@@ -1,0 +1,188 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%; /* Branco puro para um fundo mais limpo */
+    --foreground: 240 10% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 3.9%;
+    --primary: 330 80% 50%; /* Rosa mais vibrante e quente */
+    --primary-foreground: 0 0% 98%;
+    --secondary: 260 20% 96%; /* Roxo claro para secundário */
+    --secondary-foreground: 240 5.9% 10%;
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;
+    --accent: 260 20% 96%; /* Roxo claro para accent */
+    --accent-foreground: 240 5.9% 10%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 260 10% 90%; /* Borda com tom roxo suave */
+    --input: 240 5.9% 90%;
+    --ring: 330 80% 50%; /* Anel com a cor primária */
+    --radius: 0.75rem; /* Aumentar um pouco o raio para um visual mais suave */
+
+    /* Cores para CircularProgress */
+    --rose-500: 350 90% 60%;
+    --emerald-500: 158 82% 39%;
+    --sky-500: 203 92% 48%;
+    --violet-500: 252 82% 66%;
+  }
+
+  .dark {
+    --background: 240 10% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 240 10% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 240 10% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 330 80% 50%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 240 3.7% 15.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
+    --accent: 240 3.7% 15.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --ring: 330 80% 50%;
+
+    /* Cores para CircularProgress no modo escuro */
+    --rose-500: 350 90% 60%;
+    --emerald-500: 158 82% 39%;
+    --sky-500: 203 92% 48%;
+    --violet-500: 252 82% 66%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Poppins', sans-serif;
+  }
+  /* Ensure focus ring is always visible */
+  *:focus-visible {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 2px;
+  }
+}
+
+@layer components {
+  .card-style {
+    @apply bg-white/95 backdrop-blur-2xl rounded-2xl shadow-xl shadow-pink-100/50 border border-white/50 p-6 sm:p-8; /* Sombra mais suave e borda mais sutil */
+  }
+
+  .result-card {
+    @apply bg-white rounded-2xl border border-pink-100 p-4 sm:p-6 shadow-md; /* Card de resultado mais limpo */
+  }
+
+  .main-result-card {
+    @apply bg-gradient-to-r from-pink-500 to-fuchsia-600 rounded-2xl shadow-xl shadow-pink-500/30 p-6 sm:p-8 text-white; /* Sombra mais pronunciada */
+  }
+
+  .btn-calculate {
+    @apply w-full bg-gradient-to-r from-pink-500 to-fuchsia-600 text-white font-bold py-4 px-4 rounded-2xl text-lg shadow-lg shadow-pink-500/30 hover:scale-[1.02] transition-transform duration-300 ease-out; /* Animação de hover mais suave */
+  }
+
+  .gradient-text {
+    @apply bg-gradient-to-r from-pink-500 to-fuchsia-600 bg-clip-text text-transparent;
+  }
+
+  .macro-bar {
+    @apply bg-gray-200 h-2 rounded-full overflow-hidden my-2;
+  }
+
+  .macro-fill {
+    @apply h-full rounded-full transition-all duration-700 ease-out;
+  }
+
+  .protein-fill { @apply bg-gradient-to-r from-pink-400 to-fuchsia-600; }
+  .carbs-fill { @apply bg-gradient-to-r from-purple-400 to-indigo-500; }
+  .fat-fill { @apply bg-gradient-to-r from-orange-400 to-amber-500; }
+
+  .striped-bg {
+    background-color: #fceef5;
+    background-image: repeating-linear-gradient(
+      -45deg,
+      #fceef5,
+      #fceef5 20px,
+      #e9d8e4 20px,
+      #e9d8e4 40px
+    );
+  }
+
+  /* Calendar Modifiers */
+  .rdp-day_period {
+    background-color: rgba(255, 99, 132, 0.2); /* rose-200 */
+    border-radius: 50%;
+  }
+  .rdp-day_ovulation {
+    background-color: rgba(153, 102, 255, 0.3); /* purple-300 */
+    border-radius: 50%;
+  }
+  .rdp-day_fertileWindow {
+    background-color: rgba(75, 192, 192, 0.1); /* teal-100 */
+    border-radius: 50%;
+  }
+  .rdp-day_today {
+    border: 2px solid hsl(var(--primary));
+    border-radius: 50%;
+  }
+  .rdp-day_hasEntry {
+    border: 1px solid #8B5CF6; /* violet-500 */
+    border-radius: 50%;
+  }
+}
+
+@layer utilities {
+  @keyframes fade-in-up {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  .animate-fade-in-up {
+    animation: fade-in-up 0.6s ease-out forwards;
+  }
+  
+  .animation-delay-200 { animation-delay: 200ms; }
+  .animation-delay-300 { animation-delay: 300ms; }
+  .animation-delay-400 { animation-delay: 400ms; }
+  .animation-delay-500 { animation-delay: 500ms; }
+  .animation-delay-600 { animation-delay: 600ms; }
+  .animation-delay-100 { animation-delay: 100ms; } /* Adicionado para os stories */
+
+
+  @keyframes gradient-bg {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+  .animate-gradient-bg {
+    background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+    background-size: 400% 400%;
+    animation: gradient-bg 15s ease infinite;
+  }
+
+  /* Utility para esconder a barra de rolagem */
+  .no-scrollbar {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+  }
+}

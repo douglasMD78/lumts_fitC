@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">gentle-dragon-rest</string>
+    <string name="title_activity_main">gentle-dragon-rest</string>
+    <string name="package_name">com.example.gentledragonrest</string>
+    <string name="custom_url_scheme">com.example.gentledragonrest</string>
+</resources>
