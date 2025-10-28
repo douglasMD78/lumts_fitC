@@ -166,7 +166,8 @@ const Header = () => {
 
         {/* Logo */}
         <div className={cn(
-          "absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2",
+          "lg:relative lg:left-auto lg:top-auto lg:translate-x-0 lg:translate-y-0", // Override absolute positioning for desktop
+          "absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2", // Default for mobile
           isMobile ? "text-3xl" : "text-4xl"
         )}>
           <Link to="/">
