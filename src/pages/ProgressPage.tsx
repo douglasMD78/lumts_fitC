@@ -1,25 +1,22 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from 'react';
-import { supabase } from '@/integrations/supabase/client';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
-import { showError, showSuccess } from '@/utils/toast';
+import { showError } from '@/utils/toast';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, BarChart, Bar } from 'recharts';
-import { format, subDays, addDays, startOfDay, parseISO, differenceInDays } from 'date-fns';
+import { format, subDays } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { Calendar as CalendarIcon, TrendingUp, Dumbbell, Utensils, Moon, Target, Printer, Share2, CheckCircle } from 'lucide-react';
+import { Calendar as CalendarIcon, TrendingUp, Dumbbell, Target, Printer, Share2, CheckCircle } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Calendar } from '@/components/ui/calendar';
-import LoginGate from '@/components/LoginGate';
 import { Progress } from '@/components/ui/progress';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import PrintableProgressReport from '@/components/PrintableProgressReport';
 import ShareableProgressStory from '@/components/ShareableProgressStory';
 import { useUserProfile } from '@/hooks/useUserProfile';
-import { calculateNutrient } from '@/utils/nutritionHelpers';
 
 // Importar os novos hooks
 import { useLatestMacroPlan } from '@/hooks/useLatestMacroPlan';
@@ -123,34 +120,6 @@ const ProgressPage = () => {
         <Card className="p-6 shadow-lg border-pink-100">
           <CardHeader className="pb-4">
             <CardTitle className="text-xl font-bold text-slate-800 flex items-center">
-              <Utensils className="h-6 w-6 mr-3 text-pink-500" /> Tendências de Macros
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            {progressData.macroData.length > 0 ? (
-              <ResponsiveContainer width="100%" height={300}>
-                <LineChart data={progressData.macroData} margin={{ top: 5, right: 20, left: 10, bottom: 5 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                  <XAxis dataKey="date" />
-                  <YAxis />
-                  <Tooltip />
-                  <Legend />
-                  <Line type="monotone" dataKey="calories" stroke="#ec4899" name="Calorias Consumidas" />
-                  {macroPlan && <Line type="monotone" dataKey="targetCalories" stroke="#f43f5e" strokeDasharray="5 5" name="Meta de Calorias" />}
-                  <Line type="monotone" dataKey="protein" stroke="#f97316" name="Proteína (g)" />
-                  <Line type="monotone" dataKey="carbs" stroke="#a855f7" name="Carboidratos (g)" />
-                  <Line type="monotone" dataKey="fat" stroke="#22c55e" name="Gorduras (g)" />
-                </LineChart>
-              </ResponsiveContainer>
-            ) : (
-              <p className="text-slate-500 text-center py-8">Nenhum dado de macros para o período selecionado.</p>
-            )}
-          </CardContent>
-        </Card>
-
-        <Card className="p-6 shadow-lg border-pink-100">
-          <CardHeader className="pb-4">
-            <CardTitle className="text-xl font-bold text-slate-800 flex items-center">
               <Dumbbell className="h-6 w-6 mr-3 text-purple-500" /> Tendências de Atividade
             </CardTitle>
           </CardHeader>
@@ -231,7 +200,6 @@ const ProgressPage = () => {
                 <DialogTitle>Pré-visualização do Relatório de Progresso</DialogTitle>
               </DialogHeader>
               <PrintableProgressReport
-                macroData={progressData.macroData}
                 activityData={progressData.activityData}
                 userGoals={allUserGoals || []}
                 macroPlan={macroPlan}
@@ -253,9 +221,6 @@ const ProgressPage = () => {
               </DialogHeader>
               <ShareableProgressStory
                 userName={userName}
-                avgCalories={progressData.avgCalories}
-                targetCalories={macroPlan?.target_calories || 0}
-                avgProtein={progressData.avgProtein}
                 avgWorkoutDuration={progressData.avgWorkoutDuration}
                 topGoal={progressData.topGoalForStory}
                 period={periodString}

@@ -1,5 +1,5 @@
-import React, { lazy, Suspense } from "react"; // Suspense importado de React
-import { Routes, Route } from "react-router-dom"; // Removido Suspense daqui
+import React, { lazy, Suspense } from "react";
+import { Routes, Route } from "react-router-dom";
 
 import ProtectedRoute from "./components/ProtectedRoute";
 import Layout from "./components/Layout";
@@ -27,20 +27,15 @@ import CycleTrackerGatePage from "./pages/CycleTrackerGatePage";
 import CycleTrackerConfigPage from "./pages/CycleTrackerConfigPage";
 import CycleTrackerDisplayPage from "./pages/CycleTrackerDisplayPage";
 import WaterIntakeCalculatorPage from "./pages/WaterIntakeCalculatorPage";
-import IntermittentFastingCalculatorPage from "./pages/IntermittentFastingCalculatorPage";
-import FoodTrackerPage from "./pages/FoodTrackerPage";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import UpdatePasswordPage from "./pages/UpdatePasswordPage";
 import SupplementRecommenderPage from "./pages/SupplementRecommenderPage";
-import MyFastingPlansPage from "./pages/MyFastingPlansPage";
-import MyCustomFoodsPage from "./pages/MyCustomFoodsPage";
 import RoutineTrackerPage from "./pages/RoutineTrackerPage";
 import MyGoalsPage from "./pages/MyGoalsPage";
 import ProgressPage from "./pages/ProgressPage";
 
 // Lazy-loaded Hub Components
 const LazyRoutineTrackerPage = lazy(() => import('./pages/RoutineTrackerPage'));
-const LazyFoodTrackerPage = lazy(() => import('./pages/FoodTrackerPage'));
 const LazyMyGoalsPage = lazy(() => import('./pages/MyGoalsPage'));
 const LazyCommunityPage = lazy(() => import('./pages/CommunityPage')); // Using CommunityPage for /explore
 
@@ -50,7 +45,6 @@ const AppRoutes = () => (
       <Route path="/" element={<HomePage />} />
       <Route path="/calculadora-macros" element={<MacroCalculatorPage />} />
       <Route path="/calculadora-agua" element={<WaterIntakeCalculatorPage />} />
-      <Route path="/calculadora-jejum" element={<IntermittentFastingCalculatorPage />} />
       <Route path="/recomendador-suplementos" element={<SupplementRecommenderPage />} />
       <Route path="/sobre" element={<AboutPage />} />
       <Route path="/ebook" element={<EbookPage />} />
@@ -74,8 +68,6 @@ const AppRoutes = () => (
         <Route path="/overview" element={<OverviewPage />} />
         <Route path="/perfil" element={<ProfilePage />} />
         <Route path="/meus-planos" element={<MyMacroPlansPage />} />
-        <Route path="/meus-planos-jejum" element={<MyFastingPlansPage />} />
-        <Route path="/meus-alimentos-personalizados" element={<MyCustomFoodsPage />} />
         <Route path="/progresso" element={<ProgressPage />} />
         <Route path="/propor-desafio" element={<ProposeChallengePage />} />
         
@@ -84,9 +76,8 @@ const AppRoutes = () => (
 
         {/* Hub Routes with Lazy Loading */}
         <Route path="/rastreador-rotina" element={<Suspense fallback={<div>Carregando Rotina...</div>}><LazyRoutineTrackerPage /></Suspense>} />
-        <Route path="/rastreador-alimentos" element={<Suspense fallback={<div>Carregando Nutrição...</div>}><LazyFoodTrackerPage /></Suspense>} />
         <Route path="/minhas-metas" element={<Suspense fallback={<div>Carregando Metas...</div>}><LazyMyGoalsPage /></Suspense>} />
-        <Route path="/explore" element={<Suspense fallback={<div>Carregando Explorar...</div>}><LazyCommunityPage /></Suspense>} /> {/* Using CommunityPage for /explore */}
+        <Route path="/explore" element={<Suspense fallback={<div>Carregando Explorar...</div>}><LazyCommunityPage /></Suspense>} />
       </Route>
 
       <Route path="*" element={<NotFound />} />

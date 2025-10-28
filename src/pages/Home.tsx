@@ -1,23 +1,17 @@
 import { Link } from "react-router-dom";
-import { Calculator, Apple, Newspaper, Users, Droplet, Heart, Sparkles, BookOpen, GlassWater, Hourglass, Utensils, Dumbbell, LayoutDashboard, TrendingUp, Beef, Carrot, Nut, Flame } from "lucide-react";
+import { Calculator, Apple, Newspaper, Users, Droplet, Heart, Sparkles, BookOpen, GlassWater, Dumbbell, LayoutDashboard, TrendingUp, Flame } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import StoriesSection from "@/components/StoriesSection";
 import FeedCard from "@/components/FeedCard";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useUserProfile } from "@/hooks/useUserProfile";
-import { useState, useEffect, useCallback } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { useEffect } from "react";
 import { showError } from "@/utils/toast";
-import { format, subDays, differenceInDays } from "date-fns";
-import { ptBR } from "date-fns/locale";
-import { calculateNutrient } from '@/utils/nutritionHelpers'; // Importar calculateNutrient
 
 // Importar os novos hooks
 import { useLatestMacroPlan } from '@/hooks/useLatestMacroPlan';
-import { useLoggedFoodsForDateRange } from '@/hooks/useLoggedFoodsForDateRange';
-import { useDailyRoutinesForDateRange } from '@/hooks/useDailyRoutinesForDateRange';
-import { useHomeSummaryData } from '@/hooks/useHomeSummaryData'; // Importar o novo hook
+import { useHomeSummaryData } from '@/hooks/useHomeSummaryData';
 
 
 const HomePage = () => {
@@ -26,7 +20,7 @@ const HomePage = () => {
   const userName = profileData?.first_name || user?.email?.split('@')[0] || 'Usuária';
 
   const { data: homeSummary, isLoading: loadingSummary, error: summaryError } = useHomeSummaryData();
-  const { data: latestMacroPlan, isLoading: loadingMacroPlan } = useLatestMacroPlan();
+  const { data: latestMacroPlan } = useLatestMacroPlan();
 
   useEffect(() => {
     if (summaryError) {
@@ -72,18 +66,7 @@ const HomePage = () => {
                 {loadingSummary ? (
                   <p className="text-slate-600">Carregando seu resumo...</p>
                 ) : (
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
-                    <div className="p-4 bg-pink-50 rounded-lg">
-                      <Flame className="h-6 w-6 text-pink-500 mx-auto mb-2" />
-                      <p className="text-sm text-slate-600">Calorias (média)</p>
-                      <p className="text-xl font-bold text-slate-800">{homeSummary?.avgCalories.toFixed(0)} kcal</p>
-                      {latestMacroPlan?.target_calories > 0 && <p className="text-xs text-slate-500">Meta: {latestMacroPlan.target_calories} kcal</p>}
-                    </div>
-                    <div className="p-4 bg-purple-50 rounded-lg">
-                      <Beef className="h-6 w-6 text-purple-500 mx-auto mb-2" />
-                      <p className="text-sm text-slate-600">Proteína (média)</p>
-                      <p className="text-xl font-bold text-slate-800">{homeSummary?.avgProtein.toFixed(0)}g</p>
-                    </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-1 gap-4 text-center">
                     <div className="p-4 bg-blue-50 rounded-lg">
                       <Dumbbell className="h-6 w-6 text-blue-500 mx-auto mb-2" />
                       <p className="text-sm text-slate-600">Treino (média)</p>
@@ -136,26 +119,6 @@ const HomePage = () => {
           link="/calculadora-agua"
           buttonText="Calcular Água"
           icon={GlassWater}
-          colorClass="bg-white text-slate-800"
-        />
-
-        {/* Intermittent Fasting Calculator Card */}
-        <FeedCard
-          title="Calculadora de Jejum"
-          description="Planeje seu jejum intermitente e otimize seus resultados."
-          link="/calculadora-jejum"
-          buttonText="Calcular Jejum"
-          icon={Hourglass}
-          colorClass="bg-white text-slate-800"
-        />
-
-        {/* Food Tracker Card */}
-        <FeedCard
-          title="Rastreador de Alimentos"
-          description="Monitore sua ingestão de calorias e macros para alcançar seus objetivos de forma eficaz."
-          link="/rastreador-alimentos"
-          buttonText="Rastrear Alimentos"
-          icon={Utensils}
           colorClass="bg-white text-slate-800"
         />
 

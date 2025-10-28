@@ -2,16 +2,12 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { TrendingUp, Utensils, Dumbbell, Target, Share2, Sparkles, CheckCircle } from 'lucide-react';
-import { cn } from '@/lib/utils';
-import { showSuccess, showError } from '@/utils/toast';
+import { TrendingUp, Dumbbell, Target, Share2, Sparkles, CheckCircle } from 'lucide-react';
+import { showError, showSuccess } from '@/utils/toast';
 import { Progress } from '@/components/ui/progress';
 
 interface ShareableProgressStoryProps {
   userName: string;
-  avgCalories: number;
-  targetCalories: number;
-  avgProtein: number;
   avgWorkoutDuration: number; // in minutes
   topGoal?: {
     name: string;
@@ -23,16 +19,13 @@ interface ShareableProgressStoryProps {
 
 const ShareableProgressStory = ({
   userName,
-  avgCalories,
-  targetCalories,
-  avgProtein,
   avgWorkoutDuration,
   topGoal,
   period,
 }: ShareableProgressStoryProps) => {
 
   const handleShare = async () => {
-    const shareText = `✨ Meu Progresso LumtsFit! ✨\n\nOlá, ${userName}!\n\n🗓️ Período: ${period}\n🔥 Calorias (média): ${avgCalories.toFixed(0)} kcal (Meta: ${targetCalories.toFixed(0)} kcal)\n🥩 Proteína (média): ${avgProtein.toFixed(0)}g\n💪 Treino (média): ${avgWorkoutDuration.toFixed(0)} min/dia\n\n${topGoal ? `🎯 Meta Principal: ${topGoal.name} (${topGoal.progress.toFixed(0)}% ${topGoal.isCompleted ? 'Concluída!' : 'em andamento'})` : ''}\n\nJunte-se a mim e transforme sua jornada fitness com LumtsFit! #LumtsFit #Fitness #Progresso #Saúde`;
+    const shareText = `✨ Meu Progresso LumtsFit! ✨\n\nOlá, ${userName}!\n\n🗓️ Período: ${period}\n💪 Treino (média): ${avgWorkoutDuration.toFixed(0)} min/dia\n\n${topGoal ? `🎯 Meta Principal: ${topGoal.name} (${topGoal.progress.toFixed(0)}% ${topGoal.isCompleted ? 'Concluída!' : 'em andamento'})` : ''}\n\nJunte-se a mim e transforme sua jornada fitness com LumtsFit! #LumtsFit #Fitness #Progresso #Saúde`;
 
     if (navigator.share) {
       try {
@@ -78,20 +71,6 @@ const ShareableProgressStory = ({
       </p>
 
       <div className="space-y-4 mb-6">
-        <div className="flex items-center justify-between bg-white/20 p-3 rounded-xl">
-          <div className="flex items-center">
-            <Utensils className="h-5 w-5 mr-3" />
-            <span className="font-medium">Calorias (média)</span>
-          </div>
-          <span className="font-bold">{avgCalories.toFixed(0)} kcal</span>
-        </div>
-        <div className="flex items-center justify-between bg-white/20 p-3 rounded-xl">
-          <div className="flex items-center">
-            <TrendingUp className="h-5 w-5 mr-3" />
-            <span className="font-medium">Proteína (média)</span>
-          </div>
-          <span className="font-bold">{avgProtein.toFixed(0)}g</span>
-        </div>
         <div className="flex items-center justify-between bg-white/20 p-3 rounded-xl">
           <div className="flex items-center">
             <Dumbbell className="h-5 w-5 mr-3" />

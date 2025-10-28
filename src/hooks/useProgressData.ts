@@ -5,26 +5,8 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { format, parseISO, differenceInDays } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { calculateNutrient } from '@/utils/nutritionHelpers';
-import { useLatestMacroPlan } from './useLatestMacroPlan'; // Importado
-import { useUserGoals } from './useUserGoals'; // Importado
-import { Food } from './useSearchFoods'; // Importado
-
-interface CommonServing {
-  unit: string;
-  grams: number;
-}
-
-// Re-definindo LoggedFood para corresponder à estrutura do select
-interface LoggedFood {
-  food_id: string;
-  meal_type: string; // Adicionado meal_type
-  quantity_grams: number;
-  log_date: string;
-  foods: Food | null; // Corrigido: de Food[] para Food | null
-  selected_unit: string; // Adicionado
-  selected_quantity: number; // Adicionado
-}
+import { useLatestMacroPlan } from './useLatestMacroPlan';
+import { useUserGoals } from './useUserGoals';
 
 interface DailyRoutine {
   routine_date: string;
@@ -55,10 +37,7 @@ interface MacroPlan {
 }
 
 interface ProgressData {
-  macroData: any[];
   activityData: any[];
-  avgCalories: number;
-  avgProtein: number;
   avgWorkoutDuration: number;
   topGoalForStory?: {
     name: string;
@@ -76,29 +55,10 @@ const fetchProgressData = async (
   userId: string,
   startDate: Date,
   endDate: Date,
-  macroPlan: MacroPlan | null,
   allUserGoals: UserGoal[] | undefined
 ): Promise<ProgressData> => {
   const formattedStartDate = format(startDate, 'yyyy-MM-dd');
   const formattedEndDate = format(endDate, 'yyyy-MM-dd');
-
-  // Fetch logged foods for the period
-  const { data: foodsLog, error: foodsError } = await supabase
-    .from('logged_foods')
-    .select(`
-      log_date,
-      quantity_grams,
-      meal_type,
-      selected_unit,
-      selected_quantity,
-      foods (id, name, calories, protein, carbs, fat, serving_size_grams, common_servings)
-    `)
-    .eq('user_id', userId)
-    .gte('log_date', formattedStartDate)
-    .lte('log_date', formattedEndDate)
-    .order('log_date', { ascending: true });
-
-  if (foodsError) throw foodsError;
 
   // Fetch daily routines for the period
   const { data: routines, error: routinesError } = await supabase
@@ -110,33 +70,6 @@ const fetchProgressData = async (
     .order('routine_date', { ascending: true });
 
   if (routinesError) throw routinesError;
-
-  // Process Macro Data
-  const dailyMacroSummary: { [key: string]: { calories: number; protein: number; carbs: number; fat: number } } = {};
-  (foodsLog as LoggedFood[]).forEach((log: LoggedFood) => { // Explicitly cast foodsLog
-    const date = log.log_date;
-    if (!dailyMacroSummary[date]) {
-      dailyMacroSummary[date] = { calories: 0, protein: 0, carbs: 0, fat: 0 };
-    }
-    if (log.foods) { // Adicionado verificação para foods
-      dailyMacroSummary[date].calories += calculateNutrient(log.foods.calories, log.foods.serving_size_grams, log.quantity_grams);
-      dailyMacroSummary[date].protein += calculateNutrient(log.foods.protein, log.foods.serving_size_grams, log.quantity_grams);
-      dailyMacroSummary[date].carbs += calculateNutrient(log.foods.carbs, log.foods.serving_size_grams, log.quantity_grams);
-      dailyMacroSummary[date].fat += calculateNutrient(log.foods.fat, log.foods.serving_size_grams, log.quantity_grams);
-    }
-  });
-
-  const processedMacroData = Object.keys(dailyMacroSummary).map(date => ({
-    date: format(parseISO(date), 'dd/MM', { locale: ptBR }),
-    calories: Math.round(dailyMacroSummary[date].calories),
-    protein: Math.round(dailyMacroSummary[date].protein),
-    carbs: Math.round(dailyMacroSummary[date].carbs),
-    fat: Math.round(dailyMacroSummary[date].fat),
-    targetCalories: macroPlan?.target_calories || 0,
-    targetProtein: macroPlan?.protein_grams || 0,
-    targetCarbs: macroPlan?.carbs_grams || 0,
-    targetFat: macroPlan?.fat_grams || 0,
-  }));
 
   // Process Activity Data
   const dailyActivitySummary: { [key: string]: { workoutDuration: number; cardioDistance: number; sleepHours: number } } = {};
@@ -159,12 +92,8 @@ const fetchProgressData = async (
 
   // Calculate Averages for Shareable Story
   const numDaysInPeriod = differenceInDays(endDate, startDate) + 1;
-  const totalCaloriesSum = processedMacroData.reduce((sum, entry) => sum + entry.calories, 0);
-  const totalProteinSum = processedMacroData.reduce((sum, entry) => sum + entry.protein, 0);
   const totalWorkoutDurationSum = processedActivityData.reduce((sum, entry) => sum + entry.workoutDuration, 0);
 
-  const avgCalories = numDaysInPeriod > 0 ? totalCaloriesSum / numDaysInPeriod : 0;
-  const avgProtein = numDaysInPeriod > 0 ? totalProteinSum / numDaysInPeriod : 0;
   const avgWorkoutDuration = numDaysInPeriod > 0 ? totalWorkoutDurationSum / numDaysInPeriod : 0;
 
   // Set top goal for story
@@ -182,10 +111,7 @@ const fetchProgressData = async (
   }
 
   return {
-    macroData: processedMacroData,
     activityData: processedActivityData,
-    avgCalories,
-    avgProtein,
     avgWorkoutDuration,
     topGoalForStory,
   };
@@ -193,26 +119,21 @@ const fetchProgressData = async (
 
 export const useProgressData = (startDate: Date, endDate: Date) => {
   const { user } = useAuth();
-  const { data: macroPlan, isLoading: loadingMacroPlan } = useLatestMacroPlan(); // Importado
-  const { data: allUserGoals, isLoading: loadingAllGoals } = useUserGoals(false); // Importado
+  const { data: allUserGoals, isLoading: loadingAllGoals } = useUserGoals(false);
 
   return useQuery<ProgressData, Error>({
     queryKey: ['progressData', user?.id, format(startDate, 'yyyy-MM-dd'), format(endDate, 'yyyy-MM-dd')],
     queryFn: () => {
-      if (!user || !macroPlan || !allUserGoals) {
-        // Return a default empty state or throw an error if data is essential
+      if (!user || !allUserGoals) {
         return Promise.resolve({
-          macroData: [],
           activityData: [],
-          avgCalories: 0,
-          avgProtein: 0,
           avgWorkoutDuration: 0,
           topGoalForStory: undefined,
         });
       }
-      return fetchProgressData(user.id, startDate, endDate, macroPlan, allUserGoals);
+      return fetchProgressData(user.id, startDate, endDate, allUserGoals);
     },
-    enabled: !!user && !!macroPlan && !!allUserGoals && !loadingMacroPlan && !loadingAllGoals,
+    enabled: !!user && !!allUserGoals && !loadingAllGoals,
     staleTime: 1000 * 60 * 5, // 5 minutes
   });
 };

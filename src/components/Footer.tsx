@@ -1,12 +1,12 @@
 import { Link } from "react-router-dom";
 import { Heart, Instagram, Youtube, Mail } from "lucide-react";
-import { useIsMobile } from '@/hooks/use-mobile'; // Import useIsMobile
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const Footer = () => {
-  const isMobile = useIsMobile(); // Use the hook
+  const isMobile = useIsMobile();
 
   if (isMobile) {
-    return null; // Não renderiza o footer no mobile
+    return null;
   }
 
   return (
@@ -40,9 +40,6 @@ const Footer = () => {
               <li><Link to="/meu-espaco" className="text-slate-300 hover:text-pink-400 transition-colors">Meu Espaço</Link></li>
               <li><Link to="/calculadora-macros" className="text-slate-300 hover:text-pink-400 transition-colors">Calculadora de Macros</Link></li>
               <li><Link to="/calculadora-agua" className="text-slate-300 hover:text-pink-400 transition-colors">Calculadora de Água</Link></li>
-              <li><Link to="/calculadora-jejum" className="text-slate-300 hover:text-pink-400 transition-colors">Calculadora de Jejum</Link></li>
-              <li><Link to="/rastreador-alimentos" className="text-slate-300 hover:text-pink-400 transition-colors">Rastreador de Alimentos</Link></li>
-              <li><Link to="/meus-planos-jejum" className="text-slate-300 hover:text-pink-400 transition-colors">Meus Planos de Jejum</Link></li>
               <li><Link to="/ebook" className="text-slate-300 hover:text-pink-400 transition-colors">Ebook</Link></li>
               <li><Link to="/blog" className="text-slate-300 hover:text-pink-400 transition-colors">Blog</Link></li>
               <li><Link to="/comunidade" className="text-slate-300 hover:text-pink-400 transition-colors">Comunidade</Link></li>

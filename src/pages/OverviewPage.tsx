@@ -1,24 +1,19 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { User, Calculator, BookOpen, Users, Trophy, Calendar, Utensils, Flame, Beef, Carrot, Nut, Lightbulb, Droplet, Sparkles, Hourglass, Clock, Dumbbell, Target, TrendingUp, Bike, Bed, Smile, NotebookPen, CheckCircle } from "lucide-react";
-import { GlassWater } from "lucide-react"; // Importação separada para GlassWater
+import { User, Calculator, BookOpen, Users, Trophy, Calendar, Dumbbell, Target, TrendingUp, Bike, Bed, Smile, NotebookPen, CheckCircle, Lightbulb, Droplet, Sparkles } from "lucide-react";
+import { GlassWater } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { supabase } from "@/integrations/supabase/client";
 import { showError } from "@/utils/toast";
-import { format, parseISO, isSameDay } from "date-fns";
+import { format, parseISO } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { getPredictedDates } from "@/utils/cycleCalculations";
 import { mapWorkoutType, mapWorkoutIntensity, mapCardioType, mapMoodLevel } from '@/utils/displayHelpers';
-import { calculateNutrient } from '@/utils/nutritionHelpers';
-import { Progress } from '@/components/ui/progress'; // Import Progress
+import { Progress } from '@/components/ui/progress';
 
 // Importar os novos hooks
 import { useLatestMacroPlan } from '@/hooks/useLatestMacroPlan';
-import { useLatestFastingPlan } from '@/hooks/useLatestFastingPlan';
-import { useCustomFoodsCount } from '@/hooks/useCustomFoodsCount';
-import { useLoggedFoodsForDate } from '@/hooks/useLoggedFoodsForDate';
 import { useDailyRoutineForDate } from '@/hooks/useDailyRoutineForDate';
 import { useUserGoals } from '@/hooks/useUserGoals';
 import { useLatestMenstrualCycle } from '@/hooks/useLatestMenstrualCycle';
@@ -32,9 +27,6 @@ const OverviewPage = () => {
 
   // Usar os novos hooks
   const { data: latestMacroPlan, isLoading: loadingMacroPlan, error: macroPlanError } = useLatestMacroPlan();
-  const { data: latestFastingPlan, isLoading: loadingFastingPlan, error: fastingPlanError } = useLatestFastingPlan();
-  const { data: customFoodsCount, isLoading: loadingCustomFoodsCount, error: customFoodsCountError } = useCustomFoodsCount();
-  const { data: loggedFoodsToday, isLoading: loadingLoggedFoodsToday, error: loggedFoodsTodayError } = useLoggedFoodsForDate(today);
   const { data: dailyRoutineToday, isLoading: loadingDailyRoutineToday, error: dailyRoutineTodayError } = useDailyRoutineForDate(today);
   const { data: activeGoals, isLoading: loadingActiveGoals, error: activeGoalsError } = useUserGoals(true); // Fetch only active goals
   const { data: latestMenstrualCycle, isLoading: loadingMenstrualCycle, error: menstrualCycleError } = useLatestMenstrualCycle();
@@ -43,13 +35,10 @@ const OverviewPage = () => {
 
   useEffect(() => {
     if (macroPlanError) showError('Erro ao carregar plano de macros: ' + macroPlanError.message);
-    if (fastingPlanError) showError('Erro ao carregar plano de jejum: ' + fastingPlanError.message);
-    if (customFoodsCountError) showError('Erro ao carregar contagem de alimentos: ' + customFoodsCountError.message);
-    if (loggedFoodsTodayError) showError('Erro ao carregar alimentos registrados hoje: ' + loggedFoodsTodayError.message);
     if (dailyRoutineTodayError) showError('Erro ao carregar rotina diária: ' + dailyRoutineTodayError.message);
     if (activeGoalsError) showError('Erro ao carregar metas ativas: ' + activeGoalsError.message);
     if (menstrualCycleError) showError('Erro ao carregar dados do ciclo menstrual: ' + menstrualCycleError.message);
-  }, [macroPlanError, fastingPlanError, customFoodsCountError, loggedFoodsTodayError, dailyRoutineTodayError, activeGoalsError, menstrualCycleError]);
+  }, [macroPlanError, dailyRoutineTodayError, activeGoalsError, menstrualCycleError]);
 
   useEffect(() => {
     if (latestMenstrualCycle) {
@@ -60,28 +49,8 @@ const OverviewPage = () => {
     }
   }, [latestMenstrualCycle]);
 
-  const calculateDailyTotals = () => {
-    let totalCalories = 0;
-    let totalProtein = 0;
-    let totalCarbs = 0;
-    let totalFat = 0;
-
-    loggedFoodsToday?.forEach(log => {
-      const food = log.foods;
-      if (food) {
-        totalCalories += calculateNutrient(food.calories, food.serving_size_grams, log.quantity_grams);
-        totalProtein += calculateNutrient(food.protein, food.serving_size_grams, log.quantity_grams);
-        totalCarbs += calculateNutrient(food.carbs, food.serving_size_grams, log.quantity_grams);
-        totalFat += calculateNutrient(food.fat, food.serving_size_grams, log.quantity_grams);
-      }
-    });
-    return { totalCalories, totalProtein, totalCarbs, totalFat };
-  };
-
-  const { totalCalories, totalProtein, totalCarbs, totalFat } = calculateDailyTotals();
-
-  const isLoadingData = authLoading || loadingProfile || loadingMacroPlan || loadingFastingPlan || loadingCustomFoodsCount ||
-                         loadingLoggedFoodsToday || loadingDailyRoutineToday || loadingActiveGoals || loadingMenstrualCycle;
+  const isLoadingData = authLoading || loadingProfile || loadingMacroPlan ||
+                         loadingDailyRoutineToday || loadingActiveGoals || loadingMenstrualCycle;
 
   if (isLoadingData) {
     return (
@@ -107,36 +76,6 @@ const OverviewPage = () => {
 
         {/* Daily Summary Section */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-          {/* Today's Food Summary */}
-          <Card className="p-6 shadow-lg border-pink-100">
-            <CardHeader className="pb-4">
-              <CardTitle className="text-xl font-bold text-slate-800 flex items-center">
-                <Utensils className="h-6 w-6 mr-3 text-pink-500" /> Alimentos de Hoje
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-2">
-              {loggedFoodsToday && loggedFoodsToday.length > 0 ? (
-                <>
-                  <p className="text-lg font-semibold text-slate-700">{totalCalories.toFixed(0)} kcal</p>
-                  <div className="grid grid-cols-3 gap-2 text-sm text-slate-600">
-                    <p className="flex items-center"><Beef className="h-4 w-4 mr-1 text-pink-500" /> P: {totalProtein.toFixed(0)}g</p>
-                    <p className="flex items-center"><Carrot className="h-4 w-4 mr-1 text-pink-500" /> C: {totalCarbs.toFixed(0)}g</p>
-                    <p className="flex items-center"><Nut className="h-4 w-4 mr-1 text-pink-500" /> G: {totalFat.toFixed(0)}g</p>
-                  </div>
-                  <Button asChild variant="outline" className="w-full mt-4 border-pink-500 text-pink-500 hover:bg-pink-50">
-                    <Link to="/rastreador-alimentos">Ver Detalhes</Link>
-                  </Button>
-                </>
-              ) : (
-                <p className="text-slate-500">Nenhum alimento registrado hoje.
-                  <Button asChild variant="link" className="p-0 h-0 text-pink-500 hover:text-pink-600">
-                    <Link to="/rastreador-alimentos">Adicionar agora!</Link>
-                  </Button>
-                </p>
-              )}
-            </CardContent>
-          </Card>
-
           {/* Today's Routine Summary */}
           <Card className="p-6 shadow-lg border-pink-100">
             <CardHeader className="pb-4">
@@ -227,13 +166,13 @@ const OverviewPage = () => {
           </Card>
         </div>
 
-        {/* Latest Plans and Custom Foods Section */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+        {/* Latest Plans Section */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
           {latestMacroPlan ? (
             <Card className="bg-gradient-to-r from-pink-500 to-rose-400 rounded-2xl shadow-lg p-6 text-white">
               <CardHeader className="pb-2">
                 <CardTitle className="text-xl font-bold flex items-center">
-                  <Utensils className="h-6 w-6 mr-3" /> Último Plano de Macros
+                  <Calculator className="h-6 w-6 mr-3" /> Último Plano de Macros
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-2">
@@ -246,62 +185,10 @@ const OverviewPage = () => {
           ) : (
             <Card className="text-center p-6">
               <CardContent>
-                <Utensils className="h-12 w-12 text-pink-500 mx-auto mb-3" />
+                <Calculator className="h-12 w-12 text-pink-500 mx-auto mb-3" />
                 <p className="text-slate-600 mb-3">Nenhum plano de macros salvo.</p>
                 <Button asChild className="bg-pink-500 hover:bg-pink-600">
                   <Link to="/calculadora-macros">Criar Plano</Link>
-                </Button>
-              </CardContent>
-            </Card>
-          )}
-
-          {latestFastingPlan ? (
-            <Card className="bg-gradient-to-r from-indigo-500 to-purple-500 rounded-2xl shadow-lg p-6 text-white">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-xl font-bold flex items-center">
-                  <Hourglass className="h-6 w-6 mr-3" /> Último Plano de Jejum
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-2">
-                <p className="text-lg font-semibold">⏰ Fim do Jejum: {latestFastingPlan.fasting_window_end}</p>
-                <Button asChild variant="secondary" className="bg-white text-indigo-500 font-bold rounded-full px-6 py-3 h-auto hover:bg-gray-100">
-                  <Link to="/meus-planos-jejum">Ver Detalhes</Link>
-                </Button>
-              </CardContent>
-            </Card>
-          ) : (
-            <Card className="text-center p-6">
-              <CardContent>
-                <Hourglass className="h-12 w-12 text-indigo-500 mx-auto mb-3" />
-                <p className="text-slate-600 mb-3">Nenhum plano de jejum salvo.</p>
-                <Button asChild className="bg-indigo-500 hover:bg-indigo-600">
-                  <Link to="/calculadora-jejum">Criar Plano</Link>
-                </Button>
-              </CardContent>
-            </Card>
-          )}
-
-          {customFoodsCount !== null && customFoodsCount > 0 ? (
-            <Card className="bg-gradient-to-r from-green-500 to-emerald-500 rounded-2xl shadow-lg p-6 text-white">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-xl font-bold flex items-center">
-                  <Utensils className="h-6 w-6 mr-3" /> Seus Alimentos Personalizados
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-2">
-                <p className="text-lg font-semibold">Você tem {customFoodsCount} alimentos.</p>
-                <Button asChild variant="secondary" className="bg-white text-green-500 font-bold rounded-full px-6 py-3 h-auto hover:bg-gray-100">
-                  <Link to="/meus-alimentos-personalizados">Gerenciar Alimentos</Link>
-                </Button>
-              </CardContent>
-            </Card>
-          ) : (
-            <Card className="text-center p-6">
-              <CardContent>
-                <Utensils className="h-12 w-12 text-green-500 mx-auto mb-3" />
-                <p className="text-slate-600 mb-3">Nenhum alimento personalizado.</p>
-                <Button asChild className="bg-green-500 hover:bg-green-600">
-                  <Link to="/meus-alimentos-personalizados">Adicionar Alimento</Link>
                 </Button>
               </CardContent>
             </Card>
@@ -384,26 +271,8 @@ const overviewItems = [
   {
     title: "Meus Planos de Macros",
     description: "Acesse e gerencie seus planos nutricionais salvos.",
-    icon: Utensils,
+    icon: Calculator,
     link: "/meus-planos",
-  },
-  {
-    title: "Calculadora de Jejum",
-    description: "Planeje seu jejum intermitente de forma eficaz.",
-    icon: Hourglass,
-    link: "/calculadora-jejum",
-  },
-  {
-    title: "Meus Planos de Jejum",
-    description: "Visualize e gerencie seus planos de jejum salvos.",
-    icon: Hourglass,
-    link: "/meus-planos-jejum",
-  },
-  {
-    title: "Meus Alimentos Personalizados",
-    description: "Gerencie os alimentos customizados que você adicionou.",
-    icon: Utensils,
-    link: "/meus-alimentos-personalizados",
   },
   {
     title: "Calculadora de Água",

@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useUserProfile } from "@/hooks/useUserProfile";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { User, LayoutDashboard, Dumbbell, Target, TrendingUp, Utensils, Hourglass, Calculator, BookOpen, Users, Droplet, Lightbulb, GlassWater } from "lucide-react";
+import { User, LayoutDashboard, Dumbbell, Target, TrendingUp, Calculator, BookOpen, Users, Droplet, Lightbulb, GlassWater } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const MySpacePage = () => {
@@ -53,32 +53,8 @@ const MySpacePage = () => {
     {
       title: "Meus Planos de Macros",
       description: "Acesse e gerencie seus planos nutricionais salvos.",
-      icon: Utensils,
+      icon: Calculator, // Reutilizando o ícone de calculadora para planos de macros
       link: "/meus-planos",
-    },
-    {
-      title: "Calculadora de Jejum",
-      description: "Planeje seu jejum intermitente de forma eficaz.",
-      icon: Hourglass,
-      link: "/calculadora-jejum",
-    },
-    {
-      title: "Meus Planos de Jejum",
-      description: "Visualize e gerencie seus planos de jejum salvos.",
-      icon: Hourglass,
-      link: "/meus-planos-jejum",
-    },
-    {
-      title: "Rastreador de Alimentos",
-      description: "Monitore sua ingestão de calorias e macros diariamente.",
-      icon: Utensils,
-      link: "/rastreador-alimentos",
-    },
-    {
-      title: "Meus Alimentos Personalizados",
-      description: "Gerencie os alimentos customizados que você adicionou.",
-      icon: Utensils,
-      link: "/meus-alimentos-personalizados",
     },
     {
       title: "Calculadora de Água",

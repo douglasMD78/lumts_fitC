@@ -4,7 +4,7 @@ import { ResultsDisplay } from "@/components/ResultsDisplay";
 import { useAuth } from "@/contexts/AuthContext";
 import { showError, showSuccess } from "@/utils/toast";
 import { MacroCalculationInputs } from "@/utils/macroCalculations";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 // Importar os novos hooks
 import { useUserProfile } from "@/hooks/useUserProfile";
@@ -14,7 +14,6 @@ import { useSaveMacroPlan } from '@/hooks/useSaveMacroPlan';
 const MacroCalculatorPage = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
-  const location = useLocation();
   const [results, setResults] = useState<any | null>(null);
   const [initialData, setInitialData] = useState<{
     age?: string;
@@ -52,9 +51,7 @@ const MacroCalculatorPage = () => {
       },
       {
         onSuccess: () => {
-          if (location.state && (location.state as { fromFoodTracker?: boolean }).fromFoodTracker) {
-            navigate('/rastreador-alimentos');
-          }
+          // No longer redirecting to food tracker
         },
       }
     );

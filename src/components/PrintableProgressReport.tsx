@@ -4,12 +4,11 @@ import React from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, BarChart, Bar } from 'recharts';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { TrendingUp, Dumbbell, Utensils, Target, CheckCircle } from 'lucide-react';
+import { TrendingUp, Dumbbell, Target, CheckCircle } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
 import { Button } from '@/components/ui/button';
 
 interface PrintableProgressReportProps {
-  macroData: any[];
   activityData: any[];
   userGoals: {
     id: string;
@@ -39,10 +38,9 @@ const calculateProgress = (current: number, target: number) => {
 };
 
 const PrintableProgressReport = ({
-  macroData,
   activityData,
   userGoals,
-  macroPlan,
+  macroPlan, // Mantido para compatibilidade, mas não usado para dados de macro
   startDate,
   endDate,
 }: PrintableProgressReportProps) => {
@@ -60,33 +58,6 @@ const PrintableProgressReport = ({
       </div>
 
       <div className="space-y-8 print:space-y-4">
-        {/* Macro Trends */}
-        <section className="mb-8 print:mb-4">
-          <h2 className="text-xl font-bold text-slate-800 flex items-center mb-4 print:text-lg">
-            <Utensils className="h-5 w-5 mr-2 text-pink-500 print:hidden" /> Tendências de Macros
-          </h2>
-          {macroData.length > 0 ? (
-            <div className="w-full h-[300px] print:h-[200px]">
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={macroData} margin={{ top: 5, right: 20, left: 10, bottom: 5 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                  <XAxis dataKey="date" />
-                  <YAxis />
-                  <Tooltip />
-                  <Legend />
-                  <Line type="monotone" dataKey="calories" stroke="#ec4899" name="Calorias Consumidas" />
-                  {macroPlan && <Line type="monotone" dataKey="targetCalories" stroke="#f43f5e" strokeDasharray="5 5" name="Meta de Calorias" />}
-                  <Line type="monotone" dataKey="protein" stroke="#f97316" name="Proteína (g)" />
-                  <Line type="monotone" dataKey="carbs" stroke="#a855f7" name="Carboidratos (g)" />
-                  <Line type="monotone" dataKey="fat" stroke="#22c55e" name="Gorduras (g)" />
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
-          ) : (
-            <p className="text-slate-500 text-center py-4">Nenhum dado de macros para o período selecionado.</p>
-          )}
-        </section>
-
         {/* Activity Trends */}
         <section className="mb-8 print:mb-4">
           <h2 className="text-xl font-bold text-slate-800 flex items-center mb-4 print:text-lg">

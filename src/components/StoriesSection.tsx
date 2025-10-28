@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Calculator, BookOpen, Newspaper, Users, Droplet, User, LogIn, GlassWater, Hourglass, Utensils } from 'lucide-react'; // Adicionado Utensils
+import { Calculator, BookOpen, Newspaper, Users, Droplet, User, LogIn, GlassWater, Dumbbell } from 'lucide-react';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { useAuth } from '@/contexts/AuthContext';
 import { cn } from '@/lib/utils';
@@ -19,8 +19,7 @@ const StoriesSection = () => {
   const storyItems: StoryItem[] = [
     { to: "/calculadora-macros", label: "Macros", icon: Calculator },
     { to: "/calculadora-agua", label: "Água", icon: GlassWater },
-    { to: "/calculadora-jejum", label: "Jejum", icon: Hourglass },
-    { to: "/rastreador-alimentos", label: "Alimentos", icon: Utensils }, // Story atualizado
+    { to: "/rastreador-rotina", label: "Rotina", icon: Dumbbell },
     { to: "/ebook", label: "Ebook", icon: BookOpen },
     { to: "/blog", label: "Blog", icon: Newspaper },
     { to: "/comunidade", label: "Comunidade", icon: Users },

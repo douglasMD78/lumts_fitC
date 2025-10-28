@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { Link, NavLink, useLocation } from "react-router-dom";
-import { Menu, User as UserIcon, LogOut, LayoutDashboard, Settings, Utensils, Dumbbell, Target, TrendingUp, Calculator, Hourglass, GlassWater, BookOpen, Newspaper, Users, Droplet, Apple } from "lucide-react";
+import { Link, NavLink } from "react-router-dom";
+import { Menu, User as UserIcon, LogOut, LayoutDashboard, Dumbbell, Target, TrendingUp, Calculator, GlassWater, BookOpen, Newspaper, Users, Droplet } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -9,7 +9,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import { useUserProfile } from "@/hooks/useUserProfile";
 import { useLogout } from "@/hooks/useLogout";
-import { useIsMobile } from '@/hooks/use-mobile'; // Import useIsMobile
+import { useIsMobile } from '@/hooks/use-mobile';
 
 import {
   DropdownMenu,
@@ -37,10 +37,9 @@ const loggedInNavLinks = [
 const Header = () => {
   const [scrolled, setScrolled] = useState(false);
   const { user } = useAuth();
-  const location = useLocation();
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const logout = useLogout();
-  const isMobile = useIsMobile(); // Use the hook
+  const isMobile = useIsMobile();
 
   const { data: profileData } = useUserProfile();
   const avatarUrl = profileData?.avatar_url || null;
@@ -60,7 +59,7 @@ const Header = () => {
     <header className={cn(
       "sticky top-0 z-10 transition-all duration-300",
       scrolled ? "bg-white/95 backdrop-blur-sm shadow-md" : "bg-transparent",
-      isMobile && "h-16" // Compact header height on mobile
+      isMobile && "h-16"
     )}>
       <div className="container mx-auto flex justify-between items-center p-4 h-20 relative">
         {/* Mobile Menu Trigger (Hamburger) */}
@@ -121,15 +120,6 @@ const Header = () => {
                       <Dumbbell className="h-5 w-5 mr-3" /> Rastreador de Rotina
                     </NavLink>
                     <NavLink
-                      to="/rastreador-alimentos"
-                      onClick={() => setIsSheetOpen(false)}
-                      className={({ isActive }) =>
-                        `flex items-center text-xl font-medium ${isActive ? "text-pink-500" : "text-slate-700"}`
-                      }
-                    >
-                      <Utensils className="h-5 w-5 mr-3" /> Rastreador de Alimentos
-                    </NavLink>
-                    <NavLink
                       to="/minhas-metas"
                       onClick={() => setIsSheetOpen(false)}
                       className={({ isActive }) =>
@@ -177,7 +167,7 @@ const Header = () => {
         {/* Logo */}
         <div className={cn(
           "absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2",
-          isMobile ? "text-3xl" : "text-4xl" // Smaller logo on mobile
+          isMobile ? "text-3xl" : "text-4xl"
         )}>
           <Link to="/">
             <h1 className="font-bold text-pink-500">lumts<span className="font-light">fit</span></h1>
@@ -242,12 +232,6 @@ const Header = () => {
                   <Link to="/rastreador-rotina" className="flex items-center">
                     <Dumbbell className="mr-2 h-4 w-4" />
                     <span>Rastreador de Rotina</span>
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link to="/rastreador-alimentos" className="flex items-center">
-                    <Utensils className="mr-2 h-4 w-4" />
-                    <span>Rastreador de Alimentos</span>
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>

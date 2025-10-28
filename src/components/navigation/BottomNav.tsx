@@ -2,11 +2,11 @@
 
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { Dumbbell, Utensils, Target, Compass, User } from 'lucide-react';
+import { Dumbbell, Target, Compass, User } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useAuth } from '@/contexts/AuthContext';
-import { trackEvent } from '@/utils/analytics'; // Importar o stub de analytics
+import { trackEvent } from '@/utils/analytics';
 
 interface NavItem {
   to: string;
@@ -17,7 +17,6 @@ interface NavItem {
 
 const navItems: NavItem[] = [
   { to: "/rastreador-rotina", label: "Rotina", icon: Dumbbell, authRequired: true },
-  { to: "/rastreador-alimentos", label: "Nutrição", icon: Utensils, authRequired: true },
   { to: "/minhas-metas", label: "Metas", icon: Target, authRequired: true },
   { to: "/comunidade", label: "Explorar", icon: Compass },
   { to: "/meu-espaco", label: "Eu", icon: User, authRequired: true },
