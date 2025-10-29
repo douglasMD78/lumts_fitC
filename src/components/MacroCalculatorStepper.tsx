@@ -27,10 +27,15 @@ const calculatorSchema = z.object({
   bodyState: z.enum(['definida', 'tonificada', 'magraNatural', 'equilibrada', 'extrasLeves', 'emagrecer'], { message: "Selecione seu estado físico" }),
   activity: z.enum(['sedentaria', 'leve', 'moderada', 'intensa', 'muitoIntensa'], { message: "Selecione seu nível de atividade" }),
   goal: z.enum(['emagrecerSuave', 'emagrecerFoco', 'transformacaoIntensa', 'manterPeso', 'ganharMassa', 'ganhoAcelerado'], { message: "Selecione seu objetivo" }),
-  bodyFatPercentage: z.preprocess(
-    (val) => (val === "" ? null : val), // Converte string vazia para null
-    z.number().min(5, "Gordura corporal deve ser no mínimo 5%").max(60, "Gordura corporal deve ser no máximo 60%").nullable().optional()
-  ),
+  bodyFatPercentage: z.string().optional().nullable().transform((val) => {
+    if (val === null || val === undefined || val === "") {
+      return null;
+    }
+    const num = Number(val);
+    return isNaN(num) ? null : num;
+  }).refine((val) => val === null || (val >= 5 && val <= 60), {
+    message: "Gordura corporal deve ser entre 5% e 60%.",
+  }),
 });
 
 type CalculatorFormInputs = z.infer<typeof calculatorSchema>;
@@ -434,7 +439,7 @@ export function MacroCalculatorStepper({ onCalculate, initialData }: MacroCalcul
                 type="number"
                 step="0.1"
                 placeholder="Ex: 25.0"
-                {...register("bodyFatPercentage", { valueAsNumber: true })}
+                {...register("bodyFatPercentage")} // Removido valueAsNumber aqui, pois o transform já cuida disso
                 className={errors.bodyFatPercentage ? "border-red-500" : ""}
               />
               {errors.bodyFatPercentage && <p className="text-red-500 text-sm mt-1">{errors.bodyFatPercentage.message}</p>}
