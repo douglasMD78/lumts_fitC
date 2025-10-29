@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
 import { showError } from "@/utils/toast";
-import { useForm, Controller, FieldErrors } from "react-hook-form"; // Importado FieldErrors
+import { useForm, Controller, FieldErrors } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import VisualSelection from './VisualSelection';
@@ -27,7 +27,10 @@ const calculatorSchema = z.object({
   bodyState: z.enum(['definida', 'tonificada', 'magraNatural', 'equilibrada', 'extrasLeves', 'emagrecer'], { message: "Selecione seu estado físico" }),
   activity: z.enum(['sedentaria', 'leve', 'moderada', 'intensa', 'muitoIntensa'], { message: "Selecione seu nível de atividade" }),
   goal: z.enum(['emagrecerSuave', 'emagrecerFoco', 'transformacaoIntensa', 'manterPeso', 'ganharMassa', 'ganhoAcelerado'], { message: "Selecione seu objetivo" }),
-  bodyFatPercentage: z.coerce.number().min(5, "Gordura corporal deve ser no mínimo 5%").max(60, "Gordura corporal deve ser no máximo 60%").nullable().optional(),
+  bodyFatPercentage: z.preprocess( // Adicionado pré-processamento aqui
+    (val) => (val === "" ? null : val), // Converte string vazia para null
+    z.coerce.number().min(5, "Gordura corporal deve ser no mínimo 5%").max(60, "Gordura corporal deve ser no máximo 60%").nullable().optional()
+  ),
 });
 
 type CalculatorFormInputs = z.infer<typeof calculatorSchema>;
@@ -322,7 +325,7 @@ export function MacroCalculatorStepper({ onCalculate, initialData }: MacroCalcul
 
       <Progress value={progress} className="w-full mb-6 h-2 bg-pink-100" indicatorClassName="bg-gradient-to-r from-pink-500 to-fuchsia-500" />
 
-      <form onSubmit={handleSubmit(onSubmit, onErrors)} className="space-y-6"> {/* Adicionado onErrors aqui */}
+      <form onSubmit={handleSubmit(onSubmit, onErrors)} className="space-y-6">
         {step === 1 && (
           <div className="animate-fade-in-up">
             <h3 className="text-xl font-bold text-slate-800 mb-4">1. Seus Dados Pessoais</h3>
