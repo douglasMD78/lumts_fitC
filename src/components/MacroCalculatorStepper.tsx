@@ -11,11 +11,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import VisualSelection from './VisualSelection';
 import { MacroCalculationInputs, calculateMacros } from '@/utils/macroCalculations';
-import { ArrowLeft, Heart, Zap, Dumbbell, Utensils, Activity, Leaf, CalendarDays, Droplet, Sparkles, Ruler, Scale } from 'lucide-react';
+import { ArrowLeft, Heart, Zap, Dumbbell, Utensils, Activity, Leaf, CalendarDays, Droplet, Sparkles, Ruler, Scale, Female, Male, Diamond, Weight, TrendingUp, Flame, Sun, Bike, Bed, Apple, Goal, ShieldCheck, Clock, Hand, Brain, Package, RefreshCcw } from 'lucide-react'; // Adicionado mais ícones Lucide
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
 import { calculateBodyFatPercentage, BodyFatCalculationInputs } from '@/utils/bodyFatCalculations';
 import { Link } from 'react-router-dom';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'; // Importação adicionada
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 // Define o schema Zod para validação
 const calculatorSchema = z.object({
@@ -41,34 +41,34 @@ interface MacroCalculatorStepperProps {
 }
 
 const genderOptions = [
-  { value: 'female', label: 'Feminino', icon: '👩' },
-  { value: 'male', label: 'Masculino', icon: '👨' },
+  { value: 'female', label: 'Feminino', icon: <Female className="h-8 w-8 text-pink-500" /> },
+  { value: 'male', label: 'Masculino', icon: <Male className="h-8 w-8 text-blue-500" /> },
 ];
 
 const bodyStateOptions = [
-  { value: 'definida', label: 'Definição visível', icon: '💎', description: 'Músculos bem marcados' },
-  { value: 'tonificada', label: 'Corpo tonificado', icon: '💪', description: 'Forma atlética, pouca gordura' },
-  { value: 'magraNatural', label: 'Magra natural', icon: '📐', description: 'Metabolismo rápido, dificuldade em ganhar peso' },
-  { value: 'equilibrada', label: 'Peso equilibrado', icon: '⚖️', description: 'Confortável com seu corpo' },
-  { value: 'extrasLeves', label: 'Alguns quilos extras', icon: '📊', description: 'Gordura corporal um pouco acima do ideal' },
-  { value: 'emagrecer', label: 'Preciso emagrecer', icon: '🎯', description: 'Busca por perda de peso significativa' },
+  { value: 'definida', label: 'Definição visível', icon: <Diamond className="h-8 w-8 text-pink-500" />, description: 'Músculos bem marcados' },
+  { value: 'tonificada', label: 'Corpo tonificado', icon: <Dumbbell className="h-8 w-8 text-pink-500" />, description: 'Forma atlética, pouca gordura' },
+  { value: 'magraNatural', label: 'Magra natural', icon: <Leaf className="h-8 w-8 text-green-500" />, description: 'Metabolismo rápido, dificuldade em ganhar peso' },
+  { value: 'equilibrada', label: 'Peso equilibrado', icon: <Scale className="h-8 w-8 text-purple-500" />, description: 'Confortável com seu corpo' },
+  { value: 'extrasLeves', label: 'Alguns quilos extras', icon: <Weight className="h-8 w-8 text-orange-500" />, description: 'Gordura corporal um pouco acima do ideal' },
+  { value: 'emagrecer', label: 'Preciso emagrecer', icon: <Target className="h-8 w-8 text-red-500" />, description: 'Busca por perda de peso significativa' },
 ];
 
 const activityOptions = [
-  { value: 'sedentaria', label: 'Sedentária', icon: '🛋️', description: 'Pouco ou nenhum exercício' },
-  { value: 'leve', label: 'Levemente Ativa', icon: '🚶‍♀️', description: 'Exercício leve 1-3 dias/semana' },
-  { value: 'moderada', label: 'Moderadamente Ativa', icon: '🏃‍♀️', description: 'Exercício moderado 3-5 dias/semana' },
-  { value: 'intensa', label: 'Altamente Ativa', icon: '💪', description: 'Exercício intenso 6-7 dias/semana' },
-  { value: 'muitoIntensa', label: 'Muito Ativa', icon: '🔥', description: 'Exercício intenso diário ou trabalho físico' },
+  { value: 'sedentaria', label: 'Sedentária', icon: <Bed className="h-8 w-8 text-gray-500" />, description: 'Pouco ou nenhum exercício' },
+  { value: 'leve', label: 'Levemente Ativa', icon: <Hand className="h-8 w-8 text-blue-500" />, description: 'Exercício leve 1-3 dias/semana' },
+  { value: 'moderada', label: 'Moderadamente Ativa', icon: <Bike className="h-8 w-8 text-green-500" />, description: 'Exercício moderado 3-5 dias/semana' },
+  { value: 'intensa', label: 'Altamente Ativa', icon: <Dumbbell className="h-8 w-8 text-orange-500" />, description: 'Exercício intenso 6-7 dias/semana' },
+  { value: 'muitoIntensa', label: 'Muito Ativa', icon: <Flame className="h-8 w-8 text-red-500" />, description: 'Exercício intenso diário ou trabalho físico' },
 ];
 
 const goalOptions = [
-  { value: 'emagrecerSuave', label: 'Emagrecer Suavemente', icon: '🌸', description: 'Perda de peso gradual e sustentável' },
-  { value: 'emagrecerFoco', label: 'Emagrecer com Foco', icon: '🌺', description: 'Perda de peso mais acelerada' },
-  { value: 'transformacaoIntensa', label: 'Transformação Intensa', icon: '🔥', description: 'Déficit calórico agressivo para resultados rápidos' },
-  { value: 'manterPeso', label: 'Manter Meu Peso', icon: '💖', description: 'Estabilizar o peso atual' },
-  { value: 'ganharMassa', label: 'Ganhar Massa', icon: '🌻', description: 'Aumento gradual de massa muscular' },
-  { value: 'ganhoAcelerado', label: 'Ganho Acelerado', icon: '💪', description: 'Superávit calórico para ganho rápido de massa' },
+  { value: 'emagrecerSuave', label: 'Emagrecer Suavemente', icon: <Leaf className="h-8 w-8 text-green-500" />, description: 'Perda de peso gradual e sustentável' },
+  { value: 'emagrecerFoco', label: 'Emagrecer com Foco', icon: <Target className="h-8 w-8 text-red-500" />, description: 'Perda de peso mais acelerada' },
+  { value: 'transformacaoIntensa', label: 'Transformação Intensa', icon: <Zap className="h-8 w-8 text-yellow-500" />, description: 'Déficit calórico agressivo para resultados rápidos' },
+  { value: 'manterPeso', label: 'Manter Meu Peso', icon: <ShieldCheck className="h-8 w-8 text-blue-500" />, description: 'Estabilizar o peso atual' },
+  { value: 'ganharMassa', label: 'Ganhar Massa', icon: <Dumbbell className="h-8 w-8 text-purple-500" />, description: 'Aumento gradual de massa muscular' },
+  { value: 'ganhoAcelerado', label: 'Ganho Acelerado', icon: <TrendingUp className="h-8 w-8 text-pink-500" />, description: 'Superávit calórico para ganho rápido de massa' },
 ];
 
 // Schema Zod para o formulário de cálculo de BF% dentro do diálogo
