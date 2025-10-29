@@ -22,6 +22,8 @@ const calculatorSchema = z.object({
   bodyState: z.enum(['definida', 'tonificada', 'magraNatural', 'equilibrada', 'extrasLeves', 'emagrecer'], { message: "Selecione seu estado físico" }),
   activity: z.enum(['sedentaria', 'leve', 'moderada', 'intensa', 'muitoIntensa'], { message: "Selecione seu nível de atividade" }),
   goal: z.enum(['emagrecerSuave', 'emagrecerFoco', 'transformacaoIntensa', 'manterPeso', 'ganharMassa', 'ganhoAcelerado'], { message: "Selecione seu objetivo" }),
+  // Novo campo para percentual de gordura corporal, opcional
+  bodyFatPercentage: z.coerce.number().min(5, "Gordura corporal deve ser no mínimo 5%").max(60, "Gordura corporal deve ser no máximo 60%").nullable().optional(),
 });
 
 type CalculatorFormInputs = z.infer<typeof calculatorSchema>;
@@ -68,7 +70,7 @@ const goalOptions = [
 
 export function MacroCalculatorStepper({ onCalculate, initialData }: MacroCalculatorStepperProps) {
   const [step, setStep] = useState(1);
-  const totalSteps = 5; // Dados Pessoais, Gênero, Estado Físico, Atividade, Objetivo
+  const totalSteps = 6; // Dados Pessoais, Gênero, Estado Físico, Percentual de Gordura, Atividade, Objetivo
   const {
     register,
     handleSubmit,
@@ -87,6 +89,7 @@ export function MacroCalculatorStepper({ onCalculate, initialData }: MacroCalcul
       bodyState: undefined,
       activity: undefined,
       goal: undefined,
+      bodyFatPercentage: undefined, // Valor padrão para o novo campo
     },
   });
 
@@ -109,7 +112,11 @@ export function MacroCalculatorStepper({ onCalculate, initialData }: MacroCalcul
       isValid = await trigger('gender');
     } else if (step === 3) {
       isValid = await trigger('bodyState');
-    } else if (step === 4) {
+    } else if (step === 4) { // Novo passo para bodyFatPercentage
+      isValid = await trigger('bodyFatPercentage');
+      // bodyFatPercentage é opcional, então se não for preenchido, ainda é válido
+      if (!currentValues.bodyFatPercentage) isValid = true; 
+    } else if (step === 5) {
       isValid = await trigger('activity');
     }
     
@@ -221,9 +228,32 @@ export function MacroCalculatorStepper({ onCalculate, initialData }: MacroCalcul
           </div>
         )}
 
-        {step === 4 && (
+        {step === 4 && ( // Novo passo para percentual de gordura corporal
           <div className="animate-fade-in-up">
-            <h3 className="text-xl font-bold text-slate-800 mb-4">4. Nível de Atividade Física</h3>
+            <h3 className="text-xl font-bold text-slate-800 mb-4">4. Percentual de Gordura Corporal (Opcional)</h3>
+            <p className="text-slate-600 text-sm mb-4">
+              Se você souber seu percentual de gordura, insira-o para um cálculo mais preciso. Caso contrário, pode deixar em branco.
+            </p>
+            <div className="space-y-2">
+              <Label className="font-semibold text-pink-700" htmlFor="bodyFatPercentage">
+                % Gordura Corporal
+              </Label>
+              <Input
+                id="bodyFatPercentage"
+                type="number"
+                step="0.1"
+                placeholder="Ex: 25.0"
+                {...register("bodyFatPercentage", { valueAsNumber: true })}
+                className={errors.bodyFatPercentage ? "border-red-500" : ""}
+              />
+              {errors.bodyFatPercentage && <p className="text-red-500 text-sm mt-1">{errors.bodyFatPercentage.message}</p>}
+            </div>
+          </div>
+        )}
+
+        {step === 5 && (
+          <div className="animate-fade-in-up">
+            <h3 className="text-xl font-bold text-slate-800 mb-4">5. Nível de Atividade Física</h3>
             <Controller
               name="activity"
               control={control}
@@ -239,9 +269,9 @@ export function MacroCalculatorStepper({ onCalculate, initialData }: MacroCalcul
           </div>
         )}
 
-        {step === 5 && (
+        {step === 6 && (
           <div className="animate-fade-in-up">
-            <h3 className="text-xl font-bold text-slate-800 mb-4">5. Qual seu Objetivo?</h3>
+            <h3 className="text-xl font-bold text-slate-800 mb-4">6. Qual seu Objetivo?</h3>
             <Controller
               name="goal"
               control={control}

@@ -6,6 +6,7 @@ export interface MacroCalculationInputs {
   bodyState: 'definida' | 'tonificada' | 'magraNatural' | 'equilibrada' | 'extrasLeves' | 'emagrecer';
   activity: 'sedentaria' | 'leve' | 'moderada' | 'intensa' | 'muitoIntensa';
   goal: 'emagrecerSuave' | 'emagrecerFoco' | 'transformacaoIntensa' | 'manterPeso' | 'ganharMassa' | 'ganhoAcelerado';
+  bodyFatPercentage?: number | null; // Novo campo opcional
 }
 
 export interface MacroCalculationResults {
@@ -45,14 +46,22 @@ const BODY_STATE_DATA: { [key: string]: { proteinMult: number; fatPercent: numbe
 };
 
 export function calculateMacros(inputs: MacroCalculationInputs): MacroCalculationResults {
-  const { age, weight, height, gender, bodyState, activity, goal } = inputs;
+  const { age, weight, height, gender, bodyState, activity, goal, bodyFatPercentage } = inputs;
+
+  // Calcular Massa Magra se o percentual de gordura for fornecido
+  let leanBodyMass = weight; // Default to total weight
+  if (bodyFatPercentage !== null && bodyFatPercentage !== undefined && bodyFatPercentage > 0) {
+    leanBodyMass = weight * (1 - (bodyFatPercentage / 100));
+  }
 
   // 1. Calcular BMR (Taxa Metabólica Basal)
+  // Usando a fórmula de Mifflin-St Jeor, que é mais moderna e geralmente mais precisa.
+  // Se bodyFatPercentage for fornecido, podemos usar a Katch-McArdle, mas Mifflin-St Jeor é um bom equilíbrio.
   let bmr: number;
   if (gender === 'male') {
-    bmr = 10 * weight + 6.25 * height - 5 * age + 5;
+    bmr = (10 * weight) + (6.25 * height) - (5 * age) + 5;
   } else { // female
-    bmr = 10 * weight + 6.25 * height - 5 * age - 161;
+    bmr = (10 * weight) + (6.25 * height) - (5 * age) - 161;
   }
 
   // 2. Calcular TDEE (Gasto Energético Diário Total)
@@ -72,9 +81,10 @@ export function calculateMacros(inputs: MacroCalculationInputs): MacroCalculatio
     proteinMultiplier += 0.1; // Aumentar um pouco a proteína
   }
 
-  let proteinGrams = Math.round(weight * proteinMultiplier);
-  const maxProtein = Math.round(weight * 3.0); // Limite superior de proteína
-  const minProtein = Math.round(weight * 1.6); // Limite inferior de proteína
+  // Usar massa magra para cálculo de proteína se disponível, para maior precisão
+  let proteinGrams = Math.round(leanBodyMass * proteinMultiplier);
+  const maxProtein = Math.round(leanBodyMass * 3.0); // Limite superior de proteína
+  const minProtein = Math.round(leanBodyMass * 1.6); // Limite inferior de proteína
   proteinGrams = Math.min(Math.max(proteinGrams, minProtein), maxProtein);
   const proteinCalories = proteinGrams * 4;
 
