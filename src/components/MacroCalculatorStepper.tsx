@@ -51,7 +51,7 @@ const bodyStateOptions = [
   { value: 'magraNatural', label: 'Magra natural', icon: <Leaf className="h-8 w-8 text-green-500" />, description: 'Metabolismo rápido, dificuldade em ganhar peso' },
   { value: 'equilibrada', label: 'Peso equilibrado', icon: <Scale className="h-8 w-8 text-purple-500" />, description: 'Confortável com seu corpo' },
   { value: 'extrasLeves', label: 'Alguns quilos extras', icon: <Weight className="h-8 w-8 text-orange-500" />, description: 'Gordura corporal um pouco acima do ideal' },
-  { value: 'emagrecer', label: 'Preciso emagrecer', icon: <Target className="h-8 w-8 text-red-500" />, description: 'Busca por perda de peso significativa' },
+  { value: 'emagrecer', label: 'Preciso emagrecer', icon: <Goal className="h-8 w-8 text-red-500" />, description: 'Busca por perda de peso significativa' },
 ];
 
 const activityOptions = [
@@ -64,7 +64,7 @@ const activityOptions = [
 
 const goalOptions = [
   { value: 'emagrecerSuave', label: 'Emagrecer Suavemente', icon: <Leaf className="h-8 w-8 text-green-500" />, description: 'Perda de peso gradual e sustentável' },
-  { value: 'emagrecerFoco', label: 'Emagrecer com Foco', icon: <Target className="h-8 w-8 text-red-500" />, description: 'Perda de peso mais acelerada' },
+  { value: 'emagrecerFoco', label: 'Emagrecer com Foco', icon: <Goal className="h-8 w-8 text-red-500" />, description: 'Perda de peso mais acelerada' },
   { value: 'transformacaoIntensa', label: 'Transformação Intensa', icon: <Zap className="h-8 w-8 text-yellow-500" />, description: 'Déficit calórico agressivo para resultados rápidos' },
   { value: 'manterPeso', label: 'Manter Meu Peso', icon: <ShieldCheck className="h-8 w-8 text-blue-500" />, description: 'Estabilizar o peso atual' },
   { value: 'ganharMassa', label: 'Ganhar Massa', icon: <Dumbbell className="h-8 w-8 text-purple-500" />, description: 'Aumento gradual de massa muscular' },
