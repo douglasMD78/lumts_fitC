@@ -11,7 +11,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import VisualSelection from './VisualSelection';
 import { MacroCalculationInputs, calculateMacros } from '@/utils/macroCalculations';
-import { ArrowLeft, Heart, Zap, Dumbbell, Utensils, Activity, Leaf, CalendarDays, Droplet, Sparkles, Ruler, Scale, Venus, Mars, Diamond, Weight, TrendingUp, Flame, Sun, Bike, Bed, Apple, Goal, ShieldCheck, Clock, Hand, Brain, Package, RefreshCcw } from 'lucide-react'; // Corrigido: Female e Male para Venus e Mars
+import { ArrowLeft, Heart, Zap, Dumbbell, Utensils, Activity, Leaf, CalendarDays, Droplet, Sparkles, Ruler, Scale, UserRound, User, Diamond, Weight, TrendingUp, Flame, Sun, Bike, Bed, Apple, Goal, ShieldCheck, Clock, Hand, Brain, Package, RefreshCcw } from 'lucide-react'; // Corrigido: Venus e Mars para UserRound e User
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
 import { calculateBodyFatPercentage, BodyFatCalculationInputs } from '@/utils/bodyFatCalculations';
 import { Link } from 'react-router-dom';
@@ -41,8 +41,8 @@ interface MacroCalculatorStepperProps {
 }
 
 const genderOptions = [
-  { value: 'female', label: 'Feminino', icon: <Venus className="h-8 w-8 text-pink-500" /> }, // Corrigido para Venus
-  { value: 'male', label: 'Masculino', icon: <Mars className="h-8 w-8 text-blue-500" /> },   // Corrigido para Mars
+  { value: 'female', label: 'Feminino', icon: <UserRound className="h-8 w-8 text-pink-500" /> }, // Usando UserRound
+  { value: 'male', label: 'Masculino', icon: <User className="h-8 w-8 text-blue-500" /> },   // Usando User
 ];
 
 const bodyStateOptions = [
