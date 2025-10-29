@@ -27,9 +27,9 @@ const calculatorSchema = z.object({
   bodyState: z.enum(['definida', 'tonificada', 'magraNatural', 'equilibrada', 'extrasLeves', 'emagrecer'], { message: "Selecione seu estado físico" }),
   activity: z.enum(['sedentaria', 'leve', 'moderada', 'intensa', 'muitoIntensa'], { message: "Selecione seu nível de atividade" }),
   goal: z.enum(['emagrecerSuave', 'emagrecerFoco', 'transformacaoIntensa', 'manterPeso', 'ganharMassa', 'ganhoAcelerado'], { message: "Selecione seu objetivo" }),
-  bodyFatPercentage: z.preprocess( // Adicionado pré-processamento aqui
-    (val) => (val === "" ? null : val), // Converte string vazia para null
-    z.coerce.number().min(5, "Gordura corporal deve ser no mínimo 5%").max(60, "Gordura corporal deve ser no máximo 60%").nullable().optional()
+  bodyFatPercentage: z.preprocess(
+    (val) => (val === "" ? undefined : val), // Converte string vazia para undefined
+    z.coerce.number().min(5, "Gordura corporal deve ser no mínimo 5%").max(60, "Gordura corporal deve ser no máximo 60%").optional() // Torna o número coercivo opcional
   ),
 });
 
@@ -258,10 +258,10 @@ export function MacroCalculatorStepper({ onCalculate, initialData }: MacroCalcul
     } else if (step === 3) {
       isValid = await trigger('bodyState');
     } else if (step === 4) { // Novo passo para bodyFatPercentage
-      isValid = await trigger('bodyFatPercentage');
+      isValid = await await trigger('bodyFatPercentage'); // Trigger validation for this step
       // bodyFatPercentage é opcional, então se não for preenchido, ainda é válido
-      if (!currentValues.bodyFatPercentage) {
-        isValid = true;
+      if (currentValues.bodyFatPercentage === undefined || currentValues.bodyFatPercentage === null) {
+        isValid = true; // Se o campo é opcional e está vazio, é válido
         console.log("[MacroCalculator] bodyFatPercentage is optional and not provided, considering step 4 valid.");
       }
     } else if (step === 5) {
