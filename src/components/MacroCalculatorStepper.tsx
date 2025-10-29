@@ -244,6 +244,9 @@ export function MacroCalculatorStepper({ onCalculate, initialData }: MacroCalcul
   const currentValues = watch(); // Observa todos os valores do formulário
 
   const handleNextStep = async () => {
+    console.log(`[MacroCalculator] Attempting to advance from step ${step}. Current form values:`, currentValues);
+    console.log("[MacroCalculator] Current validation errors before trigger:", errors);
+
     let isValid = false;
     if (step === 1) {
       isValid = await trigger(['age', 'weight', 'height']);
@@ -254,33 +257,44 @@ export function MacroCalculatorStepper({ onCalculate, initialData }: MacroCalcul
     } else if (step === 4) { // Novo passo para bodyFatPercentage
       isValid = await trigger('bodyFatPercentage');
       // bodyFatPercentage é opcional, então se não for preenchido, ainda é válido
-      if (!currentValues.bodyFatPercentage) isValid = true; 
+      if (!currentValues.bodyFatPercentage) {
+        isValid = true;
+        console.log("[MacroCalculator] bodyFatPercentage is optional and not provided, considering step 4 valid.");
+      }
     } else if (step === 5) {
       isValid = await trigger('activity');
     }
     
+    console.log(`[MacroCalculator] Validation result for step ${step}:`, isValid);
+    console.log("[MacroCalculator] Errors after trigger:", errors);
+
     if (isValid) {
       setStep((prev) => prev + 1);
+      console.log(`[MacroCalculator] Advanced to step ${step + 1}`);
     } else {
       showError("Por favor, preencha todos os campos obrigatórios.");
-      console.error("Validation errors on next step:", errors); // Log de erro mais visível
+      console.error("[MacroCalculator] Validation errors on next step:", errors); // Log de erro mais visível
     }
   };
 
   const handlePrevStep = () => {
     setStep((prev) => prev - 1);
+    console.log(`[MacroCalculator] Went back to step ${step - 1}`);
   };
 
   const onSubmit = (data: CalculatorFormInputs) => {
-    console.log("Attempting to submit form with data:", data); // Log para confirmar que onSubmit foi chamado
+    console.log("[MacroCalculator] Attempting to submit form with data:", data); // Log para confirmar que onSubmit foi chamado
+    console.log("[MacroCalculator] Errors at submission:", errors);
+
     if (Object.keys(errors).length > 0) {
-      console.error("Validation errors preventing submission:", errors); // Log de erro mais visível
+      console.error("[MacroCalculator] Validation errors preventing submission:", errors); // Log de erro mais visível
       showError("Por favor, corrija os erros no formulário antes de criar seu plano.");
       return;
     }
     // Cast data to MacroCalculationInputs, assuming validation ensures all fields are present
     const calculatedResults = calculateMacros(data as MacroCalculationInputs);
     onCalculate(calculatedResults, data as MacroCalculationInputs);
+    console.log("[MacroCalculator] Macros calculated and onCalculate triggered.");
   };
 
   const progress = (step / totalSteps) * 100;
@@ -289,6 +303,7 @@ export function MacroCalculatorStepper({ onCalculate, initialData }: MacroCalcul
     setValue('bodyFatPercentage', bf, { shouldValidate: true });
     setIsBfDialogOpen(false);
     setIsBfDialogValid(true); // Marca como válido após o cálculo
+    console.log("[MacroCalculator] Body Fat Percentage calculated and set:", bf);
   };
 
   return (
