@@ -32,7 +32,7 @@ const VisualSelection = ({
           variant="outline"
           onClick={() => onValueChange(option.value)}
           className={cn(
-            "flex flex-col items-start justify-start text-left p-5 rounded-xl transition-all duration-200 h-auto min-h-[120px]",
+            "flex flex-col items-start justify-start text-left p-5 rounded-xl transition-all duration-200 h-auto min-h-[140px]", // Aumentado min-h
             "border-2",
             selectedValue === option.value
               ? "bg-gradient-to-r from-pink-500 to-fuchsia-500 text-white hover:from-pink-600 hover:to-fuchsia-600 shadow-lg shadow-pink-500/30 border-pink-500"
@@ -41,16 +41,15 @@ const VisualSelection = ({
         >
           {option.icon && (
             <div className={cn(
-              "mb-2 text-3xl", // Tamanho do ícone fixo e espaçamento
-              selectedValue === option.value ? "text-white" : "text-pink-500" // Cor do ícone no estado selecionado
+              "mb-2 text-3xl",
+              selectedValue === option.value ? "text-white" : "text-pink-500"
             )}>
-              {/* Renderiza o ícone diretamente, permitindo que o estilo seja aplicado */}
               {React.isValidElement(option.icon) ? React.cloneElement(option.icon as React.ReactElement, {
                 className: cn("h-8 w-8", selectedValue === option.value ? "text-white" : "text-pink-500")
               }) : option.icon}
             </div>
           )}
-          <span className="font-bold text-base leading-tight">{option.label}</span>
+          <span className="font-bold text-lg leading-tight">{option.label}</span> {/* Aumentado para text-lg */}
           {option.description && (
             <p className={cn(
               "text-sm mt-1 leading-snug text-wrap",

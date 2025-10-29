@@ -263,6 +263,7 @@ export function MacroCalculatorStepper({ onCalculate, initialData }: MacroCalcul
       setStep((prev) => prev + 1);
     } else {
       showError("Por favor, preencha todos os campos obrigatórios.");
+      console.log("Validation errors on next step:", errors); // Adicionado para depuração
     }
   };
 
@@ -271,6 +272,8 @@ export function MacroCalculatorStepper({ onCalculate, initialData }: MacroCalcul
   };
 
   const onSubmit = (data: CalculatorFormInputs) => {
+    console.log("Form submitted with data:", data); // Adicionado para depuração
+    console.log("Validation errors on submit:", errors); // Adicionado para depuração
     // Cast data to MacroCalculationInputs, assuming validation ensures all fields are present
     const calculatedResults = calculateMacros(data as MacroCalculationInputs);
     onCalculate(calculatedResults, data as MacroCalculationInputs);
