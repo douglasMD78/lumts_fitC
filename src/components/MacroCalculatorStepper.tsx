@@ -16,6 +16,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, Dialog
 import { calculateBodyFatPercentage, BodyFatCalculationInputs } from '@/utils/bodyFatCalculations';
 import { Link } from 'react-router-dom';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { cn } from '@/lib/utils'; // Adicionado: Importação da função cn
 
 // Define o schema Zod para validação
 const calculatorSchema = z.object({
@@ -368,10 +369,7 @@ export function MacroCalculatorStepper({ onCalculate, initialData }: MacroCalcul
               control={control}
               render={({ field }) => (
                 <VisualSelection
-                  options={bodyStateOptions.map(option => ({
-                    ...option,
-                    icon: React.cloneElement(option.icon as React.ReactElement, { className: cn("h-8 w-8", selectedValue === option.value ? "text-white" : "text-pink-500") })
-                  }))}
+                  options={bodyStateOptions}
                   selectedValue={field.value}
                   onValueChange={field.onChange}
                 />
@@ -436,10 +434,7 @@ export function MacroCalculatorStepper({ onCalculate, initialData }: MacroCalcul
               control={control}
               render={({ field }) => (
                 <VisualSelection
-                  options={activityOptions.map(option => ({
-                    ...option,
-                    icon: React.cloneElement(option.icon as React.ReactElement, { className: cn("h-8 w-8", selectedValue === option.value ? "text-white" : "text-pink-500") })
-                  }))}
+                  options={activityOptions}
                   selectedValue={field.value}
                   onValueChange={field.onChange}
                 />
@@ -457,10 +452,7 @@ export function MacroCalculatorStepper({ onCalculate, initialData }: MacroCalcul
               control={control}
               render={({ field }) => (
                 <VisualSelection
-                  options={goalOptions.map(option => ({
-                    ...option,
-                    icon: React.cloneElement(option.icon as React.ReactElement, { className: cn("h-8 w-8", selectedValue === option.value ? "text-white" : "text-pink-500") })
-                  }))}
+                  options={goalOptions}
                   selectedValue={field.value}
                   onValueChange={field.onChange}
                 />
