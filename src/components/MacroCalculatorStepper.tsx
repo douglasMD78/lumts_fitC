@@ -6,15 +6,16 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
 import { showError } from "@/utils/toast";
-import { useForm, Controller, useFormContext } from "react-hook-form"; // Adicionado useFormContext
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import VisualSelection from './VisualSelection';
 import { MacroCalculationInputs, calculateMacros } from '@/utils/macroCalculations';
-import { ArrowLeft, Heart, Zap, Dumbbell, Utensils, Activity, Leaf, CalendarDays, Droplet, Sparkles, Ruler, Scale } from 'lucide-react'; // Adicionado Ruler, Scale
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog"; // Importar Dialog
-import { calculateBodyFatPercentage, BodyFatCalculationInputs } from '@/utils/bodyFatCalculations'; // Importar lógica de BF%
-import { Link } from 'react-router-dom'; // Importar Link
+import { ArrowLeft, Heart, Zap, Dumbbell, Utensils, Activity, Leaf, CalendarDays, Droplet, Sparkles, Ruler, Scale } from 'lucide-react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
+import { calculateBodyFatPercentage, BodyFatCalculationInputs } from '@/utils/bodyFatCalculations';
+import { Link } from 'react-router-dom';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'; // Importação adicionada
 
 // Define o schema Zod para validação
 const calculatorSchema = z.object({
