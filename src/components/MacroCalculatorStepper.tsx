@@ -11,7 +11,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import VisualSelection from './VisualSelection';
 import { MacroCalculationInputs, calculateMacros } from '@/utils/macroCalculations';
-import { ArrowLeft, Heart, Zap, Dumbbell, Utensils, Activity, Leaf, CalendarDays, Droplet, Sparkles, Ruler, Scale, UserRound, User, Diamond, Weight, TrendingUp, Flame, Sun, Bike, Bed, Apple, Goal, ShieldCheck, Clock, Hand, Brain, Package, RefreshCcw } from 'lucide-react'; // Corrigido: Venus e Mars para UserRound e User
+import { ArrowLeft, Heart, Zap, Dumbbell, Utensils, Activity, Leaf, CalendarDays, Droplet, Sparkles, Ruler, Scale, UserRound, User, Diamond, Weight, TrendingUp, Flame, Sun, Bike, Bed, Apple, Goal, ShieldCheck, Clock, Hand, Brain, Package, RefreshCcw } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
 import { calculateBodyFatPercentage, BodyFatCalculationInputs } from '@/utils/bodyFatCalculations';
 import { Link } from 'react-router-dom';
@@ -41,34 +41,34 @@ interface MacroCalculatorStepperProps {
 }
 
 const genderOptions = [
-  { value: 'female', label: 'Feminino', icon: <UserRound className="h-8 w-8 text-pink-500" /> }, // Usando UserRound
-  { value: 'male', label: 'Masculino', icon: <User className="h-8 w-8 text-blue-500" /> },   // Usando User
+  { value: 'female', label: 'Feminino', icon: <UserRound className="h-8 w-8 text-pink-500" /> },
+  { value: 'male', label: 'Masculino', icon: <User className="h-8 w-8 text-blue-500" /> },
 ];
 
 const bodyStateOptions = [
-  { value: 'definida', label: 'Definição visível', icon: <Diamond className="h-8 w-8 text-pink-500" />, description: 'Músculos bem marcados' },
-  { value: 'tonificada', label: 'Corpo tonificado', icon: <Dumbbell className="h-8 w-8 text-pink-500" />, description: 'Forma atlética, pouca gordura' },
-  { value: 'magraNatural', label: 'Magra natural', icon: <Leaf className="h-8 w-8 text-green-500" />, description: 'Metabolismo rápido, dificuldade em ganhar peso' },
-  { value: 'equilibrada', label: 'Peso equilibrado', icon: <Scale className="h-8 w-8 text-purple-500" />, description: 'Confortável com seu corpo' },
-  { value: 'extrasLeves', label: 'Alguns quilos extras', icon: <Weight className="h-8 w-8 text-orange-500" />, description: 'Gordura corporal um pouco acima do ideal' },
-  { value: 'emagrecer', label: 'Preciso emagrecer', icon: <Goal className="h-8 w-8 text-red-500" />, description: 'Busca por perda de peso significativa' },
+  { value: 'definida', label: 'Definição visível', icon: <Diamond className="h-8 w-8" />, description: 'Músculos bem marcados' },
+  { value: 'tonificada', label: 'Corpo tonificado', icon: <Dumbbell className="h-8 w-8" />, description: 'Forma atlética, pouca gordura' },
+  { value: 'magraNatural', label: 'Magra natural', icon: <Leaf className="h-8 w-8" />, description: 'Metabolismo rápido, dificuldade em ganhar peso' },
+  { value: 'equilibrada', label: 'Peso equilibrado', icon: <Scale className="h-8 w-8" />, description: 'Confortável com seu corpo' },
+  { value: 'extrasLeves', label: 'Alguns quilos extras', icon: <Weight className="h-8 w-8" />, description: 'Gordura corporal um pouco acima do ideal' },
+  { value: 'emagrecer', label: 'Preciso emagrecer', icon: <Goal className="h-8 w-8" />, description: 'Busca por perda de peso significativa' },
 ];
 
 const activityOptions = [
-  { value: 'sedentaria', label: 'Sedentária', icon: <Bed className="h-8 w-8 text-gray-500" />, description: 'Pouco ou nenhum exercício' },
-  { value: 'leve', label: 'Levemente Ativa', icon: <Hand className="h-8 w-8 text-blue-500" />, description: 'Exercício leve 1-3 dias/semana' },
-  { value: 'moderada', label: 'Moderadamente Ativa', icon: <Bike className="h-8 w-8 text-green-500" />, description: 'Exercício moderado 3-5 dias/semana' },
-  { value: 'intensa', label: 'Altamente Ativa', icon: <Dumbbell className="h-8 w-8 text-orange-500" />, description: 'Exercício intenso 6-7 dias/semana' },
-  { value: 'muitoIntensa', label: 'Muito Ativa', icon: <Flame className="h-8 w-8 text-red-500" />, description: 'Exercício intenso diário ou trabalho físico' },
+  { value: 'sedentaria', label: 'Sedentária', icon: <Bed className="h-8 w-8" />, description: 'Pouco ou nenhum exercício' },
+  { value: 'leve', label: 'Levemente Ativa', icon: <Hand className="h-8 w-8" />, description: 'Exercício leve 1-3 dias/semana' },
+  { value: 'moderada', label: 'Moderadamente Ativa', icon: <Bike className="h-8 w-8" />, description: 'Exercício moderado 3-5 dias/semana' },
+  { value: 'intensa', label: 'Altamente Ativa', icon: <Dumbbell className="h-8 w-8" />, description: 'Exercício intenso 6-7 dias/semana' },
+  { value: 'muitoIntensa', label: 'Muito Ativa', icon: <Flame className="h-8 w-8" />, description: 'Exercício intenso diário ou trabalho físico' },
 ];
 
 const goalOptions = [
-  { value: 'emagrecerSuave', label: 'Emagrecer Suavemente', icon: <Leaf className="h-8 w-8 text-green-500" />, description: 'Perda de peso gradual e sustentável' },
-  { value: 'emagrecerFoco', label: 'Emagrecer com Foco', icon: <Goal className="h-8 w-8 text-red-500" />, description: 'Perda de peso mais acelerada' },
-  { value: 'transformacaoIntensa', label: 'Transformação Intensa', icon: <Zap className="h-8 w-8 text-yellow-500" />, description: 'Déficit calórico agressivo para resultados rápidos' },
-  { value: 'manterPeso', label: 'Manter Meu Peso', icon: <ShieldCheck className="h-8 w-8 text-blue-500" />, description: 'Estabilizar o peso atual' },
-  { value: 'ganharMassa', label: 'Ganhar Massa', icon: <Dumbbell className="h-8 w-8 text-purple-500" />, description: 'Aumento gradual de massa muscular' },
-  { value: 'ganhoAcelerado', label: 'Ganho Acelerado', icon: <TrendingUp className="h-8 w-8 text-pink-500" />, description: 'Superávit calórico para ganho rápido de massa' },
+  { value: 'emagrecerSuave', label: 'Emagrecer Suavemente', icon: <Leaf className="h-8 w-8" />, description: 'Perda de peso gradual e sustentável' },
+  { value: 'emagrecerFoco', label: 'Emagrecer com Foco', icon: <Goal className="h-8 w-8" />, description: 'Perda de peso mais acelerada' },
+  { value: 'transformacaoIntensa', label: 'Transformação Intensa', icon: <Zap className="h-8 w-8" />, description: 'Déficit calórico agressivo para resultados rápidos' },
+  { value: 'manterPeso', label: 'Manter Meu Peso', icon: <ShieldCheck className="h-8 w-8" />, description: 'Estabilizar o peso atual' },
+  { value: 'ganharMassa', label: 'Ganhar Massa', icon: <Dumbbell className="h-8 w-8" />, description: 'Aumento gradual de massa muscular' },
+  { value: 'ganhoAcelerado', label: 'Ganho Acelerado', icon: <TrendingUp className="h-8 w-8" />, description: 'Superávit calórico para ganho rápido de massa' },
 ];
 
 // Schema Zod para o formulário de cálculo de BF% dentro do diálogo
@@ -285,7 +285,8 @@ export function MacroCalculatorStepper({ onCalculate, initialData }: MacroCalcul
   return (
     <div className="w-full max-w-md card-style p-6 sm:p-8">
       <div className="text-center mb-8">
-        <div className="text-4xl mb-4">💖</div>
+        {/* Ícone de coração maior e centralizado */}
+        <Heart className="h-16 w-16 text-pink-500 mx-auto mb-4" />
         <h2 className="text-2xl font-bold gradient-text mb-3">Calculadora de Macros</h2>
         <p className="text-pink-600 text-base">Seu plano nutricional em {totalSteps} passos!</p>
       </div>
@@ -298,7 +299,9 @@ export function MacroCalculatorStepper({ onCalculate, initialData }: MacroCalcul
             <h3 className="text-xl font-bold text-slate-800 mb-4">1. Seus Dados Pessoais</h3>
             <div className="grid grid-cols-1 gap-4">
               <div className="space-y-2">
-                <Label className="font-semibold text-pink-700" htmlFor="age">✨ Idade</Label>
+                <Label className="font-semibold text-pink-700 flex items-center" htmlFor="age">
+                  <CalendarDays className="h-5 w-5 mr-2" /> Idade
+                </Label>
                 <Input
                   id="age"
                   type="number"
@@ -309,7 +312,9 @@ export function MacroCalculatorStepper({ onCalculate, initialData }: MacroCalcul
                 {errors.age && <p className="text-red-500 text-sm mt-1">{errors.age.message}</p>}
               </div>
               <div className="space-y-2">
-                <Label className="font-semibold text-pink-700" htmlFor="weight">⚖️ Peso (kg)</Label>
+                <Label className="font-semibold text-pink-700 flex items-center" htmlFor="weight">
+                  <Weight className="h-5 w-5 mr-2" /> Peso (kg)
+                </Label>
                 <Input
                   id="weight"
                   type="number"
@@ -321,7 +326,9 @@ export function MacroCalculatorStepper({ onCalculate, initialData }: MacroCalcul
                 {errors.weight && <p className="text-red-500 text-sm mt-1">{errors.weight.message}</p>}
               </div>
               <div className="space-y-2">
-                <Label className="font-semibold text-pink-700" htmlFor="height">📏 Altura (cm)</Label>
+                <Label className="font-semibold text-pink-700 flex items-center" htmlFor="height">
+                  <Ruler className="h-5 w-5 mr-2" /> Altura (cm)
+                </Label>
                 <Input
                   id="height"
                   type="number"
@@ -361,7 +368,10 @@ export function MacroCalculatorStepper({ onCalculate, initialData }: MacroCalcul
               control={control}
               render={({ field }) => (
                 <VisualSelection
-                  options={bodyStateOptions}
+                  options={bodyStateOptions.map(option => ({
+                    ...option,
+                    icon: React.cloneElement(option.icon as React.ReactElement, { className: cn("h-8 w-8", selectedValue === option.value ? "text-white" : "text-pink-500") })
+                  }))}
                   selectedValue={field.value}
                   onValueChange={field.onChange}
                 />
@@ -378,8 +388,8 @@ export function MacroCalculatorStepper({ onCalculate, initialData }: MacroCalcul
               Se você souber seu percentual de gordura, insira-o para um cálculo mais preciso. Caso contrário, pode deixar em branco.
             </p>
             <div className="space-y-2">
-              <Label className="font-semibold text-pink-700" htmlFor="bodyFatPercentage">
-                % Gordura Corporal
+              <Label className="font-semibold text-pink-700 flex items-center" htmlFor="bodyFatPercentage">
+                <Scale className="h-5 w-5 mr-2" /> % Gordura Corporal
               </Label>
               <Input
                 id="bodyFatPercentage"
@@ -426,7 +436,10 @@ export function MacroCalculatorStepper({ onCalculate, initialData }: MacroCalcul
               control={control}
               render={({ field }) => (
                 <VisualSelection
-                  options={activityOptions}
+                  options={activityOptions.map(option => ({
+                    ...option,
+                    icon: React.cloneElement(option.icon as React.ReactElement, { className: cn("h-8 w-8", selectedValue === option.value ? "text-white" : "text-pink-500") })
+                  }))}
                   selectedValue={field.value}
                   onValueChange={field.onChange}
                 />
@@ -444,7 +457,10 @@ export function MacroCalculatorStepper({ onCalculate, initialData }: MacroCalcul
               control={control}
               render={({ field }) => (
                 <VisualSelection
-                  options={goalOptions}
+                  options={goalOptions.map(option => ({
+                    ...option,
+                    icon: React.cloneElement(option.icon as React.ReactElement, { className: cn("h-8 w-8", selectedValue === option.value ? "text-white" : "text-pink-500") })
+                  }))}
                   selectedValue={field.value}
                   onValueChange={field.onChange}
                 />
