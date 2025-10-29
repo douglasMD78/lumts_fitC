@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Calculator, Apple, Newspaper, Users, Droplet, Heart, Sparkles, BookOpen, GlassWater, Dumbbell, LayoutDashboard, TrendingUp, Flame } from "lucide-react";
+import { Calculator, Apple, Newspaper, Users, Droplet, Heart, Sparkles, BookOpen, GlassWater, Dumbbell, LayoutDashboard, TrendingUp, Flame, Scale } from "lucide-react"; // Adicionado Scale
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import StoriesSection from "@/components/StoriesSection";
@@ -119,6 +119,16 @@ const HomePage = () => {
           link="/calculadora-agua"
           buttonText="Calcular Água"
           icon={GlassWater}
+          colorClass="bg-white text-slate-800"
+        />
+
+        {/* Body Fat Calculator Card */}
+        <FeedCard
+          title="Calculadora de BF%"
+          description="Estime seu percentual de gordura corporal para um acompanhamento mais preciso."
+          link="/calculadora-bf"
+          buttonText="Calcular BF%"
+          icon={Scale}
           colorClass="bg-white text-slate-800"
         />
 

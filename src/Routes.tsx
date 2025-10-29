@@ -33,6 +33,7 @@ import SupplementRecommenderPage from "./pages/SupplementRecommenderPage";
 import RoutineTrackerPage from "./pages/RoutineTrackerPage";
 import MyGoalsPage from "./pages/MyGoalsPage";
 import ProgressPage from "./pages/ProgressPage";
+import BodyFatCalculatorPage from "./pages/BodyFatCalculatorPage"; // Importar a nova página
 
 // Lazy-loaded Hub Components
 const LazyRoutineTrackerPage = lazy(() => import('./pages/RoutineTrackerPage'));
@@ -45,6 +46,7 @@ const AppRoutes = () => (
       <Route path="/" element={<HomePage />} />
       <Route path="/calculadora-macros" element={<MacroCalculatorPage />} />
       <Route path="/calculadora-agua" element={<WaterIntakeCalculatorPage />} />
+      <Route path="/calculadora-bf" element={<BodyFatCalculatorPage />} /> {/* Nova rota */}
       <Route path="/recomendador-suplementos" element={<SupplementRecommenderPage />} />
       <Route path="/sobre" element={<AboutPage />} />
       <Route path="/ebook" element={<EbookPage />} />

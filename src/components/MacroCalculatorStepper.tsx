@@ -6,12 +6,15 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
 import { showError } from "@/utils/toast";
-import { useForm, Controller } from "react-hook-form";
+import { useForm, Controller, useFormContext } from "react-hook-form"; // Adicionado useFormContext
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import VisualSelection from './VisualSelection'; // Importar o novo componente
-import { MacroCalculationInputs, calculateMacros } from '@/utils/macroCalculations'; // Importar a lógica de cálculo
-import { ArrowLeft, Heart, Zap, Dumbbell, Utensils, Activity, Leaf, CalendarDays, Droplet, Sparkles } from 'lucide-react'; // Ícones
+import VisualSelection from './VisualSelection';
+import { MacroCalculationInputs, calculateMacros } from '@/utils/macroCalculations';
+import { ArrowLeft, Heart, Zap, Dumbbell, Utensils, Activity, Leaf, CalendarDays, Droplet, Sparkles, Ruler, Scale } from 'lucide-react'; // Adicionado Ruler, Scale
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog"; // Importar Dialog
+import { calculateBodyFatPercentage, BodyFatCalculationInputs } from '@/utils/bodyFatCalculations'; // Importar lógica de BF%
+import { Link } from 'react-router-dom'; // Importar Link
 
 // Define o schema Zod para validação
 const calculatorSchema = z.object({
@@ -22,7 +25,6 @@ const calculatorSchema = z.object({
   bodyState: z.enum(['definida', 'tonificada', 'magraNatural', 'equilibrada', 'extrasLeves', 'emagrecer'], { message: "Selecione seu estado físico" }),
   activity: z.enum(['sedentaria', 'leve', 'moderada', 'intensa', 'muitoIntensa'], { message: "Selecione seu nível de atividade" }),
   goal: z.enum(['emagrecerSuave', 'emagrecerFoco', 'transformacaoIntensa', 'manterPeso', 'ganharMassa', 'ganhoAcelerado'], { message: "Selecione seu objetivo" }),
-  // Novo campo para percentual de gordura corporal, opcional
   bodyFatPercentage: z.coerce.number().min(5, "Gordura corporal deve ser no mínimo 5%").max(60, "Gordura corporal deve ser no máximo 60%").nullable().optional(),
 });
 
@@ -68,9 +70,143 @@ const goalOptions = [
   { value: 'ganhoAcelerado', label: 'Ganho Acelerado', icon: '💪', description: 'Superávit calórico para ganho rápido de massa' },
 ];
 
+// Schema Zod para o formulário de cálculo de BF% dentro do diálogo
+const bfCalculatorDialogSchema = z.object({
+  gender: z.enum(['male', 'female'], { message: "Selecione o gênero" }),
+  height: z.coerce.number().min(50, "Altura deve ser maior que 0").max(250, "Altura inválida"),
+  neck: z.coerce.number().min(20, "Pescoço deve ser maior que 0").max(60, "Pescoço inválido"),
+  waist: z.coerce.number().min(40, "Cintura deve ser maior que 0").max(150, "Cintura inválida"),
+  hip: z.coerce.number().min(50, "Quadril deve ser maior que 0").max(150, "Quadril inválido").optional(),
+}).superRefine((data, ctx) => {
+  if (data.gender === 'female' && (data.hip === undefined || data.hip === null)) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: "A medida do quadril é obrigatória para o cálculo feminino.",
+      path: ["hip"],
+    });
+  }
+});
+
+type BfCalculatorDialogInputs = z.infer<typeof bfCalculatorDialogSchema>;
+
+// Componente para o formulário de cálculo de BF% dentro do diálogo
+const BodyFatCalculatorDialog = ({ onCalculateBF, initialGender, initialHeight }: { onCalculateBF: (bf: number) => void; initialGender?: 'male' | 'female'; initialHeight?: number }) => {
+  const {
+    register,
+    handleSubmit,
+    control,
+    watch,
+    setValue,
+    formState: { errors },
+  } = useForm<BfCalculatorDialogInputs>({
+    resolver: zodResolver(bfCalculatorDialogSchema),
+    defaultValues: {
+      gender: initialGender,
+      height: initialHeight,
+      neck: undefined,
+      waist: undefined,
+      hip: undefined,
+    },
+  });
+
+  const watchedGender = watch('gender');
+
+  const onSubmit = (data: BfCalculatorDialogInputs) => {
+    try {
+      const calculatedBF = calculateBodyFatPercentage(data as BodyFatCalculationInputs);
+      onCalculateBF(calculatedBF);
+    } catch (error: any) {
+      showError("Erro ao calcular BF%: " + error.message);
+    }
+  };
+
+  // Sincroniza gênero e altura do stepper principal, se disponíveis
+  useEffect(() => {
+    if (initialGender) setValue('gender', initialGender);
+    if (initialHeight) setValue('height', initialHeight);
+  }, [initialGender, initialHeight, setValue]);
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 py-4">
+      <div className="space-y-2">
+        <Label className="font-semibold text-pink-700">Gênero</Label>
+        <Controller
+          name="gender"
+          control={control}
+          render={({ field }) => (
+            <Select onValueChange={field.onChange} value={field.value}>
+              <SelectTrigger><SelectValue placeholder="Selecione seu gênero" /></SelectTrigger>
+              <SelectContent>
+                {genderOptions.map(opt => <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>)}
+              </SelectContent>
+            </Select>
+          )}
+        />
+        {errors.gender && <p className="text-red-500 text-sm mt-1">{errors.gender.message}</p>}
+      </div>
+      <div className="space-y-2">
+        <Label htmlFor="height-bf" className="font-semibold text-pink-700">Altura (cm)</Label>
+        <Input
+          id="height-bf"
+          type="number"
+          placeholder="Ex: 165"
+          {...register("height", { valueAsNumber: true })}
+          className={errors.height ? "border-red-500" : ""}
+        />
+        {errors.height && <p className="text-red-500 text-sm mt-1">{errors.height.message}</p>}
+      </div>
+      <div className="space-y-2">
+        <Label htmlFor="neck-bf" className="font-semibold text-pink-700">Pescoço (cm)</Label>
+        <Input
+          id="neck-bf"
+          type="number"
+          step="0.1"
+          placeholder="Ex: 34.5"
+          {...register("neck", { valueAsNumber: true })}
+          className={errors.neck ? "border-red-500" : ""}
+        />
+        {errors.neck && <p className="text-red-500 text-sm mt-1">{errors.neck.message}</p>}
+      </div>
+      <div className="space-y-2">
+        <Label htmlFor="waist-bf" className="font-semibold text-pink-700">Cintura (cm)</Label>
+        <Input
+          id="waist-bf"
+          type="number"
+          step="0.1"
+          placeholder="Ex: 70.0"
+          {...register("waist", { valueAsNumber: true })}
+          className={errors.waist ? "border-red-500" : ""}
+        />
+        {errors.waist && <p className="text-red-500 text-sm mt-1">{errors.waist.message}</p>}
+      </div>
+      {watchedGender === 'female' && (
+        <div className="space-y-2">
+          <Label htmlFor="hip-bf" className="font-semibold text-pink-700">Quadril (cm)</Label>
+          <Input
+            id="hip-bf"
+            type="number"
+            step="0.1"
+            placeholder="Ex: 98.0"
+            {...register("hip", { valueAsNumber: true })}
+            className={errors.hip ? "border-red-500" : ""}
+          />
+          {errors.hip && <p className="text-red-500 text-sm mt-1">{errors.hip.message}</p>}
+        </div>
+      )}
+      <DialogFooter>
+        <Button type="submit" className="btn-calculate">Calcular BF%</Button>
+      </DialogFooter>
+    </form>
+  );
+};
+
+
 export function MacroCalculatorStepper({ onCalculate, initialData }: MacroCalculatorStepperProps) {
   const [step, setStep] = useState(1);
   const totalSteps = 6; // Dados Pessoais, Gênero, Estado Físico, Percentual de Gordura, Atividade, Objetivo
+  const [isBfDialogValid, setIsBfDialogValid] = useState(false); // Estado para controlar a validação do diálogo de BF%
+  const [isBfDialogOpen, setIsBfDialogOpen] = useState(false); // Estado para controlar a abertura do diálogo de BF%
+
   const {
     register,
     handleSubmit,
@@ -138,6 +274,12 @@ export function MacroCalculatorStepper({ onCalculate, initialData }: MacroCalcul
   };
 
   const progress = (step / totalSteps) * 100;
+
+  const handleCalculatedBF = (bf: number) => {
+    setValue('bodyFatPercentage', bf, { shouldValidate: true });
+    setIsBfDialogOpen(false);
+    setIsBfDialogValid(true); // Marca como válido após o cálculo
+  };
 
   return (
     <div className="w-full max-w-md card-style p-6 sm:p-8">
@@ -247,6 +389,30 @@ export function MacroCalculatorStepper({ onCalculate, initialData }: MacroCalcul
                 className={errors.bodyFatPercentage ? "border-red-500" : ""}
               />
               {errors.bodyFatPercentage && <p className="text-red-500 text-sm mt-1">{errors.bodyFatPercentage.message}</p>}
+            </div>
+            <div className="mt-4 text-center">
+              <Dialog open={isBfDialogOpen} onOpenChange={setIsBfDialogOpen}>
+                <DialogTrigger asChild>
+                  <Button type="button" variant="outline" className="w-full flex items-center justify-center gap-2">
+                    <Scale className="h-4 w-4" /> Não sabe seu BF%? Calcule aqui!
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-[425px]">
+                  <DialogHeader>
+                    <DialogTitle className="flex items-center">
+                      <Scale className="h-6 w-6 mr-2 text-pink-500" /> Calcular BF%
+                    </DialogTitle>
+                  </DialogHeader>
+                  <BodyFatCalculatorDialog 
+                    onCalculateBF={handleCalculatedBF} 
+                    initialGender={currentValues.gender}
+                    initialHeight={currentValues.height}
+                  />
+                  <div className="text-center text-sm text-slate-600 mt-4">
+                    Para uma calculadora mais completa, visite a <Link to="/calculadora-bf" className="font-bold text-pink-500 hover:underline">página dedicada</Link>.
+                  </div>
+                </DialogContent>
+              </Dialog>
             </div>
           </div>
         )}
