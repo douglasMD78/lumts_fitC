@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
 import { showError } from "@/utils/toast";
-import { useForm, Controller } from "react-hook-form";
+import { useForm, Controller, FieldErrors } from "react-hook-form"; // Importado FieldErrors
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import VisualSelection from './VisualSelection';
@@ -283,11 +283,11 @@ export function MacroCalculatorStepper({ onCalculate, initialData }: MacroCalcul
   };
 
   const onSubmit = (data: CalculatorFormInputs) => {
-    console.log("[MacroCalculator] Attempting to submit form with data:", data); // Log para confirmar que onSubmit foi chamado
-    console.log("[MacroCalculator] Errors at submission:", errors);
+    console.log("[MacroCalculator] onSubmit called with data:", data); // Log para confirmar que onSubmit foi chamado
+    console.log("[MacroCalculator] onSubmit: current errors object:", errors); // Log para ver o estado dos erros
 
     if (Object.keys(errors).length > 0) {
-      console.error("[MacroCalculator] Validation errors preventing submission:", errors); // Log de erro mais visível
+      console.error("[MacroCalculator] Validation errors preventing onSubmit:", errors); // Log de erro mais visível
       showError("Por favor, corrija os erros no formulário antes de criar seu plano.");
       return;
     }
@@ -295,6 +295,11 @@ export function MacroCalculatorStepper({ onCalculate, initialData }: MacroCalcul
     const calculatedResults = calculateMacros(data as MacroCalculationInputs);
     onCalculate(calculatedResults, data as MacroCalculationInputs);
     console.log("[MacroCalculator] Macros calculated and onCalculate triggered.");
+  };
+
+  const onErrors = (errors: FieldErrors<CalculatorFormInputs>) => {
+    console.error("[MacroCalculator] handleSubmit caught errors, preventing onSubmit:", errors);
+    showError("Por favor, corrija os erros no formulário antes de criar seu plano.");
   };
 
   const progress = (step / totalSteps) * 100;
@@ -317,7 +322,7 @@ export function MacroCalculatorStepper({ onCalculate, initialData }: MacroCalcul
 
       <Progress value={progress} className="w-full mb-6 h-2 bg-pink-100" indicatorClassName="bg-gradient-to-r from-pink-500 to-fuchsia-500" />
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+      <form onSubmit={handleSubmit(onSubmit, onErrors)} className="space-y-6"> {/* Adicionado onErrors aqui */}
         {step === 1 && (
           <div className="animate-fade-in-up">
             <h3 className="text-xl font-bold text-slate-800 mb-4">1. Seus Dados Pessoais</h3>
