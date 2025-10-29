@@ -13,6 +13,7 @@ import { Ruler, RefreshCcw, Share2, Sparkles, User, Scale } from 'lucide-react';
 import { showError, showSuccess } from '@/utils/toast';
 import { calculateBodyFatPercentage, BodyFatCalculationInputs } from '@/utils/bodyFatCalculations';
 import VisualSelection from '@/components/VisualSelection';
+import { genderOptions } from '@/utils/macroCalculatorOptions'; // Importar de macroCalculatorOptions
 
 const bodyFatCalculatorSchema = z.object({
   gender: z.enum(['male', 'female'], { message: "Selecione o gênero" }),
@@ -31,11 +32,6 @@ const bodyFatCalculatorSchema = z.object({
 });
 
 type BodyFatCalculatorFormInputs = z.infer<typeof bodyFatCalculatorSchema>;
-
-const genderOptions = [
-  { value: 'female', label: 'Feminino', icon: '👩' },
-  { value: 'male', label: 'Masculino', icon: '👨' },
-];
 
 const BodyFatCalculatorPage = () => {
   const [result, setResult] = useState<number | null>(null);
