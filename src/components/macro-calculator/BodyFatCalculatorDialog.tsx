@@ -30,6 +30,25 @@ const bfCalculatorDialogSchema = z.object({
       path: ["hip"],
     });
   }
+
+  // Validação para garantir que os argumentos de Math.log10 sejam positivos
+  if (data.gender === 'male') {
+    if (data.waist <= data.neck) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "A medida da cintura deve ser maior que a do pescoço para o cálculo masculino.",
+        path: ["waist"],
+      });
+    }
+  } else { // female
+    if (data.hip !== undefined && data.hip !== null && (data.waist + data.hip) <= data.neck) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "A soma da cintura e quadril deve ser maior que a do pescoço para o cálculo feminino.",
+        path: ["waist"], // Pode ser 'hip' também, dependendo de qual é mais provável ser o problema
+      });
+    }
+  }
 });
 
 export type BfCalculatorDialogInputs = z.infer<typeof bfCalculatorDialogSchema>;
