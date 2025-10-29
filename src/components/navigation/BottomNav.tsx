@@ -48,7 +48,6 @@ const BottomNav = () => {
               "hover:text-pink-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pink-500 focus-visible:ring-offset-2",
               isActive ? "text-pink-500" : ""
             )}
-            aria-current={({ isActive }) => isActive ? "page" : undefined}
             onClick={() => handleTabSelect(item.label)}
           >
             <item.icon className="h-6 w-6 mb-1" />
