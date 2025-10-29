@@ -93,6 +93,7 @@ export function MacroCalculatorStepper({ onCalculate, initialData }: MacroCalcul
     if (isValid) {
       setStep((prev) => prev + 1);
     } else {
+      // Esta é a única mensagem de erro para validação de passo
       let firstErrorMessage = "Por favor, preencha todos os campos obrigatórios ou corrija os erros.";
       for (const field of fieldsToValidate) {
         if (errors[field]) {
@@ -108,14 +109,10 @@ export function MacroCalculatorStepper({ onCalculate, initialData }: MacroCalcul
     setStep((prev) => prev - 1);
   };
 
-  const onSubmit = (data: CalculatorFormInputs) => {
+  const handleFinalSubmit = (data: CalculatorFormInputs) => {
+    // Esta função só é chamada se todas as validações passarem
     const calculatedResults = calculateMacros(data as MacroCalculationInputs);
     onCalculate(calculatedResults, data as MacroCalculationInputs);
-  };
-
-  const onErrors = (errors: FieldErrors<CalculatorFormInputs>) => {
-    console.error("[MacroCalculator] handleSubmit caught errors, preventing onSubmit:", errors);
-    showError("Por favor, corrija os erros no formulário antes de criar seu plano.");
   };
 
   const progress = (step / totalSteps) * 100;
@@ -142,7 +139,7 @@ export function MacroCalculatorStepper({ onCalculate, initialData }: MacroCalcul
 
       <Progress value={progress} className="w-full mb-6 h-2 bg-pink-100" indicatorClassName="bg-gradient-to-r from-pink-500 to-fuchsia-500" />
 
-      <form onSubmit={handleSubmit(onSubmit, onErrors)} className="space-y-6">
+      <form onSubmit={handleSubmit(handleFinalSubmit)} className="space-y-6"> {/* onErrors removido aqui */}
         {renderStepComponent()}
 
         <div className="flex justify-between mt-8">
