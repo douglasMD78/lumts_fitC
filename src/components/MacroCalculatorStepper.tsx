@@ -27,15 +27,10 @@ const calculatorSchema = z.object({
   bodyState: z.enum(['definida', 'tonificada', 'magraNatural', 'equilibrada', 'extrasLeves', 'emagrecer'], { message: "Selecione seu estado físico" }),
   activity: z.enum(['sedentaria', 'leve', 'moderada', 'intensa', 'muitoIntensa'], { message: "Selecione seu nível de atividade" }),
   goal: z.enum(['emagrecerSuave', 'emagrecerFoco', 'transformacaoIntensa', 'manterPeso', 'ganharMassa', 'ganhoAcelerado'], { message: "Selecione seu objetivo" }),
-  bodyFatPercentage: z.string().optional().nullable().transform((val) => {
-    if (val === null || val === undefined || val === "") {
-      return null;
-    }
-    const num = Number(val);
-    return isNaN(num) ? null : num;
-  }).refine((val) => val === null || (val >= 5 && val <= 60), {
-    message: "Gordura corporal deve ser entre 5% e 60%.",
-  }),
+  bodyFatPercentage: z.preprocess(
+    (val) => (val === "" ? undefined : val), // Converte string vazia para undefined
+    z.coerce.number().min(5, "Gordura corporal deve ser no mínimo 5%").max(60, "Gordura corporal deve ser no máximo 60%").optional() // Torna o número coercivo opcional
+  ),
 });
 
 type CalculatorFormInputs = z.infer<typeof calculatorSchema>;
@@ -252,61 +247,53 @@ export function MacroCalculatorStepper({ onCalculate, initialData }: MacroCalcul
   const currentValues = watch(); // Observa todos os valores do formulário
 
   const handleNextStep = async () => {
-    console.log(`[MacroCalculator] Attempting to advance from step ${step}. Current form values:`, currentValues);
-    console.log("[MacroCalculator] Current validation errors before trigger:", errors);
-
-    let isValid = false;
+    let fieldsToValidate: (keyof CalculatorFormInputs)[] = [];
     if (step === 1) {
-      isValid = await trigger(['age', 'weight', 'height']);
+      fieldsToValidate = ['age', 'weight', 'height'];
     } else if (step === 2) {
-      isValid = await trigger('gender');
+      fieldsToValidate = ['gender'];
     } else if (step === 3) {
-      isValid = await trigger('bodyState');
-    } else if (step === 4) { // Novo passo para bodyFatPercentage
-      isValid = await trigger('bodyFatPercentage');
-      // bodyFatPercentage é opcional, então se não for preenchido, ainda é válido
-      if (currentValues.bodyFatPercentage === undefined || currentValues.bodyFatPercentage === null) {
-        isValid = true; // Se o campo é opcional e está vazio, é válido
-        console.log("[MacroCalculator] bodyFatPercentage is optional and not provided, considering step 4 valid.");
-      }
+      fieldsToValidate = ['bodyState'];
+    } else if (step === 4) {
+      fieldsToValidate = ['bodyFatPercentage'];
     } else if (step === 5) {
-      isValid = await trigger('activity');
+      fieldsToValidate = ['activity'];
+    } else if (step === 6) {
+      fieldsToValidate = ['goal'];
     }
-    
-    console.log(`[MacroCalculator] Validation result for step ${step}:`, isValid);
-    console.log("[MacroCalculator] Errors after trigger:", errors);
 
+    const isValid = await trigger(fieldsToValidate);
+    
     if (isValid) {
       setStep((prev) => prev + 1);
-      console.log(`[MacroCalculator] Advanced to step ${step + 1}`);
     } else {
-      showError("Por favor, preencha todos os campos obrigatórios.");
-      console.error("[MacroCalculator] Validation errors on next step:", errors); // Log de erro mais visível
+      // Encontra a primeira mensagem de erro específica para os campos do passo atual
+      let firstErrorMessage = "Por favor, preencha todos os campos obrigatórios ou corrija os erros.";
+      for (const field of fieldsToValidate) {
+        if (errors[field]) {
+          firstErrorMessage = errors[field]?.message || firstErrorMessage;
+          break; // Exibe apenas o primeiro erro encontrado
+        }
+      }
+      showError(firstErrorMessage);
     }
   };
 
   const handlePrevStep = () => {
     setStep((prev) => prev - 1);
-    console.log(`[MacroCalculator] Went back to step ${step - 1}`);
   };
 
   const onSubmit = (data: CalculatorFormInputs) => {
-    console.log("[MacroCalculator] onSubmit called with data:", data); // Log para confirmar que onSubmit foi chamado
-    console.log("[MacroCalculator] onSubmit: current errors object:", errors); // Log para ver o estado dos erros
-
-    if (Object.keys(errors).length > 0) {
-      console.error("[MacroCalculator] Validation errors preventing onSubmit:", errors); // Log de erro mais visível
-      showError("Por favor, corrija os erros no formulário antes de criar seu plano.");
-      return;
-    }
-    // Cast data to MacroCalculationInputs, assuming validation ensures all fields are present
+    // Se onSubmit é chamado, o formulário já foi validado com sucesso pelo handleSubmit
     const calculatedResults = calculateMacros(data as MacroCalculationInputs);
     onCalculate(calculatedResults, data as MacroCalculationInputs);
-    console.log("[MacroCalculator] Macros calculated and onCalculate triggered.");
   };
 
   const onErrors = (errors: FieldErrors<CalculatorFormInputs>) => {
     console.error("[MacroCalculator] handleSubmit caught errors, preventing onSubmit:", errors);
+    // Esta função é chamada se houver erros na validação final do formulário
+    // A mensagem de erro já é exibida pelos campos individuais ou pelo toast no handleNextStep
+    // Podemos adicionar um toast genérico aqui se necessário, mas evitamos duplicidade
     showError("Por favor, corrija os erros no formulário antes de criar seu plano.");
   };
 
@@ -316,7 +303,6 @@ export function MacroCalculatorStepper({ onCalculate, initialData }: MacroCalcul
     setValue('bodyFatPercentage', bf, { shouldValidate: true });
     setIsBfDialogOpen(false);
     setIsBfDialogValid(true); // Marca como válido após o cálculo
-    console.log("[MacroCalculator] Body Fat Percentage calculated and set:", bf);
   };
 
   return (
@@ -439,7 +425,7 @@ export function MacroCalculatorStepper({ onCalculate, initialData }: MacroCalcul
                 type="number"
                 step="0.1"
                 placeholder="Ex: 25.0"
-                {...register("bodyFatPercentage")} // Removido valueAsNumber aqui, pois o transform já cuida disso
+                {...register("bodyFatPercentage")}
                 className={errors.bodyFatPercentage ? "border-red-500" : ""}
               />
               {errors.bodyFatPercentage && <p className="text-red-500 text-sm mt-1">{errors.bodyFatPercentage.message}</p>}
