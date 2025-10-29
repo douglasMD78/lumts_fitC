@@ -16,7 +16,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, Dialog
 import { calculateBodyFatPercentage, BodyFatCalculationInputs } from '@/utils/bodyFatCalculations';
 import { Link } from 'react-router-dom';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { cn } from '@/lib/utils'; // Adicionado: Importação da função cn
+import { cn } from '@/lib/utils';
 
 // Define o schema Zod para validação
 const calculatorSchema = z.object({
@@ -42,34 +42,34 @@ interface MacroCalculatorStepperProps {
 }
 
 const genderOptions = [
-  { value: 'female', label: 'Feminino', icon: <UserRound className="h-8 w-8 text-pink-500" /> },
-  { value: 'male', label: 'Masculino', icon: <User className="h-8 w-8 text-blue-500" /> },
+  { value: 'female', label: 'Feminino', icon: <UserRound /> },
+  { value: 'male', label: 'Masculino', icon: <User /> },
 ];
 
 const bodyStateOptions = [
-  { value: 'definida', label: 'Definição visível', icon: <Diamond className="h-8 w-8" />, description: 'Músculos bem marcados' },
-  { value: 'tonificada', label: 'Corpo tonificado', icon: <Dumbbell className="h-8 w-8" />, description: 'Forma atlética, pouca gordura' },
-  { value: 'magraNatural', label: 'Magra natural', icon: <Leaf className="h-8 w-8" />, description: 'Metabolismo rápido, dificuldade em ganhar peso' },
-  { value: 'equilibrada', label: 'Peso equilibrado', icon: <Scale className="h-8 w-8" />, description: 'Confortável com seu corpo' },
-  { value: 'extrasLeves', label: 'Alguns quilos extras', icon: <Weight className="h-8 w-8" />, description: 'Gordura corporal um pouco acima do ideal' },
-  { value: 'emagrecer', label: 'Preciso emagrecer', icon: <Goal className="h-8 w-8" />, description: 'Busca por perda de peso significativa' },
+  { value: 'definida', label: 'Definição visível', icon: <Diamond />, description: 'Músculos bem marcados' },
+  { value: 'tonificada', label: 'Corpo tonificado', icon: <Dumbbell />, description: 'Forma atlética, pouca gordura' },
+  { value: 'magraNatural', label: 'Magra natural', icon: <Leaf />, description: 'Metabolismo rápido, dificuldade em ganhar peso' },
+  { value: 'equilibrada', label: 'Peso equilibrado', icon: <Scale />, description: 'Confortável com seu corpo' },
+  { value: 'extrasLeves', label: 'Alguns quilos extras', icon: <Weight />, description: 'Gordura corporal um pouco acima do ideal' },
+  { value: 'emagrecer', label: 'Preciso emagrecer', icon: <Goal />, description: 'Busca por perda de peso significativa' },
 ];
 
 const activityOptions = [
-  { value: 'sedentaria', label: 'Sedentária', icon: <Bed className="h-8 w-8" />, description: 'Pouco ou nenhum exercício' },
-  { value: 'leve', label: 'Levemente Ativa', icon: <Hand className="h-8 w-8" />, description: 'Exercício leve 1-3 dias/semana' },
-  { value: 'moderada', label: 'Moderadamente Ativa', icon: <Bike className="h-8 w-8" />, description: 'Exercício moderado 3-5 dias/semana' },
-  { value: 'intensa', label: 'Altamente Ativa', icon: <Dumbbell className="h-8 w-8" />, description: 'Exercício intenso 6-7 dias/semana' },
-  { value: 'muitoIntensa', label: 'Muito Ativa', icon: <Flame className="h-8 w-8" />, description: 'Exercício intenso diário ou trabalho físico' },
+  { value: 'sedentaria', label: 'Sedentária', icon: <Bed />, description: 'Pouco ou nenhum exercício' },
+  { value: 'leve', label: 'Levemente Ativa', icon: <Hand />, description: 'Exercício leve 1-3 dias/semana' },
+  { value: 'moderada', label: 'Moderadamente Ativa', icon: <Bike />, description: 'Exercício moderado 3-5 dias/semana' },
+  { value: 'intensa', label: 'Altamente Ativa', icon: <Dumbbell />, description: 'Exercício intenso 6-7 dias/semana' },
+  { value: 'muitoIntensa', label: 'Muito Ativa', icon: <Flame />, description: 'Exercício intenso diário ou trabalho físico' },
 ];
 
 const goalOptions = [
-  { value: 'emagrecerSuave', label: 'Emagrecer Suavemente', icon: <Leaf className="h-8 w-8" />, description: 'Perda de peso gradual e sustentável' },
-  { value: 'emagrecerFoco', label: 'Emagrecer com Foco', icon: <Goal className="h-8 w-8" />, description: 'Perda de peso mais acelerada' },
-  { value: 'transformacaoIntensa', label: 'Transformação Intensa', icon: <Zap className="h-8 w-8" />, description: 'Déficit calórico agressivo para resultados rápidos' },
-  { value: 'manterPeso', label: 'Manter Meu Peso', icon: <ShieldCheck className="h-8 w-8" />, description: 'Estabilizar o peso atual' },
-  { value: 'ganharMassa', label: 'Ganhar Massa', icon: <Dumbbell className="h-8 w-8" />, description: 'Aumento gradual de massa muscular' },
-  { value: 'ganhoAcelerado', label: 'Ganho Acelerado', icon: <TrendingUp className="h-8 w-8" />, description: 'Superávit calórico para ganho rápido de massa' },
+  { value: 'emagrecerSuave', label: 'Emagrecer Suavemente', icon: <Leaf />, description: 'Perda de peso gradual e sustentável' },
+  { value: 'emagrecerFoco', label: 'Emagrecer com Foco', icon: <Goal />, description: 'Perda de peso mais acelerada' },
+  { value: 'transformacaoIntensa', label: 'Transformação Intensa', icon: <Zap />, description: 'Déficit calórico agressivo para resultados rápidos' },
+  { value: 'manterPeso', label: 'Manter Meu Peso', icon: <ShieldCheck />, description: 'Estabilizar o peso atual' },
+  { value: 'ganharMassa', label: 'Ganhar Massa', icon: <Dumbbell />, description: 'Aumento gradual de massa muscular' },
+  { value: 'ganhoAcelerado', label: 'Ganho Acelerado', icon: <TrendingUp />, description: 'Superávit calórico para ganho rápido de massa' },
 ];
 
 // Schema Zod para o formulário de cálculo de BF% dentro do diálogo

@@ -78,7 +78,7 @@
 
 @layer components {
   .card-style {
-    @apply bg-white/95 backdrop-blur-2xl rounded-2xl shadow-xl shadow-pink-100/50 border border-white/50 p-6 sm:p-8; /* Sombra mais suave e borda mais sutil */
+    @apply bg-white/95 backdrop-blur-2xl rounded-2xl shadow-lg shadow-pink-100/30 border border-white/50 p-6 sm:p-8; /* Sombra mais suave e borda mais sutil */
   }
 
   .result-card {
@@ -86,11 +86,11 @@
   }
 
   .main-result-card {
-    @apply bg-gradient-to-r from-pink-500 to-fuchsia-600 rounded-2xl shadow-xl shadow-pink-500/30 p-6 sm:p-8 text-white; /* Sombra mais pronunciada */
+    @apply bg-gradient-to-r from-pink-500 to-fuchsia-600 rounded-2xl shadow-xl shadow-pink-500/20 p-6 sm:p-8 text-white; /* Sombra mais pronunciada e menos intensa */
   }
 
   .btn-calculate {
-    @apply w-full bg-gradient-to-r from-pink-500 to-fuchsia-600 text-white font-bold py-4 px-4 rounded-2xl text-lg shadow-lg shadow-pink-500/30 hover:scale-[1.02] transition-transform duration-300 ease-out; /* Animação de hover mais suave */
+    @apply w-full bg-gradient-to-r from-pink-500 to-fuchsia-600 text-white font-bold py-4 px-4 rounded-2xl text-lg shadow-md shadow-pink-500/20 hover:scale-[1.02] transition-transform duration-300 ease-out; /* Animação de hover mais suave e sombra mais sutil */
   }
 
   .gradient-text {
