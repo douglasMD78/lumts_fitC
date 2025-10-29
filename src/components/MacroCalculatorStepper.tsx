@@ -41,6 +41,7 @@ interface MacroCalculatorStepperProps {
   };
 }
 
+// Ajustado para passar o ícone como um componente React diretamente
 const genderOptions = [
   { value: 'female', label: 'Feminino', icon: <UserRound /> },
   { value: 'male', label: 'Masculino', icon: <User /> },
@@ -298,6 +299,9 @@ export function MacroCalculatorStepper({ onCalculate, initialData }: MacroCalcul
         {step === 1 && (
           <div className="animate-fade-in-up">
             <h3 className="text-xl font-bold text-slate-800 mb-4">1. Seus Dados Pessoais</h3>
+            <p className="text-slate-600 text-sm mb-4">
+              Precisamos de algumas informações básicas para começar seu cálculo.
+            </p>
             <div className="grid grid-cols-1 gap-4">
               <div className="space-y-2">
                 <Label className="font-semibold text-pink-700 flex items-center" htmlFor="age">
@@ -346,6 +350,9 @@ export function MacroCalculatorStepper({ onCalculate, initialData }: MacroCalcul
         {step === 2 && (
           <div className="animate-fade-in-up">
             <h3 className="text-xl font-bold text-slate-800 mb-4">2. Qual seu Gênero?</h3>
+            <p className="text-slate-600 text-sm mb-4">
+              Isso nos ajuda a ajustar as fórmulas de cálculo para você.
+            </p>
             <Controller
               name="gender"
               control={control}
@@ -364,6 +371,9 @@ export function MacroCalculatorStepper({ onCalculate, initialData }: MacroCalcul
         {step === 3 && (
           <div className="animate-fade-in-up">
             <h3 className="text-xl font-bold text-slate-800 mb-4">3. Como você se sente?</h3>
+            <p className="text-slate-600 text-sm mb-4">
+              Selecione a opção que melhor descreve seu estado físico atual.
+            </p>
             <Controller
               name="bodyState"
               control={control}
@@ -429,6 +439,9 @@ export function MacroCalculatorStepper({ onCalculate, initialData }: MacroCalcul
         {step === 5 && (
           <div className="animate-fade-in-up">
             <h3 className="text-xl font-bold text-slate-800 mb-4">5. Nível de Atividade Física</h3>
+            <p className="text-slate-600 text-sm mb-4">
+              Quão ativo você é no seu dia a dia e nos treinos?
+            </p>
             <Controller
               name="activity"
               control={control}
@@ -447,6 +460,9 @@ export function MacroCalculatorStepper({ onCalculate, initialData }: MacroCalcul
         {step === 6 && (
           <div className="animate-fade-in-up">
             <h3 className="text-xl font-bold text-slate-800 mb-4">6. Qual seu Objetivo?</h3>
+            <p className="text-slate-600 text-sm mb-4">
+              Selecione o que você busca alcançar com seu plano nutricional.
+            </p>
             <Controller
               name="goal"
               control={control}

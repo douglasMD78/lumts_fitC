@@ -32,7 +32,7 @@ const VisualSelection = ({
           variant="outline"
           onClick={() => onValueChange(option.value)}
           className={cn(
-            "flex flex-col items-start justify-start text-left p-5 rounded-xl transition-all duration-200 h-auto min-h-[120px]", // Aumentado padding, min-height para consistência
+            "flex flex-col items-start justify-start text-left p-5 rounded-xl transition-all duration-200 h-auto min-h-[120px]",
             "border-2",
             selectedValue === option.value
               ? "bg-gradient-to-r from-pink-500 to-fuchsia-500 text-white hover:from-pink-600 hover:to-fuchsia-600 shadow-lg shadow-pink-500/30 border-pink-500"
@@ -42,7 +42,7 @@ const VisualSelection = ({
           {option.icon && (
             <div className={cn(
               "mb-2 text-3xl", // Tamanho do ícone fixo e espaçamento
-              selectedValue === option.value ? "text-white" : "text-pink-500"
+              selectedValue === option.value ? "text-white" : "text-pink-500" // Cor do ícone no estado selecionado
             )}>
               {/* Renderiza o ícone diretamente, permitindo que o estilo seja aplicado */}
               {React.isValidElement(option.icon) ? React.cloneElement(option.icon as React.ReactElement, {
