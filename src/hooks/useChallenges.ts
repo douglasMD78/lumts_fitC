@@ -58,8 +58,8 @@ export const useChallenges = () => {
     queryFn: () => fetchChallenges(user?.id),
     enabled: true,
     staleTime: 1000 * 60 * 5,
-    onError: (error: Error) => {
-      showError('Erro ao carregar desafios: ' + error.message);
-    },
+    // onError: (error: Error) => { // Removido conforme a nova API do TanStack Query v5
+    //   showError('Erro ao carregar desafios: ' + error.message);
+    // },
   });
 };

@@ -45,9 +45,9 @@ const HomePage = () => {
     queryKey: ['homeBlogPosts'],
     queryFn: fetchBlogPosts,
     staleTime: 1000 * 60 * 10,
-    onError: (error: Error) => {
-      showError('Erro ao carregar posts do blog: ' + error.message);
-    },
+    // onError: (error: Error) => { // Removido conforme a nova API do TanStack Query v5
+    //   showError('Erro ao carregar posts do blog: ' + error.message);
+    // },
   });
 
   useEffect(() => {

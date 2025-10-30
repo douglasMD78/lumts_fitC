@@ -38,8 +38,8 @@ export const useUserMacroPlans = () => {
     },
     enabled: !!user,
     staleTime: 1000 * 60 * 5,
-    onError: (error: Error) => {
-      showError('Erro ao carregar planos de macros do usuário: ' + error.message);
-    },
+    // onError: (error: Error) => { // Removido conforme a nova API do TanStack Query v5
+    //   showError('Erro ao carregar planos de macros do usuário: ' + error.message);
+    // },
   });
 };

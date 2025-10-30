@@ -110,8 +110,10 @@ const CycleTrackerDisplayPage = () => {
 
   const modifiers: DayModifiers = {
     period: { from: cycleData.lastPeriodStartDate, to: addDays(cycleData.lastPeriodStartDate, cycleData.menstrualLength - 1) },
-    ovulation: predictedDates?.ovulationDate,
-    fertileWindow: predictedDates ? { from: predictedDates.fertileWindowStart, to: predictedDates.fertileWindowEnd } : undefined,
+    ...(predictedDates?.ovulationDate && { ovulation: predictedDates.ovulationDate }),
+    ...(predictedDates?.fertileWindowStart && predictedDates?.fertileWindowEnd && {
+      fertileWindow: { from: predictedDates.fertileWindowStart, to: predictedDates.fertileWindowEnd }
+    }),
     today: new Date(),
     hasEntry: dailyEntries ? dailyEntries.map((entry: DailyEntry) => parseISO(entry.entry_date)) : [],
   };

@@ -71,7 +71,7 @@ const ProfilePage = () => {
     });
   };
 
-  const handleAvatarUpload = (newUrl: string | null) => {
+  const handleAvatarUpload = (_newUrl: string | null) => {
     // A URL do avatar é gerenciada pelo useUserProfile, então apenas invalidamos o cache
     // para que o useUserProfile refetch e atualize o componente.
     // Não precisamos de um estado local para avatar_url aqui.

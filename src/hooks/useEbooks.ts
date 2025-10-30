@@ -30,8 +30,8 @@ export const useEbooks = () => {
     queryFn: fetchEbooks,
     enabled: true,
     staleTime: 1000 * 60 * 10,
-    onError: (error: Error) => {
-      showError('Erro ao carregar ebooks: ' + error.message);
-    },
+    // onError: (error: Error) => { // Removido conforme a nova API do TanStack Query v5
+    //   showError('Erro ao carregar ebooks: ' + error.message);
+    // },
   });
 };

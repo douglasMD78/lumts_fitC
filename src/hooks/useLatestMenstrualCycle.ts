@@ -48,8 +48,8 @@ export const useLatestMenstrualCycle = () => {
     },
     enabled: !!user,
     staleTime: 1000 * 60 * 10,
-    onError: (error: Error) => {
-      showError('Erro ao carregar o último ciclo menstrual: ' + error.message);
-    },
+    // onError: (error: Error) => { // Removido conforme a nova API do TanStack Query v5
+    //   showError('Erro ao carregar o último ciclo menstrual: ' + error.message);
+    // },
   });
 };

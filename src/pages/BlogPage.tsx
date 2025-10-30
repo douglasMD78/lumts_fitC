@@ -34,9 +34,9 @@ const BlogPage = () => {
   const { data: blogPosts, isLoading, isError, error } = useQuery<BlogPost[], Error, BlogPost[], (string)[]>({
     queryKey: ['blogPosts'],
     queryFn: fetchBlogPosts,
-    onError: (error: Error) => {
-      showError('Erro ao carregar posts do blog: ' + error.message);
-    },
+    // onError: (error: Error) => { // Removido conforme a nova API do TanStack Query v5
+    //   showError('Erro ao carregar posts do blog: ' + error.message);
+    // },
   });
 
   if (isError) {

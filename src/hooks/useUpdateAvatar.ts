@@ -47,7 +47,7 @@ export const useUpdateAvatar = () => {
       }
       return newAvatarUrl;
     },
-    onSuccess: (newAvatarUrl, variables) => {
+    onSuccess: (_newAvatarUrl, variables) => {
       queryClient.invalidateQueries({ queryKey: ['userProfile', variables.uid] });
       showSuccess('Avatar atualizado com sucesso! 🎉');
     },

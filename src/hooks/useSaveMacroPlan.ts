@@ -29,7 +29,7 @@ export const useSaveMacroPlan = () => {
         throw error;
       }
     },
-    onSuccess: (data, variables) => { // 'data' is the result of mutation, 'variables' is the input
+    onSuccess: (_data, variables) => { // 'data' is the result of mutation, 'variables' is the input
       showSuccess("Seu plano de macros foi salvo com sucesso! 🎉");
       queryClient.invalidateQueries({ queryKey: ['userMacroPlans', variables.userId] });
       queryClient.invalidateQueries({ queryKey: ['latestMacroPlan', variables.userId] });

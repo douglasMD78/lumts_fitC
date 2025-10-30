@@ -94,7 +94,7 @@ export const useSaveUserGoal = () => {
         }
       }
     },
-    onSuccess: (data, variables) => { // 'data' is the result of mutation, 'variables' is the input
+    onSuccess: (_data, variables) => { // 'data' is the result of mutation, 'variables' is the input
       showSuccess(variables.goalData.id ? 'Meta atualizada com sucesso! ✨' : 'Meta definida com sucesso! 🎉');
       queryClient.invalidateQueries({ queryKey: ['userGoals', variables.userId] }); // Invalidate all user goals
       queryClient.invalidateQueries({ queryKey: ['userGoals', variables.userId, 'active'] }); // Invalidate active goals
