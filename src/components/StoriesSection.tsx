@@ -32,7 +32,7 @@ const StoriesSection = () => {
 
   return (
     <section className="w-full max-w-4xl mb-12 opacity-0 animate-fade-in-up animation-delay-100">
-      <div className="flex w-full space-x-4 overflow-x-auto p-4 no-scrollbar"> {/* Refactored for horizontal scroll */}
+      <div className="flex w-full items-center space-x-4 overflow-x-auto py-4 no-scrollbar"> {/* Refactored for horizontal scroll */}
         {storyItems.map((item, index) => (
           <Link
             key={index}
