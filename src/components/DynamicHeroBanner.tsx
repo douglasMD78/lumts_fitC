@@ -3,6 +3,7 @@
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { cn } from '@/lib/utils';
 import { useDynamicContent } from '@/hooks/useDynamicContent';
 import { ArrowRight, ExternalLink } from 'lucide-react';
 

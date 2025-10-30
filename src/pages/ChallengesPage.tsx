@@ -22,7 +22,7 @@ const ChallengesPage = () => {
   const challengeDuration = "21 Dias";
   const challengeDifficulty = "Moderado";
   const challengeParticipants = "1200+";
-  const challengeRewards = "Acesso a treinos exclusivos e guia alimentar"; // This variable is not used, but kept for context if needed later.
+  // const challengeRewards = "Acesso a treinos exclusivos e guia alimentar"; // This variable is not used, but kept for context if needed later.
 
   if (loadingChallengeContent) {
     return (
