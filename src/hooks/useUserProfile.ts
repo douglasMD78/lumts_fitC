@@ -3,11 +3,12 @@
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
+import { showError } from '@/utils/toast'; // Importar showError
 
 const fetchUserProfile = async (userId: string) => {
   const { data, error } = await supabase
     .from('profiles')
-    .select('first_name, last_name, age, weight, height, avatar_url, role') // Adicionado 'role'
+    .select('first_name, last_name, age, weight, height, avatar_url, role')
     .eq('id', userId)
     .single();
 
@@ -27,7 +28,10 @@ export const useUserProfile = () => {
       if (!user) return null;
       return fetchUserProfile(user.id);
     },
-    enabled: !!user, // A query só será executada se houver um usuário
-    staleTime: 1000 * 60 * 5, // Considera os dados "frescos" por 5 minutos
+    enabled: !!user,
+    staleTime: 1000 * 60 * 5,
+    onError: (error) => {
+      showError('Erro ao carregar perfil do usuário: ' + error.message);
+    },
   });
 };

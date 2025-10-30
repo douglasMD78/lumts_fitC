@@ -2,6 +2,7 @@
 
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
+import { showError } from '@/utils/toast'; // Importar showError
 
 interface Ebook {
   id: string;
@@ -27,7 +28,10 @@ export const useEbooks = () => {
   return useQuery<Ebook[], Error>({
     queryKey: ['ebooks'],
     queryFn: fetchEbooks,
-    enabled: true, // Sempre tenta buscar ebooks
-    staleTime: 1000 * 60 * 10, // 10 minutos
+    enabled: true,
+    staleTime: 1000 * 60 * 10,
+    onError: (error) => {
+      showError('Erro ao carregar ebooks: ' + error.message);
+    },
   });
 };

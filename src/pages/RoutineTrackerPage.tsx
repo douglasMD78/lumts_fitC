@@ -8,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 import { Calendar as CalendarIcon, Dumbbell, Heart, Utensils, ChevronLeft, ChevronRight, Plus, Edit, Target, Trash2, CheckCircle, Clock, Bed, Smile, NotebookPen, Bike, Ruler } from 'lucide-react';
-import { format, subDays, addDays, isSameDay, parseISO, isAfter, isToday } from 'date-fns'; // Importar isAfter e isToday
+import { format, subDays, addDays, isSameDay, parseISO, isAfter, isToday } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -23,7 +23,7 @@ import { mapWorkoutType, mapWorkoutIntensity, mapCardioType, mapMoodLevel, mapGo
 import { useDailyRoutineForDate } from '@/hooks/useDailyRoutineForDate';
 import { useUserGoals } from '@/hooks/useUserGoals';
 import { useSaveDailyRoutine } from '@/hooks/useSaveDailyRoutine';
-import { useDeleteUserGoal } from '@/hooks/useDeleteUserGoal'; // Importar o hook de mutação para deletar meta
+import { useDeleteUserGoal } from '@/hooks/useDeleteUserGoal';
 
 
 interface DailyRoutine {
@@ -64,16 +64,17 @@ const RoutineTrackerPage = () => {
   const [editingGoal, setEditingGoal] = useState<UserGoal | null>(null);
 
   const { data: dailyRoutine, isLoading: loadingRoutine } = useDailyRoutineForDate(selectedDate);
-  const { data: userGoals, isLoading: loadingGoals, refetch: refetchUserGoals } = useUserGoals(true); // Fetch only active goals
+  const { data: userGoals, isLoading: loadingGoals, refetch: refetchUserGoals } = useUserGoals(true);
 
   const saveDailyRoutineMutation = useSaveDailyRoutine();
-  const deleteUserGoalMutation = useDeleteUserGoal(); // Inicializar o hook de mutação
+  const deleteUserGoalMutation = useDeleteUserGoal();
 
-  useEffect(() => {
-    if (saveDailyRoutineMutation.isError) {
-      showError('Erro ao salvar rotina: ' + saveDailyRoutineMutation.error?.message);
-    }
-  }, [saveDailyRoutineMutation.isError, saveDailyRoutineMutation.error]);
+  // Removido useEffect para tratamento de erro, agora gerenciado pelos hooks
+  // useEffect(() => {
+  //   if (saveDailyRoutineMutation.isError) {
+  //     showError('Erro ao salvar rotina: ' + saveDailyRoutineMutation.error?.message);
+  //   }
+  // }, [saveDailyRoutineMutation.isError, saveDailyRoutineMutation.error]);
 
   const handleSaveRoutine = async (routineData: Partial<DailyRoutine>) => {
     if (!user || !userGoals) {
@@ -90,7 +91,7 @@ const RoutineTrackerPage = () => {
       selectedDate: selectedDate,
       routineData: routineData,
       existingRoutineId: dailyRoutine?.id,
-      userGoals: userGoals,
+      userGoals: userGoals, // userGoals is no longer used in the mutationFn, but kept for type compatibility if needed elsewhere
     }, {
       onSuccess: () => {
         setIsFormDialogOpen(false);

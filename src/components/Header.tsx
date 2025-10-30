@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, NavLink } from "react-router-dom";
-import { Menu, User as UserIcon, LogOut, LayoutDashboard, Dumbbell, Target, TrendingUp, Calculator, GlassWater, BookOpen, Newspaper, Users, Droplet } from "lucide-react";
+import { Menu, User as UserIcon, LogOut, LayoutDashboard, Dumbbell, Target, TrendingUp, Calculator, GlassWater, BookOpen, Newspaper, Users, Droplet, Scale, Heart } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -10,6 +10,7 @@ import { Separator } from "@/components/ui/separator";
 import { useUserProfile } from "@/hooks/useUserProfile";
 import { useLogout } from "@/hooks/useLogout";
 import { useIsMobile } from '@/hooks/use-mobile';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"; // Importar Accordion
 
 import {
   DropdownMenu,
@@ -22,14 +23,12 @@ import {
 
 const publicNavLinks = [
   { to: "/", label: "Início" },
-  { to: "/sobre", label: "Sobre Mim" },
   { to: "/blog", label: "Blog" },
-  { to: "/contato", label: "Contato" },
+  { to: "/comunidade", label: "Comunidade" },
 ];
 
 const loggedInNavLinks = [
   { to: "/", label: "Início" },
-  { to: "/meu-espaco", label: "Meu Espaço" },
   { to: "/blog", label: "Blog" },
   { to: "/comunidade", label: "Comunidade" },
 ];
@@ -70,101 +69,187 @@ const Header = () => {
                 <Menu className="h-6 w-6 text-slate-700" />
               </Button>
             </SheetTrigger>
-            <SheetContent side="left">
-              <div className="flex flex-col space-y-6 p-6">
+            <SheetContent side="left" className="w-[280px] sm:w-[320px]">
+              <div className="flex flex-col space-y-6 p-4">
                 <Link to="/" onClick={() => setIsSheetOpen(false)} className="mb-4">
                   <h1 className="text-3xl font-bold text-pink-500">lumts<span className="font-light">fit</span></h1>
                 </Link>
+
                 {currentNavLinks.map(({ to, label }) => (
                   <NavLink
                     key={to}
                     to={to}
                     onClick={() => setIsSheetOpen(false)}
                     className={({ isActive }) =>
-                      `text-xl font-medium ${isActive ? "text-pink-500" : "text-slate-700"}`
+                      `text-xl font-medium ${isActive ? "text-pink-500" : "text-slate-700"} hover:text-pink-500`
                     }
                   >
                     {label}
                   </NavLink>
                 ))}
                 
-                <Separator className="my-4" />
-
                 {user ? (
-                  <>
-                    <NavLink
-                      to="/meu-espaco"
-                      onClick={() => setIsSheetOpen(false)}
-                      className={({ isActive }) =>
-                        `flex items-center text-xl font-medium ${isActive ? "text-pink-500" : "text-slate-700"}`
-                      }
-                    >
-                      <LayoutDashboard className="h-5 w-5 mr-3" /> Meu Espaço
-                    </NavLink>
-                    <NavLink
-                      to="/perfil"
-                      onClick={() => setIsSheetOpen(false)}
-                      className={({ isActive }) =>
-                        `flex items-center text-xl font-medium ${isActive ? "text-pink-500" : "text-slate-700"}`
-                      }
-                    >
-                      <UserIcon className="h-5 w-5 mr-3" /> Meu Perfil
-                    </NavLink>
-                    <NavLink
-                      to="/rastreador-rotina"
-                      onClick={() => setIsSheetOpen(false)}
-                      className={({ isActive }) =>
-                        `flex items-center text-xl font-medium ${isActive ? "text-pink-500" : "text-slate-700"}`
-                      }
-                    >
-                      <Dumbbell className="h-5 w-5 mr-3" /> Rastreador de Rotina
-                    </NavLink>
-                    <NavLink
-                      to="/minhas-metas"
-                      onClick={() => setIsSheetOpen(false)}
-                      className={({ isActive }) =>
-                        `flex items-center text-xl font-medium ${isActive ? "text-pink-500" : "text-slate-700"}`
-                      }
-                    >
-                      <Target className="h-5 w-5 mr-3" /> Minhas Metas
-                    </NavLink>
-                    <NavLink
-                      to="/progresso"
-                      onClick={() => setIsSheetOpen(false)}
-                      className={({ isActive }) =>
-                        `flex items-center text-xl font-medium ${isActive ? "text-pink-500" : "text-slate-700"}`
-                      }
-                    >
-                      <TrendingUp className="h-5 w-5 mr-3" /> Meu Progresso
-                    </NavLink>
-                    <Separator className="my-4" />
-                    <NavLink
-                      to="/termos"
-                      onClick={() => setIsSheetOpen(false)}
-                      className={({ isActive }) =>
-                        `text-lg font-medium ${isActive ? "text-pink-500" : "text-slate-700"}`
-                      }
-                    >
-                      Termos de Uso
-                    </NavLink>
-                    <NavLink
-                      to="/privacidade"
-                      onClick={() => setIsSheetOpen(false)}
-                      className={({ isActive }) =>
-                        `text-lg font-medium ${isActive ? "text-pink-500" : "text-slate-700"}`
-                      }
-                    >
-                      Política de Privacidade
-                    </NavLink>
-                    <NavLink
-                      to="/cookies"
-                      onClick={() => setIsSheetOpen(false)}
-                      className={({ isActive }) =>
-                        `text-lg font-medium ${isActive ? "text-pink-500" : "text-slate-700"}`
-                      }
-                    >
-                      Política de Cookies
-                    </NavLink>
+                  <Accordion type="multiple" className="w-full">
+                    <AccordionItem value="item-1">
+                      <AccordionTrigger className="text-xl font-medium text-slate-700 hover:text-pink-500 hover:no-underline">
+                        <LayoutDashboard className="h-5 w-5 mr-3" /> Meu Espaço
+                      </AccordionTrigger>
+                      <AccordionContent className="pl-8 space-y-3 py-2">
+                        <NavLink
+                          to="/perfil"
+                          onClick={() => setIsSheetOpen(false)}
+                          className={({ isActive }) =>
+                            `flex items-center text-base font-medium ${isActive ? "text-pink-500" : "text-slate-700"} hover:text-pink-500`
+                          }
+                        >
+                          <UserIcon className="h-4 w-4 mr-3" /> Meu Perfil
+                        </NavLink>
+                        <NavLink
+                          to="/overview"
+                          onClick={() => setIsSheetOpen(false)}
+                          className={({ isActive }) =>
+                            `flex items-center text-base font-medium ${isActive ? "text-pink-500" : "text-slate-700"} hover:text-pink-500`
+                          }
+                        >
+                          <LayoutDashboard className="h-4 w-4 mr-3" /> Visão Geral
+                        </NavLink>
+                        <NavLink
+                          to="/rastreador-rotina"
+                          onClick={() => setIsSheetOpen(false)}
+                          className={({ isActive }) =>
+                            `flex items-center text-base font-medium ${isActive ? "text-pink-500" : "text-slate-700"} hover:text-pink-500`
+                          }
+                        >
+                          <Dumbbell className="h-4 w-4 mr-3" /> Rastreador de Rotina
+                        </NavLink>
+                        <NavLink
+                          to="/minhas-metas"
+                          onClick={() => setIsSheetOpen(false)}
+                          className={({ isActive }) =>
+                            `flex items-center text-base font-medium ${isActive ? "text-pink-500" : "text-slate-700"} hover:text-pink-500`
+                          }
+                        >
+                          <Target className="h-4 w-4 mr-3" /> Minhas Metas
+                        </NavLink>
+                        <NavLink
+                          to="/progresso"
+                          onClick={() => setIsSheetOpen(false)}
+                          className={({ isActive }) =>
+                            `flex items-center text-base font-medium ${isActive ? "text-pink-500" : "text-slate-700"} hover:text-pink-500`
+                          }
+                        >
+                          <TrendingUp className="h-4 w-4 mr-3" /> Meu Progresso
+                        </NavLink>
+                        <NavLink
+                          to="/calculadora-macros"
+                          onClick={() => setIsSheetOpen(false)}
+                          className={({ isActive }) =>
+                            `flex items-center text-base font-medium ${isActive ? "text-pink-500" : "text-slate-700"} hover:text-pink-500`
+                          }
+                        >
+                          <Calculator className="h-4 w-4 mr-3" /> Calculadora de Macros
+                        </NavLink>
+                        <NavLink
+                          to="/meus-planos"
+                          onClick={() => setIsSheetOpen(false)}
+                          className={({ isActive }) =>
+                            `flex items-center text-base font-medium ${isActive ? "text-pink-500" : "text-slate-700"} hover:text-pink-500`
+                          }
+                        >
+                          <Calculator className="h-4 w-4 mr-3" /> Meus Planos de Macros
+                        </NavLink>
+                        <NavLink
+                          to="/calculadora-agua"
+                          onClick={() => setIsSheetOpen(false)}
+                          className={({ isActive }) =>
+                            `flex items-center text-base font-medium ${isActive ? "text-pink-500" : "text-slate-700"} hover:text-pink-500`
+                          }
+                        >
+                          <GlassWater className="h-4 w-4 mr-3" /> Calculadora de Água
+                        </NavLink>
+                        <NavLink
+                          to="/calculadora-bf"
+                          onClick={() => setIsSheetOpen(false)}
+                          className={({ isActive }) =>
+                            `flex items-center text-base font-medium ${isActive ? "text-pink-500" : "text-slate-700"} hover:text-pink-500`
+                          }
+                        >
+                          <Scale className="h-4 w-4 mr-3" /> Calculadora de BF%
+                        </NavLink>
+                        <NavLink
+                          to="/recomendador-suplementos"
+                          onClick={() => setIsSheetOpen(false)}
+                          className={({ isActive }) =>
+                            `flex items-center text-base font-medium ${isActive ? "text-pink-500" : "text-slate-700"} hover:text-pink-500`
+                          }
+                        >
+                          <Lightbulb className="h-4 w-4 mr-3" /> Recomendador de Suplementos
+                        </NavLink>
+                        <NavLink
+                          to="/rastreador-ciclo"
+                          onClick={() => setIsSheetOpen(false)}
+                          className={({ isActive }) =>
+                            `flex items-center text-base font-medium ${isActive ? "text-pink-500" : "text-slate-700"} hover:text-pink-500`
+                          }
+                        >
+                          <Droplet className="h-4 w-4 mr-3" /> Rastreador de Ciclo
+                        </NavLink>
+                        <NavLink
+                          to="/ebook"
+                          onClick={() => setIsSheetOpen(false)}
+                          className={({ isActive }) =>
+                            `flex items-center text-base font-medium ${isActive ? "text-pink-500" : "text-slate-700"} hover:text-pink-500`
+                          }
+                        >
+                          <BookOpen className="h-4 w-4 mr-3" /> Ebook de Receitas
+                        </NavLink>
+                        <NavLink
+                          to="/desafios"
+                          onClick={() => setIsSheetOpen(false)}
+                          className={({ isActive }) =>
+                            `flex items-center text-base font-medium ${isActive ? "text-pink-500" : "text-slate-700"} hover:text-pink-500`
+                          }
+                        >
+                          <Users className="h-4 w-4 mr-3" /> Desafios
+                        </NavLink>
+                      </AccordionContent>
+                    </AccordionItem>
+
+                    <AccordionItem value="item-2">
+                      <AccordionTrigger className="text-xl font-medium text-slate-700 hover:text-pink-500 hover:no-underline">
+                        <Heart className="h-5 w-5 mr-3" /> Legal
+                      </AccordionTrigger>
+                      <AccordionContent className="pl-8 space-y-3 py-2">
+                        <NavLink
+                          to="/termos"
+                          onClick={() => setIsSheetOpen(false)}
+                          className={({ isActive }) =>
+                            `text-base font-medium ${isActive ? "text-pink-500" : "text-slate-700"} hover:text-pink-500`
+                          }
+                        >
+                          Termos de Uso
+                        </NavLink>
+                        <NavLink
+                          to="/privacidade"
+                          onClick={() => setIsSheetOpen(false)}
+                          className={({ isActive }) =>
+                            `text-base font-medium ${isActive ? "text-pink-500" : "text-slate-700"} hover:text-pink-500`
+                          }
+                        >
+                          Política de Privacidade
+                        </NavLink>
+                        <NavLink
+                          to="/cookies"
+                          onClick={() => setIsSheetOpen(false)}
+                          className={({ isActive }) =>
+                            `text-base font-medium ${isActive ? "text-pink-500" : "text-slate-700"} hover:text-pink-500`
+                          }
+                        >
+                          Política de Cookies
+                        </NavLink>
+                      </AccordionContent>
+                    </AccordionItem>
+
                     <Button
                       variant="ghost"
                       onClick={() => {
@@ -175,46 +260,54 @@ const Header = () => {
                     >
                       <LogOut className="h-5 w-5 mr-3" /> Sair da Conta
                     </Button>
-                  </>
+                  </Accordion>
                 ) : (
                   <>
                     <NavLink
                       to="/login"
                       onClick={() => setIsSheetOpen(false)}
                       className={({ isActive }) =>
-                        `flex items-center text-xl font-medium ${isActive ? "text-pink-500" : "text-slate-700"}`
+                        `flex items-center text-xl font-medium ${isActive ? "text-pink-500" : "text-slate-700"} hover:text-pink-500`
                       }
                     >
                       <UserIcon className="h-5 w-5 mr-3" /> Login / Cadastro
                     </NavLink>
-                    <Separator className="my-4" />
-                    <NavLink
-                      to="/termos"
-                      onClick={() => setIsSheetOpen(false)}
-                      className={({ isActive }) =>
-                        `text-lg font-medium ${isActive ? "text-pink-500" : "text-slate-700"}`
-                      }
-                    >
-                      Termos de Uso
-                    </NavLink>
-                    <NavLink
-                      to="/privacidade"
-                      onClick={() => setIsSheetOpen(false)}
-                      className={({ isActive }) =>
-                        `text-lg font-medium ${isActive ? "text-pink-500" : "text-slate-700"}`
-                      }
-                    >
-                      Política de Privacidade
-                    </NavLink>
-                    <NavLink
-                      to="/cookies"
-                      onClick={() => setIsSheetOpen(false)}
-                      className={({ isActive }) =>
-                        `text-lg font-medium ${isActive ? "text-pink-500" : "text-slate-700"}`
-                      }
-                    >
-                      Política de Cookies
-                    </NavLink>
+                    <Accordion type="multiple" className="w-full">
+                      <AccordionItem value="item-1">
+                        <AccordionTrigger className="text-xl font-medium text-slate-700 hover:text-pink-500 hover:no-underline">
+                          <Heart className="h-5 w-5 mr-3" /> Legal
+                        </AccordionTrigger>
+                        <AccordionContent className="pl-8 space-y-3 py-2">
+                          <NavLink
+                            to="/termos"
+                            onClick={() => setIsSheetOpen(false)}
+                            className={({ isActive }) =>
+                              `text-base font-medium ${isActive ? "text-pink-500" : "text-slate-700"} hover:text-pink-500`
+                            }
+                          >
+                            Termos de Uso
+                          </NavLink>
+                          <NavLink
+                            to="/privacidade"
+                            onClick={() => setIsSheetOpen(false)}
+                            className={({ isActive }) =>
+                              `text-base font-medium ${isActive ? "text-pink-500" : "text-slate-700"} hover:text-pink-500`
+                            }
+                          >
+                            Política de Privacidade
+                          </NavLink>
+                          <NavLink
+                            to="/cookies"
+                            onClick={() => setIsSheetOpen(false)}
+                            className={({ isActive }) =>
+                              `text-base font-medium ${isActive ? "text-pink-500" : "text-slate-700"} hover:text-pink-500`
+                            }
+                          >
+                            Política de Cookies
+                          </NavLink>
+                        </AccordionContent>
+                      </AccordionItem>
+                    </Accordion>
                   </>
                 )}
               </div>

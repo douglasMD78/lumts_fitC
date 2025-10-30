@@ -3,6 +3,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
+import { showError } from '@/utils/toast'; // Importar showError
 
 interface Challenge {
   id: string;
@@ -35,6 +36,7 @@ const fetchChallenges = async (userId: string | undefined): Promise<Challenge[]>
 
     if (userChallengesError) {
       console.error('Erro ao carregar desafios do usuário:', userChallengesError.message);
+      // Não lançar erro aqui para não bloquear a exibição dos desafios públicos
     } else {
       userChallenges = userChallengesData || [];
     }
@@ -54,7 +56,10 @@ export const useChallenges = () => {
   return useQuery<Challenge[], Error>({
     queryKey: ['challenges', user?.id],
     queryFn: () => fetchChallenges(user?.id),
-    enabled: true, // Sempre tenta buscar, mesmo que o usuário não esteja logado (RLS cuidará da visibilidade)
-    staleTime: 1000 * 60 * 5, // 5 minutos
+    enabled: true,
+    staleTime: 1000 * 60 * 5,
+    onError: (error) => {
+      showError('Erro ao carregar desafios: ' + error.message);
+    },
   });
 };

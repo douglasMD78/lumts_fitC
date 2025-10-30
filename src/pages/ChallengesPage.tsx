@@ -35,11 +35,12 @@ const ChallengesPage = () => {
   const { data: challenges, isLoading: loadingChallenges, error: fetchError } = useChallenges();
   const joinChallengeMutation = useJoinChallenge();
 
-  useEffect(() => {
-    if (fetchError) {
-      showError('Erro ao carregar desafios: ' + fetchError.message);
-    }
-  }, [fetchError]);
+  // Removido useEffect para tratamento de erro, agora gerenciado pelo hook useChallenges
+  // useEffect(() => {
+  //   if (fetchError) {
+  //     showError('Erro ao carregar desafios: ' + fetchError.message);
+  //   }
+  // }, [fetchError]);
 
   const handleJoinChallenge = async (challengeId: string) => {
     if (!user) return;

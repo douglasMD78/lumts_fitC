@@ -12,47 +12,31 @@ import { getPredictedDates } from "@/utils/cycleCalculations";
 import { mapWorkoutType, mapWorkoutIntensity, mapCardioType, mapMoodLevel } from '@/utils/displayHelpers';
 import { Progress } from '@/components/ui/progress';
 
-// Importar os novos hooks
-import { useLatestMacroPlan } from '@/hooks/useLatestMacroPlan';
-import { useDailyRoutineForDate } from '@/hooks/useDailyRoutineForDate';
-import { useUserGoals } from '@/hooks/useUserGoals';
-import { useLatestMenstrualCycle } from '@/hooks/useLatestMenstrualCycle';
-import { useUserProfile } from '@/hooks/useUserProfile';
+// Importar o novo hook consolidado
+import { useOverviewData } from '@/hooks/useOverviewData';
 
 
 const OverviewPage = () => {
   const { user, loading: authLoading } = useAuth();
-  const { data: profileData, isLoading: loadingProfile } = useUserProfile();
   const [today] = useState(new Date());
 
-  // Usar os novos hooks
-  const { data: latestMacroPlan, isLoading: loadingMacroPlan, error: macroPlanError } = useLatestMacroPlan();
-  const { data: dailyRoutineToday, isLoading: loadingDailyRoutineToday, error: dailyRoutineTodayError } = useDailyRoutineForDate(today);
-  const { data: activeGoals, isLoading: loadingActiveGoals, error: activeGoalsError } = useUserGoals(true); // Fetch only active goals
-  const { data: latestMenstrualCycle, isLoading: loadingMenstrualCycle, error: menstrualCycleError } = useLatestMenstrualCycle();
+  // Usar o novo hook consolidado
+  const { data: overviewData, isLoading: loadingOverviewData } = useOverviewData();
 
   const [nextPeriodDate, setNextPeriodDate] = useState<Date | null>(null);
 
   useEffect(() => {
-    if (macroPlanError) showError('Erro ao carregar plano de macros: ' + macroPlanError.message);
-    if (dailyRoutineTodayError) showError('Erro ao carregar rotina diária: ' + dailyRoutineTodayError.message);
-    if (activeGoalsError) showError('Erro ao carregar metas ativas: ' + activeGoalsError.message);
-    if (menstrualCycleError) showError('Erro ao carregar dados do ciclo menstrual: ' + menstrualCycleError.message);
-  }, [macroPlanError, dailyRoutineTodayError, activeGoalsError, menstrualCycleError]);
-
-  useEffect(() => {
-    if (latestMenstrualCycle) {
-      const predicted = getPredictedDates(latestMenstrualCycle.start_date, latestMenstrualCycle.cycle_length, latestMenstrualCycle.menstrual_length);
+    if (overviewData?.latestMenstrualCycle) {
+      const predicted = getPredictedDates(overviewData.latestMenstrualCycle.start_date, overviewData.latestMenstrualCycle.cycle_length, overviewData.latestMenstrualCycle.menstrual_length);
       setNextPeriodDate(predicted.nextPeriodStartDate);
     } else {
       setNextPeriodDate(null);
     }
-  }, [latestMenstrualCycle]);
+  }, [overviewData?.latestMenstrualCycle]);
 
-  const isLoadingData = authLoading || loadingProfile || loadingMacroPlan ||
-                         loadingDailyRoutineToday || loadingActiveGoals || loadingMenstrualCycle;
+  const isLoadingPage = authLoading || loadingOverviewData || !overviewData;
 
-  if (isLoadingData) {
+  if (isLoadingPage) {
     return (
       <div className="flex justify-center items-center h-screen">
         <p>Carregando visão geral...</p>
@@ -60,7 +44,8 @@ const OverviewPage = () => {
     );
   }
 
-  const userName = profileData?.first_name || user?.email?.split('@')[0] || 'usuária';
+  const { profile, latestMacroPlan, dailyRoutineToday, activeGoals } = overviewData;
+  const userName = profile?.first_name || user?.email?.split('@')[0] || 'usuária';
 
   return (
     <div className="container mx-auto px-4 py-8">

@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { format } from 'date-fns';
+import { showError } from '@/utils/toast'; // Importar showError
 
 interface DailyRoutine {
   id: string;
@@ -45,6 +46,9 @@ export const useDailyRoutineForDate = (date: Date) => {
       return fetchDailyRoutineForDate(user.id, date);
     },
     enabled: !!user,
-    staleTime: 1000 * 60, // 1 minute
+    staleTime: 1000 * 60,
+    onError: (error) => {
+      showError('Erro ao carregar rotina diária: ' + error.message);
+    },
   });
 };

@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { format, subDays, differenceInDays } from 'date-fns';
+import { showError } from '@/utils/toast'; // Importar showError
 
 interface DailyRoutine {
   routine_date: string;
@@ -56,6 +57,9 @@ export const useHomeSummaryData = () => {
       return fetchHomeSummaryData(user.id);
     },
     enabled: !!user,
-    staleTime: 1000 * 60 * 5, // 5 minutes
+    staleTime: 1000 * 60 * 5,
+    onError: (error) => {
+      showError('Erro ao carregar dados de resumo da página inicial: ' + error.message);
+    },
   });
 };

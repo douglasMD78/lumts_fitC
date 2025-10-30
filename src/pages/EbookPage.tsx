@@ -26,13 +26,14 @@ const EbookPage = () => {
   const { user, loading: authLoading } = useAuth();
 
   // Usar o hook de query para buscar ebooks
-  const { data: ebooks, isLoading: loadingEbooks, error: fetchError } = useEbooks();
+  const { data: ebooks, isLoading: loadingEbooks } = useEbooks();
 
-  useEffect(() => {
-    if (fetchError) {
-      showError('Erro ao carregar ebooks: ' + fetchError.message);
-    }
-  }, [fetchError]);
+  // Removido useEffect para tratamento de erro, agora gerenciado pelo hook useEbooks
+  // useEffect(() => {
+  //   if (fetchError) {
+  //     showError('Erro ao carregar ebooks: ' + fetchError.message);
+  //   }
+  // }, [fetchError]);
 
   if (authLoading || loadingEbooks) {
     return (
@@ -50,7 +51,7 @@ const EbookPage = () => {
           title="Conteúdo Exclusivo para Membros"
           description="Faça login ou crie sua conta para acessar ebooks, receitas e guias exclusivos."
           buttonText="Fazer Login"
-          buttonLink="/login"
+          onClick={() => { /* navigate to login */ }} // Adicionado onClick para o EmptyState
           iconColorClass="text-pink-500"
           buttonVariant="default"
         />

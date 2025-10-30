@@ -28,14 +28,15 @@ const MyMacroPlansPage = () => {
   const { user, loading: authLoading } = useAuth();
 
   // Usar os novos hooks de query e mutação
-  const { data: plans, isLoading: loadingPlans, error: fetchError } = useUserMacroPlans();
+  const { data: plans, isLoading: loadingPlans } = useUserMacroPlans();
   const deleteMacroPlanMutation = useDeleteMacroPlan();
 
-  useEffect(() => {
-    if (fetchError) {
-      showError('Erro ao carregar seus planos de macros: ' + fetchError.message);
-    }
-  }, [fetchError]);
+  // Removido useEffect para tratamento de erro, agora gerenciado pelo hook useUserMacroPlans
+  // useEffect(() => {
+  //   if (fetchError) {
+  //     showError('Erro ao carregar seus planos de macros: ' + fetchError.message);
+  //   }
+  // }, [fetchError]);
 
   const handleDeletePlan = async (planId: string) => {
     if (!user) {
@@ -83,7 +84,7 @@ const MyMacroPlansPage = () => {
             title="Nenhum plano de macros salvo"
             description="Crie seu primeiro plano nutricional personalizado agora!"
             buttonText="Criar Meu Primeiro Plano"
-            buttonLink="/calculadora-macros"
+            onClick={() => navigate("/calculadora-macros")} // Adicionado onClick para o EmptyState
             iconColorClass="text-pink-500"
           />
         ) : (

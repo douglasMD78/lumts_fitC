@@ -46,17 +46,18 @@ const MyGoalsPage = () => {
   const [selectedGoalForProgress, setSelectedGoalForProgress] = useState<UserGoal | null>(null);
 
   // Usar o novo hook para buscar todas as metas
-  const { data: userGoals, isLoading: queryLoadingGoals, error: goalsError, refetch: refetchUserGoals } = useUserGoals(false);
+  const { data: userGoals, isLoading: queryLoadingGoals, refetch: refetchUserGoals } = useUserGoals(false);
   const deleteUserGoalMutation = useDeleteUserGoal(); // Inicializar o hook de mutação
 
   useEffect(() => {
     if (!authLoading && !queryLoadingGoals) {
       setLoadingGoals(false); // Set local loading to false once query is done
     }
-    if (goalsError) {
-      showError('Erro ao carregar metas: ' + goalsError.message);
-    }
-  }, [authLoading, queryLoadingGoals, goalsError]);
+    // Removido useEffect para tratamento de erro, agora gerenciado pelo hook useUserGoals
+    // if (goalsError) {
+    //   showError('Erro ao carregar metas: ' + goalsError.message);
+    // }
+  }, [authLoading, queryLoadingGoals]);
 
   // A função handleSaveGoal foi movida para o hook useSaveUserGoal e não é mais necessária aqui.
   // O GoalSettingDialog agora gerencia sua própria lógica de salvamento.
@@ -115,10 +116,9 @@ const MyGoalsPage = () => {
             title="Nenhuma meta definida"
             description="Defina sua primeira meta de fitness e saúde para começar a acompanhar seu progresso!"
             buttonText="Definir Minha Primeira Meta"
-            buttonLink="#" // Link placeholder, action is handled by setIsGoalDialogOpen
+            onClick={() => { setEditingGoal(null); setIsGoalDialogOpen(true); }} // Passa a função onClick aqui
             iconColorClass="text-pink-500"
             buttonVariant="default"
-            onClick={() => { setEditingGoal(null); setIsGoalDialogOpen(true); }} // Add onClick to the card
           />
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

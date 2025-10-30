@@ -8,22 +8,23 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { showError, showSuccess } from "@/utils/toast";
-import { getCycleDayInfo, getPredictedDates, CyclePhaseInfo, PHASE_CONTENT } from "@/utils/cycleCalculations"; // Import PHASE_CONTENT
+import { getCycleDayInfo, getPredictedDates, CyclePhaseInfo, CyclePhase } from "@/utils/cycleCalculations";
 import { Calendar } from "@/components/ui/calendar";
-import { format, subDays, addDays, isSameDay, parseISO, isAfter, isToday } from "date-fns"; // Importar isAfter e isToday
+import { format, subDays, addDays, isSameDay, parseISO, isAfter, isToday } from "date-fns";
 import { ptBR } from 'date-fns/locale';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
 import CircularProgress from "@/components/ui/CircularProgress";
 import InfoAccordion from "@/components/InfoAccordion";
 import DailyLogForm from "@/components/DailyLogForm";
-import CycleTrackerDisplaySkeleton from "@/components/CycleTrackerDisplaySkeleton"; // Importar o skeleton
+import CycleTrackerDisplaySkeleton from "@/components/CycleTrackerDisplaySkeleton";
 
 // Importar os novos hooks
 import { useLatestMenstrualCycle } from '@/hooks/useLatestMenstrualCycle';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useSaveDailyCycleEntry } from '@/hooks/useSaveDailyCycleEntry';
 import { useUpdateMenstrualCycleStartDate } from '@/hooks/useUpdateMenstrualCycleStartDate';
-import { useDailyCycleEntriesForUser, DailyEntry } from '@/hooks/useDailyCycleEntriesForUser'; // Importar o novo hook e a interface DailyEntry
+import { useDailyCycleEntriesForUser, DailyEntry } from '@/hooks/useDailyCycleEntriesForUser';
+import { useCyclePhaseContent, CyclePhaseContent } from '@/hooks/useCyclePhaseContent';
 
 
 interface CycleData {
@@ -47,16 +48,19 @@ const CycleTrackerDisplayPage = () => {
   const [newPeriodDate, setNewPeriodDate] = useState<Date | undefined>(new Date());
 
   // Usar os novos hooks
-  const { data: latestMenstrualCycle, isLoading: loadingMenstrualCycle, error: menstrualCycleError, refetch: refetchLatestMenstrualCycle } = useLatestMenstrualCycle();
-  const { data: dailyEntries, isLoading: loadingDailyEntries, error: dailyEntriesError, refetch: refetchDailyEntries } = useDailyCycleEntriesForUser(); // Usar o novo hook
+  const { data: latestMenstrualCycle, isLoading: loadingMenstrualCycle, refetch: refetchLatestMenstrualCycle } = useLatestMenstrualCycle();
+  const { data: dailyEntries, isLoading: loadingDailyEntries, refetch: refetchDailyEntries } = useDailyCycleEntriesForUser();
+  const { data: phaseContent, isLoading: loadingPhaseContent } = useCyclePhaseContent(cycleDayInfo?.phase || null);
 
   const saveDailyEntryMutation = useSaveDailyCycleEntry();
   const updateMenstrualCycleStartDateMutation = useUpdateMenstrualCycleStartDate();
 
-  useEffect(() => {
-    if (menstrualCycleError) showError("Erro ao carregar dados do ciclo: " + menstrualCycleError.message);
-    if (dailyEntriesError) showError('Erro ao carregar registros diários: ' + dailyEntriesError.message);
-  }, [menstrualCycleError, dailyEntriesError]);
+  // Removido useEffect para tratamento de erro, agora gerenciado pelos hooks
+  // useEffect(() => {
+  //   if (menstrualCycleError) showError("Erro ao carregar dados do ciclo: " + menstrualCycleError.message);
+  //   if (dailyEntriesError) showError('Erro ao carregar registros diários: ' + dailyEntriesError.message);
+  //   if (phaseContentError) showError('Erro ao carregar conteúdo da fase do ciclo: ' + phaseContentError.message);
+  // }, [menstrualCycleError, dailyEntriesError, phaseContentError]);
 
   useEffect(() => {
     if (latestMenstrualCycle) {
@@ -86,7 +90,7 @@ const CycleTrackerDisplayPage = () => {
   const handleSaveDailyEntry = async (entryData: Partial<DailyEntry>) => {
     if (!user || !selectedDate || !cycleData || !dailyEntries) return;
     
-    const existingEntry = dailyEntries.find(e => isSameDay(parseISO(e.entry_date), selectedDate));
+    const existingEntry = dailyEntries.find(e => isSameDay(parseISO(e.entry_date), selectedDate || new Date()));
 
     saveDailyEntryMutation.mutate(
       {
@@ -119,20 +123,22 @@ const CycleTrackerDisplayPage = () => {
     );
   };
 
-  const isLoadingPage = authLoading || loadingMenstrualCycle || loadingDailyEntries || !cycleData || !cycleDayInfo;
+  const isLoadingPage = authLoading || loadingMenstrualCycle || loadingDailyEntries || loadingPhaseContent || !cycleData || !cycleDayInfo || !phaseContent;
 
   if (isLoadingPage) {
     return <CycleTrackerDisplaySkeleton />; // Exibe o skeleton durante o carregamento
   }
 
-  const { phase, dayInCycle, cycleLength, phaseContent } = cycleDayInfo;
+  const { phase, dayInCycle, cycleLength } = cycleDayInfo;
   const progress = (dayInCycle / cycleLength) * 100;
   const colorClass = phaseContent.color.replace('bg-', 'text-').replace('-200', '-500');
-  // const indicatorClass = phaseContent.progressColor; // Removido, pois agora usamos indicatorColorClass
 
-  const infoItems = Object.entries(phaseContent)
-    .filter(([key]) => ['energy', 'workout', 'body', 'cravings'].includes(key))
-    .map(([key, value]) => ({ key, ...value as typeof PHASE_CONTENT['menstrual']['energy'] })); // Explicitly cast value
+  const infoItems = [
+    { key: 'energy', title: phaseContent.energy_title, description: phaseContent.energy_description },
+    { key: 'workout', title: phaseContent.workout_title, description: phaseContent.workout_description },
+    { key: 'body', title: phaseContent.body_title, description: phaseContent.body_description },
+    { key: 'cravings', title: phaseContent.cravings_title, description: phaseContent.cravings_description },
+  ];
 
   const modifiers = {
     period: { from: cycleData.lastPeriodStartDate, to: addDays(cycleData.lastPeriodStartDate, cycleData.menstrualLength - 1) },
@@ -160,7 +166,7 @@ const CycleTrackerDisplayPage = () => {
               progress={progress} 
               size={220} 
               strokeWidth={18} 
-              className={colorClass} // Passar a classe de cor aqui
+              className={colorClass}
             >
               <text x="50%" y="50%" textAnchor="middle" dy=".3em" className="fill-slate-800">
                 <tspan x="50%" dy="-0.2em" className="text-6xl font-bold">{dayInCycle}</tspan>
@@ -242,7 +248,6 @@ const CycleTrackerDisplayPage = () => {
                   }}
                   locale={ptBR}
                   modifiers={modifiers}
-                  // Removed classNames prop as it's causing type errors and styles are in globals.css
                 />
               </DialogContent>
             </Dialog>

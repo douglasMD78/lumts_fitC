@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { parseISO } from 'date-fns';
+import { showError } from '@/utils/toast'; // Importar showError
 
 interface UserGoal {
   id: string;
@@ -65,6 +66,9 @@ export const useUserGoals = (activeOnly: boolean = false) => {
       return fetchUserGoals(user.id, activeOnly);
     },
     enabled: !!user,
-    staleTime: 1000 * 60 * 2, // 2 minutes
+    staleTime: 1000 * 60 * 2,
+    onError: (error) => {
+      showError('Erro ao carregar metas do usuário: ' + error.message);
+    },
   });
 };

@@ -5,8 +5,8 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { format, parseISO, differenceInDays } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { useLatestMacroPlan } from './useLatestMacroPlan';
 import { useUserGoals } from './useUserGoals';
+import { showError } from '@/utils/toast'; // Importar showError
 
 interface DailyRoutine {
   routine_date: string;
@@ -27,13 +27,6 @@ interface UserGoal {
   end_date?: Date | null;
   is_completed: boolean;
   created_at: string;
-}
-
-interface MacroPlan {
-  target_calories: number;
-  protein_grams: number;
-  carbs_grams: number;
-  fat_grams: number;
 }
 
 interface ProgressData {
@@ -134,6 +127,9 @@ export const useProgressData = (startDate: Date, endDate: Date) => {
       return fetchProgressData(user.id, startDate, endDate, allUserGoals);
     },
     enabled: !!user && !!allUserGoals && !loadingAllGoals,
-    staleTime: 1000 * 60 * 5, // 5 minutes
+    staleTime: 1000 * 60 * 5,
+    onError: (error) => {
+      showError('Erro ao carregar dados de progresso: ' + error.message);
+    },
   });
 };

@@ -3,6 +3,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
+import { showError } from '@/utils/toast'; // Importar showError
 
 interface MacroPlan {
   id: string;
@@ -38,6 +39,9 @@ export const useLatestMacroPlan = () => {
       return fetchLatestMacroPlan(user.id);
     },
     enabled: !!user,
-    staleTime: 1000 * 60 * 5, // 5 minutes
+    staleTime: 1000 * 60 * 5,
+    onError: (error) => {
+      showError('Erro ao carregar o último plano de macros: ' + error.message);
+    },
   });
 };

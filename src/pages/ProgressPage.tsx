@@ -47,17 +47,18 @@ const ProgressPage = () => {
   const [isReportDialogOpen, setIsReportDialogOpen] = useState(false);
   const [isShareStoryDialogOpen, setIsShareStoryDialogOpen] = useState(false);
 
-  const { data: macroPlan, isLoading: loadingMacroPlan, error: macroPlanError } = useLatestMacroPlan(); // Fetch latest macro plan
-  const { data: allUserGoals, isLoading: loadingAllGoals, error: allGoalsError } = useUserGoals(false); // Fetch all goals
+  const { data: macroPlan, isLoading: loadingMacroPlan } = useLatestMacroPlan(); // Fetch latest macro plan
+  const { data: allUserGoals, isLoading: loadingAllGoals } = useUserGoals(false); // Fetch all goals
 
   // Usar o novo hook para buscar e processar os dados de progresso
-  const { data: progressData, isLoading: loadingProgressData, error: progressDataError } = useProgressData(startDate, endDate);
+  const { data: progressData, isLoading: loadingProgressData } = useProgressData(startDate, endDate);
 
-  useEffect(() => {
-    if (macroPlanError) showError('Erro ao carregar plano de macros: ' + macroPlanError.message);
-    if (allGoalsError) showError('Erro ao carregar metas: ' + allGoalsError.message);
-    if (progressDataError) showError('Erro ao carregar dados de progresso: ' + progressDataError.message);
-  }, [macroPlanError, allGoalsError, progressDataError]);
+  // Removido useEffect para tratamento de erro, agora gerenciado pelos hooks
+  // useEffect(() => {
+  //   if (macroPlanError) showError('Erro ao carregar plano de macros: ' + macroPlanError.message);
+  //   if (allGoalsError) showError('Erro ao carregar metas: ' + allGoalsError.message);
+  //   if (progressDataError) showError('Erro ao carregar dados de progresso: ' + progressDataError.message);
+  // }, [macroPlanError, allGoalsError, progressDataError]);
 
   const handleDateChange = (range: { from?: Date; to?: Date }) => {
     if (range.from) setStartDate(range.from);

@@ -3,6 +3,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
+import { showError } from '@/utils/toast'; // Importar showError
 
 export interface DailyEntry {
   id: string;
@@ -31,6 +32,9 @@ export const useDailyCycleEntriesForUser = () => {
       return fetchDailyCycleEntriesForUser(user.id);
     },
     enabled: !!user,
-    staleTime: 1000 * 60, // 1 minuto
+    staleTime: 1000 * 60,
+    onError: (error) => {
+      showError('Erro ao carregar registros diários do ciclo: ' + error.message);
+    },
   });
 };

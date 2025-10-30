@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { Dumbbell, Target, Compass, User } from 'lucide-react';
+import { Dumbbell, Target, Users, User } from 'lucide-react'; // Alterado Compass para Users
 import { cn } from '@/lib/utils';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useAuth } from '@/contexts/AuthContext';
@@ -18,7 +18,7 @@ interface NavItem {
 const navItems: NavItem[] = [
   { to: "/rastreador-rotina", label: "Rotina", icon: Dumbbell, authRequired: true },
   { to: "/minhas-metas", label: "Metas", icon: Target, authRequired: true },
-  { to: "/comunidade", label: "Explorar", icon: Compass },
+  { to: "/comunidade", label: "Comunidade", icon: Users }, // Alterado label e ícone
   { to: "/meu-espaco", label: "Eu", icon: User, authRequired: true },
 ];
 

@@ -19,14 +19,15 @@ const HomePage = () => {
   const { data: profileData } = useUserProfile();
   const userName = profileData?.first_name || user?.email?.split('@')[0] || 'Usuária';
 
-  const { data: homeSummary, isLoading: loadingSummary, error: summaryError } = useHomeSummaryData();
+  const { data: homeSummary, isLoading: loadingSummary } = useHomeSummaryData();
   const { data: latestMacroPlan } = useLatestMacroPlan();
 
-  useEffect(() => {
-    if (summaryError) {
-      showError('Erro ao carregar resumo da página inicial: ' + summaryError.message);
-    }
-  }, [summaryError]);
+  // Removido useEffect para tratamento de erro, agora gerenciado pelo hook useHomeSummaryData
+  // useEffect(() => {
+  //   if (summaryError) {
+  //     showError('Erro ao carregar resumo da página inicial: ' + summaryError.message);
+  //   }
+  // }, [summaryError]);
 
   return (
     <div className="container mx-auto px-4 pt-8 pb-16 flex flex-col items-center">
