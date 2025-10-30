@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, NavLink } from "react-router-dom";
-import { Menu, User as UserIcon, LogOut, LayoutDashboard, Dumbbell, Target, TrendingUp, Calculator, GlassWater, BookOpen, Newspaper, Users, Droplet, Scale, Heart } from "lucide-react";
+import { Menu, User as UserIcon, LogOut, LayoutDashboard, Dumbbell, Target, TrendingUp, Calculator, GlassWater, BookOpen, Newspaper, Users, Droplet, Scale, Heart, Lightbulb, Home } from "lucide-react"; // Added Home, Lightbulb
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -10,7 +10,7 @@ import { Separator } from "@/components/ui/separator";
 import { useUserProfile } from "@/hooks/useUserProfile";
 import { useLogout } from "@/hooks/useLogout";
 import { useIsMobile } from '@/hooks/use-mobile';
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"; // Importar Accordion
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
 import {
   DropdownMenu,
@@ -24,13 +24,13 @@ import {
 const publicNavLinks = [
   { to: "/", label: "Início" },
   { to: "/blog", label: "Blog" },
-  { to: "/comunidade", label: "Comunidade" },
+  { to: "/desafios", label: "Desafios" }, // Challenges is now a landing page
 ];
 
 const loggedInNavLinks = [
   { to: "/", label: "Início" },
   { to: "/blog", label: "Blog" },
-  { to: "/comunidade", label: "Comunidade" },
+  { to: "/desafios", label: "Desafios" }, // Challenges is now a landing page
 ];
 
 const Header = () => {
@@ -105,42 +105,6 @@ const Header = () => {
                           <UserIcon className="h-4 w-4 mr-3" /> Meu Perfil
                         </NavLink>
                         <NavLink
-                          to="/overview"
-                          onClick={() => setIsSheetOpen(false)}
-                          className={({ isActive }) =>
-                            `flex items-center text-base font-medium ${isActive ? "text-pink-500" : "text-slate-700"} hover:text-pink-500`
-                          }
-                        >
-                          <LayoutDashboard className="h-4 w-4 mr-3" /> Visão Geral
-                        </NavLink>
-                        <NavLink
-                          to="/rastreador-rotina"
-                          onClick={() => setIsSheetOpen(false)}
-                          className={({ isActive }) =>
-                            `flex items-center text-base font-medium ${isActive ? "text-pink-500" : "text-slate-700"} hover:text-pink-500`
-                          }
-                        >
-                          <Dumbbell className="h-4 w-4 mr-3" /> Rastreador de Rotina
-                        </NavLink>
-                        <NavLink
-                          to="/minhas-metas"
-                          onClick={() => setIsSheetOpen(false)}
-                          className={({ isActive }) =>
-                            `flex items-center text-base font-medium ${isActive ? "text-pink-500" : "text-slate-700"} hover:text-pink-500`
-                          }
-                        >
-                          <Target className="h-4 w-4 mr-3" /> Minhas Metas
-                        </NavLink>
-                        <NavLink
-                          to="/progresso"
-                          onClick={() => setIsSheetOpen(false)}
-                          className={({ isActive }) =>
-                            `flex items-center text-base font-medium ${isActive ? "text-pink-500" : "text-slate-700"} hover:text-pink-500`
-                          }
-                        >
-                          <TrendingUp className="h-4 w-4 mr-3" /> Meu Progresso
-                        </NavLink>
-                        <NavLink
                           to="/calculadora-macros"
                           onClick={() => setIsSheetOpen(false)}
                           className={({ isActive }) =>
@@ -177,13 +141,13 @@ const Header = () => {
                           <Scale className="h-4 w-4 mr-3" /> Calculadora de BF%
                         </NavLink>
                         <NavLink
-                          to="/recomendador-suplementos"
+                          to="/suples-da-lu"
                           onClick={() => setIsSheetOpen(false)}
                           className={({ isActive }) =>
                             `flex items-center text-base font-medium ${isActive ? "text-pink-500" : "text-slate-700"} hover:text-pink-500`
                           }
                         >
-                          <Lightbulb className="h-4 w-4 mr-3" /> Recomendador de Suplementos
+                          <Lightbulb className="h-4 w-4 mr-3" /> Suples da Lu
                         </NavLink>
                         <NavLink
                           to="/rastreador-ciclo"
@@ -202,15 +166,6 @@ const Header = () => {
                           }
                         >
                           <BookOpen className="h-4 w-4 mr-3" /> Ebook de Receitas
-                        </NavLink>
-                        <NavLink
-                          to="/desafios"
-                          onClick={() => setIsSheetOpen(false)}
-                          className={({ isActive }) =>
-                            `flex items-center text-base font-medium ${isActive ? "text-pink-500" : "text-slate-700"} hover:text-pink-500`
-                          }
-                        >
-                          <Users className="h-4 w-4 mr-3" /> Desafios
                         </NavLink>
                       </AccordionContent>
                     </AccordionItem>
@@ -301,7 +256,7 @@ const Header = () => {
                             onClick={() => setIsSheetOpen(false)}
                             className={({ isActive }) =>
                               `text-base font-medium ${isActive ? "text-pink-500" : "text-slate-700"} hover:text-pink-500`
-                            }
+                          }
                           >
                             Política de Cookies
                           </NavLink>
@@ -378,24 +333,6 @@ const Header = () => {
                   <Link to="/perfil" className="flex items-center">
                     <UserIcon className="mr-2 h-4 w-4" />
                     <span>Meu Perfil</span>
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link to="/rastreador-rotina" className="flex items-center">
-                    <Dumbbell className="mr-2 h-4 w-4" />
-                    <span>Rastreador de Rotina</span>
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link to="/minhas-metas" className="flex items-center">
-                    <Target className="mr-2 h-4 w-4" />
-                    <span>Minhas Metas</span>
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link to="/progresso" className="flex items-center">
-                    <TrendingUp className="mr-2 h-4 w-4" />
-                    <span>Meu Progresso</span>
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />

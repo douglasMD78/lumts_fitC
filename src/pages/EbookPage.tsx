@@ -7,54 +7,26 @@ import { showError } from '@/utils/toast';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
-import { BookOpen, Download, Lock } from 'lucide-react';
+import { BookOpen, Download, Lock, ShoppingCart, RefreshCcw } from 'lucide-react';
 import LoginGate from '@/components/LoginGate';
 import EmptyState from '@/components/EmptyState';
 
-// Importar o novo hook
-import { useEbooks } from '@/hooks/useEbooks';
-
-interface Ebook {
-  id: string;
-  title: string;
-  description: string | null;
-  cover_image_url: string | null;
-  download_url: string;
-}
+import { useDynamicContent } from '@/hooks/useDynamicContent'; // Import useDynamicContent
 
 const EbookPage = () => {
   const { user, loading: authLoading } = useAuth();
 
-  // Usar o hook de query para buscar ebooks
-  const { data: ebooks, isLoading: loadingEbooks } = useEbooks();
+  // Fetch dynamic content for Kiwify links
+  const { data: checkoutEbookContent } = useDynamicContent('link_checkout_ebook');
+  const { data: updateEbookContent } = useDynamicContent('link_atualizacao_ebook');
 
-  // Removido useEffect para tratamento de erro, agora gerenciado pelo hook useEbooks
-  // useEffect(() => {
-  //   if (fetchError) {
-  //     showError('Erro ao carregar ebooks: ' + fetchError.message);
-  //   }
-  // }, [fetchError]);
+  const checkoutLink = checkoutEbookContent?.link_url || "https://kiwify.com.br/checkout-ebook-placeholder";
+  const updateLink = updateEbookContent?.link_url || "https://kiwify.com.br/area-membros-ebook-placeholder";
 
-  if (authLoading || loadingEbooks) {
+  if (authLoading) {
     return (
       <div className="flex justify-center items-center h-screen">
-        <p>Carregando ebooks...</p>
-      </div>
-    );
-  }
-
-  if (!user) {
-    return (
-      <div className="container mx-auto py-12 px-4 text-center">
-        <EmptyState
-          icon={Lock}
-          title="Conteúdo Exclusivo para Membros"
-          description="Faça login ou crie sua conta para acessar ebooks, receitas e guias exclusivos."
-          buttonText="Fazer Login"
-          onClick={() => { /* navigate to login */ }} // Adicionado onClick para o EmptyState
-          iconColorClass="text-pink-500"
-          buttonVariant="default"
-        />
+        <p>Carregando página do Ebook...</p>
       </div>
     );
   }
@@ -63,49 +35,54 @@ const EbookPage = () => {
     <div className="container mx-auto px-4 py-8">
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-8">
+          <BookOpen className="h-16 w-16 text-pink-500 mx-auto mb-4" />
           <h1 className="text-3xl font-bold text-slate-800 mb-2">
-            Seus <span className="text-pink-500">Ebooks Exclusivos</span>
+            Seu Guia Completo para uma Vida <span className="text-pink-500">Fitness e Saudável</span>
           </h1>
-          <p className="text-slate-600">
-            Conteúdo premium para impulsionar sua jornada fitness.
+          <p className="text-lg text-slate-600 max-w-2xl mx-auto">
+            Descubra os segredos para transformar seu corpo e sua mente com nosso Ebook exclusivo.
           </p>
         </div>
 
-        {ebooks && ebooks.length === 0 ? (
-          <EmptyState
-            icon={BookOpen}
-            title="Nenhum ebook disponível"
-            description="Volte em breve para novas atualizações!"
-            iconColorClass="text-pink-500"
+        <Card className="bg-white rounded-2xl shadow-lg border border-pink-100 overflow-hidden p-6 md:p-8 lg:p-10 text-center">
+          <img
+            src="/placeholder.svg" // Placeholder image, replace with actual ebook cover
+            alt="Capa do Ebook LumtsFit"
+            className="w-full max-w-sm mx-auto h-auto object-cover rounded-lg mb-8 shadow-md"
           />
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {ebooks && ebooks.map((ebook) => (
-              <Card key={ebook.id} className="bg-white rounded-2xl shadow-lg border border-pink-100 overflow-hidden">
-                {ebook.cover_image_url && (
-                  <img
-                    src={ebook.cover_image_url}
-                    alt={ebook.title}
-                    className="w-full h-48 object-cover"
-                  />
-                )}
-                <CardHeader>
-                  <CardTitle className="text-xl font-bold text-slate-800">{ebook.title}</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  {ebook.description && (
-                    <p className="text-slate-600 text-sm">{ebook.description}</p>
-                  )}
-                  <Button asChild className="w-full bg-pink-500 hover:bg-pink-600">
-                    <a href={ebook.download_url} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center">
-                      <Download className="h-5 w-5 mr-2" /> Acessar Ebook
-                    </a>
-                  </Button>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        )}
+          <CardHeader className="pb-4">
+            <CardTitle className="text-2xl md:text-3xl font-bold text-slate-800 mb-4">
+              Ebook: Receitas e Estratégias para o Corpo dos Seus Sonhos
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <p className="text-lg text-slate-700 leading-relaxed">
+              Este ebook é o seu passaporte para uma alimentação deliciosa e resultados duradouros.
+              Com receitas exclusivas, dicas de nutrição e um plano passo a passo, você vai alcançar
+              seus objetivos de forma prazerosa e sustentável.
+            </p>
+            <ul className="list-disc list-inside text-left text-slate-600 space-y-2 mb-6 max-w-md mx-auto">
+              <li>Mais de 50 receitas saudáveis e saborosas</li>
+              <li>Estratégias de planejamento alimentar</li>
+              <li>Dicas para acelerar seu metabolismo</li>
+              <li>Guia de suplementação inteligente</li>
+              <li>Bônus exclusivos para membros</li>
+            </ul>
+
+            <div className="space-y-4">
+              <Button asChild className="w-full btn-calculate bg-pink-500 hover:bg-pink-600">
+                <a href={checkoutLink} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center">
+                  <ShoppingCart className="h-5 w-5 mr-2" /> QUERO MEU EBOOK AGORA!
+                </a>
+              </Button>
+              <Button asChild variant="outline" className="w-full border-pink-500 text-pink-500 hover:bg-pink-50">
+                <a href={updateLink} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center">
+                  <RefreshCcw className="h-5 w-5 mr-2" /> Já comprei, baixar atualização
+                </a>
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );

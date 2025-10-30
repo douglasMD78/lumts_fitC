@@ -1,64 +1,47 @@
 "use client";
 
-import { useState, useEffect, useCallback } from 'react';
-import { supabase } from '@/integrations/supabase/client';
-import { Calendar, Trophy, Users, CheckCircle } from "lucide-react";
+import { useState, useEffect } from 'react';
+import { Calendar, Trophy, Users, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from 'react-router-dom';
-import { showError, showSuccess } from '@/utils/toast';
 import { Card, CardContent } from '@/components/ui/card';
-import { useAuth } from '@/contexts/AuthContext';
-import LoginGate from '@/components/LoginGate';
 import EmptyState from '@/components/EmptyState';
 
-// Importar os novos hooks
-import { useChallenges } from '@/hooks/useChallenges';
-import { useJoinChallenge } from '@/hooks/useJoinChallenge';
-
-interface Challenge {
-  id: string;
-  title: string;
-  description: string;
-  participants: number;
-  rewards: string | null;
-  duration: string | null;
-  difficulty: string | null;
-  created_at: string;
-  isJoined?: boolean;
-}
+import { useDynamicContent } from '@/hooks/useDynamicContent'; // Import useDynamicContent
 
 const ChallengesPage = () => {
-  const { user, loading: authLoading } = useAuth();
-  const [joiningChallengeId, setJoiningChallengeId] = useState<string | null>(null);
+  // Fetch dynamic content for the active challenge
+  const { data: activeChallengeContent, isLoading: loadingChallengeContent } = useDynamicContent('desafio_ativo');
 
-  // Usar o hook de query para buscar desafios
-  const { data: challenges, isLoading: loadingChallenges, error: fetchError } = useChallenges();
-  const joinChallengeMutation = useJoinChallenge();
+  // Use dynamic content or fallbacks
+  const challengeTitle = activeChallengeContent?.title || "Desafio Ativo LumtsFit";
+  const challengeDescription = activeChallengeContent?.subtitle || "Participe do nosso desafio exclusivo e transforme seu corpo!";
+  const challengeImage = activeChallengeContent?.image_url || "/placeholder.svg";
+  const challengeLink = activeChallengeContent?.link_url || "https://linktr.ee/lumtsfit_desafio_placeholder";
+  // For duration, difficulty, participants, rewards, we might need to parse subtitle or add more fields to dynamic_content
+  // For now, using static placeholders if not available in dynamic_content
+  const challengeDuration = "21 Dias";
+  const challengeDifficulty = "Moderado";
+  const challengeParticipants = "1200+";
+  const challengeRewards = "Acesso a treinos exclusivos e guia alimentar";
 
-  // Removido useEffect para tratamento de erro, agora gerenciado pelo hook useChallenges
-  // useEffect(() => {
-  //   if (fetchError) {
-  //     showError('Erro ao carregar desafios: ' + fetchError.message);
-  //   }
-  // }, [fetchError]);
-
-  const handleJoinChallenge = async (challengeId: string) => {
-    if (!user) return;
-
-    setJoiningChallengeId(challengeId);
-    try {
-      await joinChallengeMutation.mutateAsync({ userId: user.id, challengeId });
-    } catch (error) {
-      // Erro já tratado no hook
-    } finally {
-      setJoiningChallengeId(null);
-    }
-  };
-
-  if (authLoading || loadingChallenges) {
+  if (loadingChallengeContent) {
     return (
       <div className="flex justify-center items-center h-screen">
-        <p>Carregando desafios...</p>
+        <p>Carregando desafio...</p>
+      </div>
+    );
+  }
+
+  if (!activeChallengeContent) {
+    return (
+      <div className="container mx-auto py-12 px-4 text-center">
+        <EmptyState
+          icon={Trophy}
+          title="Nenhum desafio ativo no momento"
+          description="Volte em breve para novos desafios emocionantes!"
+          iconColorClass="text-pink-500"
+        />
       </div>
     );
   }
@@ -67,102 +50,52 @@ const ChallengesPage = () => {
     <div className="container mx-auto px-4 py-8">
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-12">
+          <Trophy className="h-16 w-16 text-pink-500 mx-auto mb-4" />
           <h1 className="text-3xl md:text-4xl font-bold text-slate-800 mb-4">
             Desafios <span className="text-pink-500">LumtsFit</span>
           </h1>
           <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-            Participe de desafios comunitários para manter a motivação alta e celebrar conquistas juntas.
+            Participe do nosso desafio ativo e transforme seu corpo!
           </p>
         </div>
 
-        {challenges && challenges.length === 0 ? (
-          <EmptyState
-            icon={Trophy}
-            title="Nenhum desafio disponível"
-            description="Volte em breve para novos desafios ou proponha o seu!"
-            buttonText="Propor Desafio"
-            buttonLink="/propor-desafio"
-            iconColorClass="text-pink-500"
-          />
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-            {challenges && challenges.map((challenge) => (
-              <div key={challenge.id} className="bg-white rounded-2xl p-6 shadow-lg border border-pink-100 flex flex-col">
-                <div className="flex justify-between items-start mb-4">
-                  <h2 className="text-xl font-bold text-slate-800">{challenge.title}</h2>
-                  {challenge.difficulty && (
-                    <span className="bg-pink-100 text-pink-800 text-xs font-bold px-2 py-1 rounded-full">
-                      {challenge.difficulty}
-                    </span>
-                  )}
-                </div>
+        <Card className="bg-white rounded-2xl p-6 shadow-lg border border-pink-100 flex flex-col items-center text-center">
+          {challengeImage && (
+            <img src={challengeImage} alt={challengeTitle} className="w-full max-w-md h-auto object-cover rounded-lg mb-6 shadow-md" />
+          )}
+          <h2 className="text-2xl font-bold text-slate-800 mb-3">{challengeTitle}</h2>
+          <p className="text-slate-600 mb-6 max-w-xl">{challengeDescription}</p>
 
-                <p className="text-slate-600 mb-4 flex-grow">{challenge.description}</p>
-
-                <div className="flex items-center text-sm text-slate-500 mb-2">
-                  <Users className="h-4 w-4 mr-2" />
-                  <span>{challenge.participants} participantes</span>
-                </div>
-
-                {challenge.rewards && (
-                  <div className="flex items-center text-sm text-slate-500 mb-4">
-                    <Trophy className="h-4 w-4 mr-2" />
-                    <span>{challenge.rewards}</span>
-                  </div>
-                )}
-
-                {challenge.duration && (
-                  <div className="flex justify-between items-center mb-4">
-                    <div className="flex items-center text-sm text-slate-500">
-                      <Calendar className="h-4 w-4 mr-2" />
-                      <span>{challenge.duration}</span>
-                    </div>
-                  </div>
-                )}
-
-                <LoginGate
-                  message="Você precisa de uma conta para participar dos desafios da comunidade."
-                  featureName="Participar de Desafio"
-                >
-                  <Button
-                    className="bg-pink-500 hover:bg-pink-600 w-full"
-                    onClick={() => handleJoinChallenge(challenge.id)}
-                    disabled={challenge.isJoined || joiningChallengeId === challenge.id || joinChallengeMutation.isPending}
-                  >
-                    {joiningChallengeId === challenge.id || joinChallengeMutation.isPending ? 'Entrando...' : challenge.isJoined ? (
-                      <>
-                        <CheckCircle className="h-4 w-4 mr-2" /> Participando
-                      </>
-                    ) : (
-                      'Participar do Desafio'
-                    )}
-                  </Button>
-                </LoginGate>
-              </div>
-            ))}
-          </div>
-        )}
-
-        <div className="bg-white rounded-2xl p-8 shadow-lg border border-pink-100">
-          <div className="flex flex-col md:flex-row items-center">
-            <div className="mb-6 md:mb-0 md:mr-8">
-              <Trophy className="h-16 w-16 text-pink-500 mx-auto" />
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full max-w-md mb-6">
+            <div className="flex items-center justify-center text-sm text-slate-500 bg-pink-50 p-3 rounded-lg">
+              <Calendar className="h-4 w-4 mr-2" />
+              <span>Duração: {challengeDuration}</span>
             </div>
-            <div className="text-center md:text-left flex-grow">
-              <h2 className="text-2xl font-bold text-slate-800 mb-2">Crie seu próprio desafio</h2>
-              <p className="text-slate-600 mb-4">
-                Tem uma ideia de desafio? Proponha para a comunidade e incentive outras mulheres a participarem!
-              </p>
-              <LoginGate
-                message="Você precisa de uma conta para propor um desafio à comunidade."
-                featureName="Propor Desafio"
-              >
-                <Button asChild variant="outline" className="border-pink-500 text-pink-500 hover:bg-pink-50">
-                  <Link to="/propor-desafio">Propor Desafio</Link>
-                </Button>
-              </LoginGate>
+            <div className="flex items-center justify-center text-sm text-slate-500 bg-pink-50 p-3 rounded-lg">
+              <Trophy className="h-4 w-4 mr-2" />
+              <span>Dificuldade: {challengeDifficulty}</span>
+            </div>
+            <div className="flex items-center justify-center text-sm text-slate-500 bg-pink-50 p-3 rounded-lg col-span-full">
+              <Users className="h-4 w-4 mr-2" />
+              <span>{challengeParticipants} participantes</span>
             </div>
           </div>
+
+          <Button asChild className="btn-calculate w-full max-w-md bg-pink-500 hover:bg-pink-600">
+            <a href={challengeLink} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center">
+              QUERO PARTICIPAR! <ExternalLink className="h-5 w-5 ml-2" />
+            </a>
+          </Button>
+        </Card>
+
+        <div className="bg-white rounded-2xl p-8 shadow-lg border border-pink-100 mt-8 text-center">
+          <h2 className="text-2xl font-bold text-slate-800 mb-4">Não perca os próximos desafios!</h2>
+          <p className="text-slate-600 mb-6 max-w-2xl mx-auto">
+            Fique ligada em nossas redes sociais e no blog para ser a primeira a saber sobre novos desafios e conteúdos exclusivos.
+          </p>
+          <Button asChild variant="outline" className="border-pink-500 text-pink-500 hover:bg-pink-50">
+            <Link to="/blog">Visitar Blog</Link>
+          </Button>
         </div>
       </div>
     </div>

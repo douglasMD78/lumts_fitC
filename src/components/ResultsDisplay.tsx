@@ -2,8 +2,9 @@
 
 import { Button } from "@/components/ui/button";
 import { showSuccess } from "@/utils/toast";
-import { Flame, Beef, Carrot, Nut, Share2, RefreshCcw, Sparkles } from 'lucide-react';
-import LoginGate from "./LoginGate"; // Importar o LoginGate
+import { Flame, Beef, Carrot, Nut, Share2, RefreshCcw, Sparkles, ExternalLink } from 'lucide-react'; // Added ExternalLink
+import LoginGate from "./LoginGate";
+import DynamicBanner from "./DynamicBanner"; // Import DynamicBanner
 
 interface ResultsDisplayProps {
   results: {
@@ -124,6 +125,19 @@ export function ResultsDisplay({ results, onRestart, onSavePlan }: ResultsDispla
         >
           <Share2 className="h-5 w-5 mr-2" /> Compartilhar Resultado
         </Button>
+      </div>
+
+      {/* Dynamic Upsell Banner */}
+      <div className="mt-6">
+        <DynamicBanner
+          slug="cta_guia_macros"
+          defaultTitle="Leve seu Plano de Macros para o Próximo Nível!"
+          defaultDescription="Com o nosso Guia de Emagrecimento, você terá receitas e estratégias para aplicar seus macros e ver resultados reais."
+          defaultLink="/ebook"
+          buttonText="CONHECER O GUIA"
+          variant="default"
+          colorClass="bg-gradient-to-r from-pink-500 to-fuchsia-600 text-white shadow-pink-500/20"
+        />
       </div>
 
       <div className="bg-yellow-50 border border-yellow-200 rounded-2xl p-4 mt-6">

@@ -2,10 +2,11 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Calculator, BookOpen, Newspaper, Users, Droplet, User, LogIn, GlassWater, Dumbbell } from 'lucide-react';
+import { Calculator, BookOpen, Newspaper, Users, Droplet, User, LogIn, GlassWater, Dumbbell, Scale, Lightbulb } from 'lucide-react'; // Added Scale, Lightbulb
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { useAuth } from '@/contexts/AuthContext';
 import { cn } from '@/lib/utils';
+import { trackEvent } from '@/utils/analytics';
 
 interface StoryItem {
   to: string;
@@ -18,12 +19,13 @@ const StoriesSection = () => {
 
   const storyItems: StoryItem[] = [
     { to: "/calculadora-macros", label: "Macros", icon: Calculator },
+    { to: "/rastreador-ciclo", label: "Ciclo", icon: Droplet },
     { to: "/calculadora-agua", label: "Água", icon: GlassWater },
-    { to: "/rastreador-rotina", label: "Rotina", icon: Dumbbell },
+    { to: "/calculadora-bf", label: "BF%", icon: Scale },
+    { to: "/suples-da-lu", label: "Suples", icon: Lightbulb }, // Updated label and icon
     { to: "/ebook", label: "Ebook", icon: BookOpen },
     { to: "/blog", label: "Blog", icon: Newspaper },
-    { to: "/comunidade", label: "Comunidade", icon: Users },
-    { to: "/rastreador-ciclo", label: "Ciclo", icon: Droplet },
+    { to: "/desafios", label: "Desafios", icon: Users }, // Changed from Community to Challenges
     // Story condicional para Perfil/Login
     user
       ? { to: "/perfil", label: "Perfil", icon: User }
@@ -31,7 +33,7 @@ const StoriesSection = () => {
   ];
 
   return (
-    <section className="w-full max-w-4xl mx-auto mb-12 opacity-0 animate-fade-in-up animation-delay-100">
+    <section className="w-full max-w-4xl mb-12 opacity-0 animate-fade-in-up animation-delay-100">
       <div className="flex overflow-x-auto space-x-4 px-4 py-3 no-scrollbar">
         {storyItems.map((item, index) => (
           <Link

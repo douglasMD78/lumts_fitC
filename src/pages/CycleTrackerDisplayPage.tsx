@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { Droplet, CalendarDays, Edit, Plus, RefreshCw } from "lucide-react";
+import { Droplet, CalendarDays, Edit, RefreshCw } from "lucide-react"; // Removed Plus
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuth } from "@/contexts/AuthContext";
@@ -15,13 +15,13 @@ import { ptBR } from 'date-fns/locale';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
 import CircularProgress from "@/components/ui/CircularProgress";
 import InfoAccordion from "@/components/InfoAccordion";
-import DailyLogForm from "@/components/DailyLogForm";
+// Removed import DailyLogForm from "@/components/DailyLogForm";
 import CycleTrackerDisplaySkeleton from "@/components/CycleTrackerDisplaySkeleton";
 
 // Importar os novos hooks
 import { useLatestMenstrualCycle } from '@/hooks/useLatestMenstrualCycle';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { useSaveDailyCycleEntry } from '@/hooks/useSaveDailyCycleEntry';
+// Removed import { useSaveDailyCycleEntry } from '@/hooks/useSaveDailyCycleEntry';
 import { useUpdateMenstrualCycleStartDate } from '@/hooks/useUpdateMenstrualCycleStartDate';
 import { useDailyCycleEntriesForUser, DailyEntry } from '@/hooks/useDailyCycleEntriesForUser';
 import { useCyclePhaseContent, CyclePhaseContent } from '@/hooks/useCyclePhaseContent';
@@ -42,7 +42,7 @@ const CycleTrackerDisplayPage = () => {
   const [cycleDayInfo, setCycleDayInfo] = useState<CyclePhaseInfo | null>(null);
   const [predictedDates, setPredictedDates] = useState<ReturnType<typeof getPredictedDates> | null>(null);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
-  const [isLogDialogOpen, setIsLogDialogOpen] = useState(false);
+  // Removed [isLogDialogOpen, setIsLogDialogOpen] = useState(false);
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [isUpdatePeriodOpen, setIsUpdatePeriodOpen] = useState(false);
   const [newPeriodDate, setNewPeriodDate] = useState<Date | undefined>(new Date());
@@ -52,15 +52,8 @@ const CycleTrackerDisplayPage = () => {
   const { data: dailyEntries, isLoading: loadingDailyEntries, refetch: refetchDailyEntries } = useDailyCycleEntriesForUser();
   const { data: phaseContent, isLoading: loadingPhaseContent } = useCyclePhaseContent(cycleDayInfo?.phase || null);
 
-  const saveDailyEntryMutation = useSaveDailyCycleEntry();
+  // Removed const saveDailyEntryMutation = useSaveDailyCycleEntry();
   const updateMenstrualCycleStartDateMutation = useUpdateMenstrualCycleStartDate();
-
-  // Removido useEffect para tratamento de erro, agora gerenciado pelos hooks
-  // useEffect(() => {
-  //   if (menstrualCycleError) showError("Erro ao carregar dados do ciclo: " + menstrualCycleError.message);
-  //   if (dailyEntriesError) showError('Erro ao carregar registros diários: ' + dailyEntriesError.message);
-  //   if (phaseContentError) showError('Erro ao carregar conteúdo da fase do ciclo: ' + phaseContentError.message);
-  // }, [menstrualCycleError, dailyEntriesError, phaseContentError]);
 
   useEffect(() => {
     if (latestMenstrualCycle) {
@@ -87,24 +80,7 @@ const CycleTrackerDisplayPage = () => {
     }
   }, [cycleData, selectedDate]);
 
-  const handleSaveDailyEntry = async (entryData: Partial<DailyEntry>) => {
-    if (!user || !selectedDate || !cycleData || !dailyEntries) return;
-    
-    const existingEntry = dailyEntries.find(e => isSameDay(parseISO(e.entry_date), selectedDate || new Date()));
-
-    saveDailyEntryMutation.mutate(
-      {
-        userId: user.id,
-        cycleId: cycleData.id,
-        selectedDate: selectedDate,
-        entryData: entryData,
-        existingEntryId: existingEntry?.id,
-      },
-      {
-        onSuccess: () => setIsLogDialogOpen(false),
-      }
-    );
-  };
+  // Removed handleSaveDailyEntry function
 
   const handleUpdateLastPeriodDate = async () => {
     if (!newPeriodDate || !cycleData) {
@@ -184,25 +160,7 @@ const CycleTrackerDisplayPage = () => {
         </Card>
 
         <div className="grid grid-cols-1 gap-4">
-          <Dialog open={isLogDialogOpen} onOpenChange={setIsLogDialogOpen}>
-            <DialogTrigger asChild>
-              <Button className="w-full bg-gradient-to-r from-pink-500 to-fuchsia-500 text-white font-bold py-6 text-lg">
-                <Plus className="h-5 w-5 mr-2" /> Registrar Sintomas
-              </Button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Registro de {format(selectedDate || new Date(), 'dd/MM/yyyy', { locale: ptBR })}</DialogTitle>
-              </DialogHeader>
-              <DailyLogForm
-                selectedDate={selectedDate}
-                initialEntry={dailyEntries?.find(e => isSameDay(parseISO(e.entry_date), selectedDate || new Date())) || null}
-                onSave={handleSaveDailyEntry}
-                loading={saveDailyEntryMutation.isPending}
-                onClose={() => setIsLogDialogOpen(false)}
-              />
-            </DialogContent>
-          </Dialog>
+          {/* Removed Dialog for "Registrar Sintomas" */}
 
           <div className="grid grid-cols-2 gap-4">
             <Dialog open={isUpdatePeriodOpen} onOpenChange={setIsUpdatePeriodOpen}>
@@ -244,7 +202,7 @@ const CycleTrackerDisplayPage = () => {
                   onSelect={(date) => {
                     setSelectedDate(date);
                     setIsCalendarOpen(false);
-                    setIsLogDialogOpen(true);
+                    // Removed setIsLogDialogOpen(true); as logging is removed
                   }}
                   locale={ptBR}
                   modifiers={modifiers}

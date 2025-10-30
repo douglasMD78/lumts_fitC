@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useUserProfile } from "@/hooks/useUserProfile";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { User, LayoutDashboard, Dumbbell, Target, TrendingUp, Calculator, BookOpen, Users, Droplet, Lightbulb, GlassWater } from "lucide-react";
+import { User, Calculator, BookOpen, Droplet, Lightbulb, GlassWater, Scale } from "lucide-react"; // Removed Dumbbell, Target, TrendingUp, Users
 import { Button } from "@/components/ui/button";
 
 const MySpacePage = () => {
@@ -19,30 +19,6 @@ const MySpacePage = () => {
       description: "Gerencie suas informações pessoais e avatar.",
       icon: User,
       link: "/perfil",
-    },
-    {
-      title: "Visão Geral",
-      description: "Veja um resumo rápido da sua jornada fitness.",
-      icon: LayoutDashboard,
-      link: "/overview",
-    },
-    {
-      title: "Rastreador de Rotina",
-      description: "Monitore seus treinos, cardio, dieta e bem-estar diário.",
-      icon: Dumbbell,
-      link: "/rastreador-rotina",
-    },
-    {
-      title: "Minhas Metas",
-      description: "Defina e acompanhe seus objetivos de fitness e saúde.",
-      icon: Target,
-      link: "/minhas-metas",
-    },
-    {
-      title: "Meu Progresso",
-      description: "Visualize suas tendências e conquistas ao longo do tempo.",
-      icon: TrendingUp,
-      link: "/progresso",
     },
     {
       title: "Calculadora de Macros",
@@ -63,10 +39,16 @@ const MySpacePage = () => {
       link: "/calculadora-agua",
     },
     {
-      title: "Recomendador de Suplementos",
+      title: "Calculadora de BF%",
+      description: "Estime seu percentual de gordura corporal.",
+      icon: Scale,
+      link: "/calculadora-bf",
+    },
+    {
+      title: "Suples da Lu",
       description: "Encontre os suplementos ideais para seus objetivos.",
       icon: Lightbulb,
-      link: "/recomendador-suplementos",
+      link: "/suples-da-lu", // Updated link
     },
     {
       title: "Rastreador de Ciclo",
@@ -81,10 +63,16 @@ const MySpacePage = () => {
       link: "/ebook",
     },
     {
-      title: "Comunidade & Desafios",
-      description: "Conecte-se com outras mulheres e participe de desafios.",
-      icon: Users,
-      link: "/comunidade",
+      title: "Blog",
+      description: "Artigos, dicas e inspirações para sua jornada de bem-estar.",
+      icon: Newspaper, // Changed from Users to Newspaper for Blog
+      link: "/blog",
+    },
+    {
+      title: "Desafios",
+      description: "Participe de desafios para manter a motivação alta.",
+      icon: Trophy, // Added Trophy icon for Challenges
+      link: "/desafios",
     },
   ];
 
