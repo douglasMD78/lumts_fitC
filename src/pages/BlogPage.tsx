@@ -4,10 +4,10 @@ import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { showError } from '@/utils/toast';
 import BlogCard from '@/components/BlogCard';
-import BlogCardSkeleton from '@/components/BlogCardSkeleton'; // Importar o skeleton
+import BlogCardSkeleton from '@/components/BlogCardSkeleton';
 import { BookOpen } from 'lucide-react';
-import { Card, CardContent } from '@/components/ui/card';
-import EmptyState from '@/components/EmptyState'; // Importar EmptyState
+import { Card, CardContent } from '@/components/ui/card'; // Removed Card as it's not used directly
+import EmptyState from '@/components/EmptyState';
 
 interface BlogPost {
   id: string;
@@ -35,6 +35,9 @@ const BlogPage = () => {
   const { data: blogPosts, isLoading, isError, error } = useQuery<BlogPost[], Error>({
     queryKey: ['blogPosts'],
     queryFn: fetchBlogPosts,
+    onError: (error: Error) => { // Added error type
+      showError('Erro ao carregar posts do blog: ' + error.message);
+    },
   });
 
   if (isError) {

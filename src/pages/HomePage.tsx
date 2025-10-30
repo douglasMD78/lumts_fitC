@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Calculator, Apple, Newspaper, Users, Droplet, Heart, Sparkles, BookOpen, GlassWater, Dumbbell, LayoutDashboard, TrendingUp, Flame, Scale, Home } from "lucide-react";
+import { Calculator, Sparkles, BookOpen, GlassWater, Dumbbell, LayoutDashboard, Scale, Lightbulb, ArrowRight } from "lucide-react"; // Removed many unused icons
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import StoriesSection from "@/components/StoriesSection";
@@ -9,10 +9,9 @@ import { useEffect } from "react";
 import { showError } from "@/utils/toast";
 import DynamicBanner from "@/components/DynamicBanner"; // Import DynamicBanner
 import { useQuery } from '@tanstack/react-query'; // Import useQuery for blog posts
+import { supabase } from '@/integrations/supabase/client'; // Added missing import
 
-// Importar os novos hooks
-import { useLatestMacroPlan } from '@/hooks/useLatestMacroPlan';
-import { useHomeSummaryData } from '@/hooks/useHomeSummaryData';
+// Removed imports for useLatestMacroPlan and useHomeSummaryData as they are no longer used directly here
 
 interface BlogPost {
   id: string;
@@ -47,6 +46,9 @@ const HomePage = () => {
     queryKey: ['homeBlogPosts'],
     queryFn: fetchBlogPosts,
     staleTime: 1000 * 60 * 10, // Cache for 10 minutes
+    onError: (error: Error) => { // Added error type
+      showError('Erro ao carregar posts do blog: ' + error.message);
+    },
   });
 
   useEffect(() => {

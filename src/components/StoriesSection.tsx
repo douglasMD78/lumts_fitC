@@ -2,11 +2,11 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Calculator, BookOpen, Newspaper, Users, Droplet, User, LogIn, GlassWater, Dumbbell, Scale, Lightbulb } from 'lucide-react'; // Added Scale, Lightbulb
+import { Calculator, BookOpen, Newspaper, Users, Droplet, User, LogIn, GlassWater, Scale, Lightbulb } from 'lucide-react'; // Removed Dumbbell, cn, trackEvent
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { useAuth } from '@/contexts/AuthContext';
-import { cn } from '@/lib/utils';
-import { trackEvent } from '@/utils/analytics';
+// Removed import { cn } from '@/lib/utils';
+// Removed import { trackEvent } from '@/utils/analytics';
 
 interface StoryItem {
   to: string;

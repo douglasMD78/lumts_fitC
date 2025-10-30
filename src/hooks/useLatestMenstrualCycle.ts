@@ -40,7 +40,7 @@ const fetchLatestMenstrualCycle = async (userId: string): Promise<MenstrualCycle
 export const useLatestMenstrualCycle = () => {
   const { user } = useAuth();
 
-  return useQuery<MenstrualCycle | null, Error>({
+  return useQuery({ // Updated syntax
     queryKey: ['latestMenstrualCycle', user?.id],
     queryFn: () => {
       if (!user) return Promise.resolve(null);
@@ -48,7 +48,7 @@ export const useLatestMenstrualCycle = () => {
     },
     enabled: !!user,
     staleTime: 1000 * 60 * 10,
-    onError: (error) => {
+    onError: (error: Error) => { // Updated error type
       showError('Erro ao carregar o último ciclo menstrual: ' + error.message);
     },
   });

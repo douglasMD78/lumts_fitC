@@ -25,7 +25,7 @@ const fetchDailyCycleEntriesForUser = async (userId: string): Promise<DailyEntry
 export const useDailyCycleEntriesForUser = () => {
   const { user } = useAuth();
 
-  return useQuery<DailyEntry[], Error>({
+  return useQuery({ // Updated syntax
     queryKey: ['dailyCycleEntries', user?.id],
     queryFn: () => {
       if (!user) return Promise.resolve([]);
@@ -33,7 +33,7 @@ export const useDailyCycleEntriesForUser = () => {
     },
     enabled: !!user,
     staleTime: 1000 * 60,
-    onError: (error) => {
+    onError: (error: Error) => { // Updated error type
       showError('Erro ao carregar registros diários do ciclo: ' + error.message);
     },
   });

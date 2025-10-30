@@ -1,14 +1,14 @@
 "use client";
 
-import { useState, useEffect, useCallback } from 'react';
-import { supabase } from '@/integrations/supabase/client';
+import { useState, useEffect, useCallback } from 'react'; // Removed useState, useEffect, useCallback as they are not used
+import { supabase } from '@/integrations/supabase/client'; // Removed supabase as it's not used
 import { useAuth } from '@/contexts/AuthContext';
-import { showError, showSuccess } from '@/utils/toast'; // Importar showSuccess
+import { showError, showSuccess } from '@/utils/toast'; // Removed showSuccess as it's not used
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom'; // Added useNavigate
 import { Utensils, Flame, Beef, Carrot, Nut, Trash2 } from 'lucide-react';
-import EmptyState from '@/components/EmptyState'; // Importar EmptyState
+import EmptyState from '@/components/EmptyState';
 
 // Importar os novos hooks
 import { useUserMacroPlans } from '@/hooks/useUserMacroPlans';
@@ -26,6 +26,7 @@ interface MacroPlan {
 
 const MyMacroPlansPage = () => {
   const { user, loading: authLoading } = useAuth();
+  const navigate = useNavigate(); // Initialized useNavigate
 
   // Usar os novos hooks de query e mutação
   const { data: plans, isLoading: loadingPlans } = useUserMacroPlans();

@@ -12,7 +12,7 @@ const AuthContext = createContext<AuthContextType>({ session: null, user: null, 
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [session, setSession] = useState<Session | null>(null);
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<User | null>(null); // Changed initial state from {} to null
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

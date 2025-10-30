@@ -25,12 +25,12 @@ const fetchEbooks = async (): Promise<Ebook[]> => {
 };
 
 export const useEbooks = () => {
-  return useQuery<Ebook[], Error>({
+  return useQuery({ // Updated syntax
     queryKey: ['ebooks'],
     queryFn: fetchEbooks,
     enabled: true,
     staleTime: 1000 * 60 * 10,
-    onError: (error) => {
+    onError: (error: Error) => { // Updated error type
       showError('Erro ao carregar ebooks: ' + error.message);
     },
   });

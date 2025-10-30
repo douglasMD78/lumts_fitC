@@ -30,7 +30,7 @@ const fetchUserMacroPlans = async (userId: string): Promise<MacroPlan[]> => {
 export const useUserMacroPlans = () => {
   const { user } = useAuth();
 
-  return useQuery<MacroPlan[], Error>({
+  return useQuery({ // Updated syntax
     queryKey: ['userMacroPlans', user?.id],
     queryFn: () => {
       if (!user) return Promise.resolve([]);
@@ -38,7 +38,7 @@ export const useUserMacroPlans = () => {
     },
     enabled: !!user,
     staleTime: 1000 * 60 * 5,
-    onError: (error) => {
+    onError: (error: Error) => { // Updated error type
       showError('Erro ao carregar planos de macros do usuário: ' + error.message);
     },
   });

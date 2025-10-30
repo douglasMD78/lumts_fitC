@@ -1,13 +1,13 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react'; // Removed useState, useEffect as they are not used
 import { Calendar, Trophy, Users, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
 import EmptyState from '@/components/EmptyState';
 
-import { useDynamicContent } from '@/hooks/useDynamicContent'; // Import useDynamicContent
+import { useDynamicContent } from '@/hooks/useDynamicContent';
 
 const ChallengesPage = () => {
   // Fetch dynamic content for the active challenge

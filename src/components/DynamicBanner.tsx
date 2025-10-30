@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 import { useDynamicContent, DynamicContent } from '@/hooks/useDynamicContent';
-import { Sparkles, ArrowRight } from 'lucide-react';
+import { Sparkles, ArrowRight, ExternalLink } from 'lucide-react'; // Ensure ExternalLink is imported
 
 interface DynamicBannerProps {
   slug: string;
@@ -49,10 +49,10 @@ const DynamicBanner = ({
     );
   }
 
-  const title = content?.title || defaultTitle;
-  const description = content?.subtitle || defaultDescription;
-  const image = content?.image_url || defaultImage;
-  const link = content?.link_url || defaultLink;
+  const title = content?.title || defaultTitle; // Added optional chaining
+  const description = content?.subtitle || defaultDescription; // Added optional chaining
+  const image = content?.image_url || defaultImage; // Added optional chaining
+  const link = content?.link_url || defaultLink; // Added optional chaining
 
   if (!content?.is_active && content !== null) {
     return null; // Don't render if content is explicitly inactive

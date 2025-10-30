@@ -22,7 +22,7 @@ const fetchUserProfile = async (userId: string) => {
 export const useUserProfile = () => {
   const { user } = useAuth();
 
-  return useQuery({
+  return useQuery({ // Updated syntax
     queryKey: ['userProfile', user?.id],
     queryFn: () => {
       if (!user) return null;
@@ -30,7 +30,7 @@ export const useUserProfile = () => {
     },
     enabled: !!user,
     staleTime: 1000 * 60 * 5,
-    onError: (error) => {
+    onError: (error: Error) => { // Updated error type
       showError('Erro ao carregar perfil do usuário: ' + error.message);
     },
   });

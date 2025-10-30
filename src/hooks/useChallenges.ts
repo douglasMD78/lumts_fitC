@@ -53,12 +53,12 @@ const fetchChallenges = async (userId: string | undefined): Promise<Challenge[]>
 export const useChallenges = () => {
   const { user } = useAuth();
 
-  return useQuery<Challenge[], Error>({
+  return useQuery({ // Updated syntax
     queryKey: ['challenges', user?.id],
     queryFn: () => fetchChallenges(user?.id),
     enabled: true,
     staleTime: 1000 * 60 * 5,
-    onError: (error) => {
+    onError: (error: Error) => { // Updated error type
       showError('Erro ao carregar desafios: ' + error.message);
     },
   });
