@@ -4,7 +4,7 @@
 
 @layer base {
   :root {
-    --background: 251 252 254; /* slate.50 - Um off-white muito suave */
+    --background: 0 0% 100%; /* Branco puro para um fundo mais limpo */
     --foreground: 240 10% 3.9%;
     --card: 0 0% 100%;
     --card-foreground: 240 10% 3.9%;
@@ -23,7 +23,7 @@
     --border: 260 10% 90%; /* Borda com tom roxo suave */
     --input: 240 5.9% 90%;
     --ring: 330 80% 50%; /* Anel com a cor primária */
-    --radius: 1.5rem; /* Aumentando o raio para um visual mais suave e moderno */
+    --radius: 0.75rem; /* Aumentar um pouco o raio para um visual mais suave */
 
     /* Cores para CircularProgress */
     --rose-500: 350 90% 60%;
@@ -67,7 +67,7 @@
   }
   body {
     @apply bg-background text-foreground;
-    font-family: 'Inter', sans-serif;
+    font-family: 'Poppins', sans-serif;
   }
   /* Ensure focus ring is always visible */
   *:focus-visible {
@@ -78,7 +78,7 @@
 
 @layer components {
   .card-style {
-    @apply bg-white/95 backdrop-blur-2xl rounded-2xl shadow-xl shadow-pink-100/30 border border-white/50 p-6 sm:p-8; /* Sombra mais suave e borda mais sutil */
+    @apply bg-white/95 backdrop-blur-2xl rounded-2xl shadow-lg shadow-pink-100/30 border border-white/50 p-6 sm:p-8; /* Sombra mais suave e borda mais sutil */
   }
 
   .result-card {
