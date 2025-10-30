@@ -32,7 +32,7 @@ const StoriesSection = () => {
 
   return (
     <section className="w-full max-w-4xl mb-12 opacity-0 animate-fade-in-up animation-delay-100">
-      <div className="flex w-full items-center space-x-4 overflow-x-auto py-4 no-scrollbar"> {/* Refactored for horizontal scroll */}
+      <div className="flex w-full items-center space-x-4 overflow-x-auto py-4 no-scrollbar"> {/* Confirmed horizontal scroll */}
         {storyItems.map((item, index) => (
           <Link
             key={index}
@@ -40,7 +40,7 @@ const StoriesSection = () => {
             className="flex flex-col items-center flex-shrink-0 w-20 group"
             onClick={() => trackEvent('navigation.story_select', { story_name: item.label })}
           >
-            <Avatar className="h-16 w-16 p-1 bg-gray-100 shadow-md group-hover:scale-105 group-hover:bg-pink-50 transition-all duration-300 ease-out">
+            <Avatar className="h-16 w-16 p-1 bg-white shadow-md group-hover:scale-105 group-hover:shadow-lg transition-all duration-300 ease-out">
               <AvatarFallback className="bg-transparent text-pink-500">
                 <item.icon className="h-8 w-8" />
               </AvatarFallback>
