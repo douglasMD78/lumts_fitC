@@ -20,7 +20,8 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ["Poppins", ...fontFamily.sans],
+        sans: ["Inter", ...fontFamily.sans],
+        heading: ["Lexend", ...fontFamily.sans], // Adicionando a nova fonte para títulos
       },
       colors: {
         border: "hsl(var(--border))",
