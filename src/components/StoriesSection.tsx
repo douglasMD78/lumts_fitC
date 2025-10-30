@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Calculator, BookOpen, Newspaper, Users, Droplet, User, LogIn, GlassWater, Scale, Lightbulb } from 'lucide-react';
+import { Calculator, BookOpen, Newspaper, Users, Droplet, User, LogIn, GlassWater, Scale, Lightbulb, Trophy } from 'lucide-react';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { useAuth } from '@/contexts/AuthContext';
 import { cn } from '@/lib/utils';
@@ -25,7 +25,7 @@ const StoriesSection = () => {
     { to: "/suples-da-lu", label: "Suples", icon: Lightbulb },
     { to: "/ebook", label: "Ebook", icon: BookOpen },
     { to: "/blog", label: "Blog", icon: Newspaper },
-    { to: "/desafios", label: "Desafios", icon: Users },
+    { to: "/desafios", label: "Desafios", icon: Trophy },
     // Story condicional para Perfil/Login
     user
       ? { to: "/perfil", label: "Perfil", icon: User }

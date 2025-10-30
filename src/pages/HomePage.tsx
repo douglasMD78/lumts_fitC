@@ -58,20 +58,15 @@ const HomePage = () => {
 
   return (
     <div className="container mx-auto px-4 pt-8 pb-16 flex flex-col items-center space-y-12">
-      {/* Seção 1: O "Hero" (Acima da Dobra) */}
-      <section className="w-full max-w-4xl text-center px-6 py-12 animate-fade-in-up">
-        <h1 className="text-4xl md:text-5xl font-bold text-slate-800 leading-tight mb-4">
-          A calculadora de macros que eu uso para <span className="gradient-text">resultados reais</span>.
+      {/* Seção 1: O Acolhimento e a Identidade */}
+      <section className="w-full max-w-4xl text-center px-6 py-4 animate-fade-in-up">
+        <h1 className="text-3xl font-bold text-slate-800 leading-tight mb-6">
+          Olá, {userName}! O que vamos fazer hoje?
         </h1>
-        <p className="text-lg md:text-xl text-slate-600 max-w-2xl mx-auto mb-8">
-          Descubra suas calorias e macros em 60 segundos com nossa ferramenta 100% gratuita.
-        </p>
-        <Button asChild size="lg" className="btn-calculate">
-          <Link to="/calculadora-macros">CALCULAR MEUS MACROS AGORA</Link>
-        </Button>
+        <StoriesSection />
       </section>
 
-      {/* Seção 2: Venda #1 (Ebook - O Carro-Chefe) */}
+      {/* Seção 2: Venda #1 (Ebook - Lindo e Contextual) */}
       <section className="w-full max-w-4xl animate-fade-in-up animation-delay-200">
         <DynamicHeroBanner
           slug="banner_home_ebook"
@@ -82,10 +77,25 @@ const HomePage = () => {
         />
       </section>
 
-      {/* Seção 3: Ferramentas (A Identidade Visual) */}
+      {/* Seção 3: A "Isca" (Um CTA Claro, mas Gentil) */}
       <section className="w-full max-w-4xl animate-fade-in-up animation-delay-300">
-        <h2 className="text-3xl font-bold text-slate-800 text-center mb-8">Explore nossas ferramentas</h2>
-        <StoriesSection />
+        <Card className="card-style p-6 text-center">
+          <CardHeader className="pb-4">
+            <CardTitle className="text-2xl font-bold text-slate-800">
+              Precisando de um norte na dieta?
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <p className="text-slate-600 text-lg">
+              A nossa calculadora de macros gratuita é o primeiro passo para você entender exatamente o que precisa comer.
+            </p>
+            <Button asChild size="lg" className="btn-calculate">
+              <Link to="/calculadora-macros" className="flex items-center justify-center">
+                <Calculator className="h-5 w-5 mr-2" /> Começar a Calcular
+              </Link>
+            </Button>
+          </CardContent>
+        </Card>
       </section>
 
       {/* Seção 4: Venda #2 (Desafio ou Guia - CMS) */}
