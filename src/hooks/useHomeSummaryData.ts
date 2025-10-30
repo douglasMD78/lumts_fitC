@@ -4,7 +4,6 @@ import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { format, subDays, differenceInDays } from 'date-fns';
-import { showError } from '@/utils/toast';
 
 // Ajustado para refletir apenas os campos selecionados na query
 interface DailyRoutine {
