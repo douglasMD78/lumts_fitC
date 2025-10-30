@@ -1,12 +1,11 @@
 "use client";
 
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, UseQueryOptions } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { showError } from '@/utils/toast';
 import BlogCard from '@/components/BlogCard';
 import BlogCardSkeleton from '@/components/BlogCardSkeleton';
 import { BookOpen } from 'lucide-react';
-import { Card, CardContent } from '@/components/ui/card'; // Removed Card as it's not used directly
 import EmptyState from '@/components/EmptyState';
 
 interface BlogPost {
@@ -32,10 +31,10 @@ const fetchBlogPosts = async (): Promise<BlogPost[]> => {
 };
 
 const BlogPage = () => {
-  const { data: blogPosts, isLoading, isError, error } = useQuery<BlogPost[], Error>({
+  const { data: blogPosts, isLoading, isError, error } = useQuery<BlogPost[], Error, BlogPost[], (string)[]>({
     queryKey: ['blogPosts'],
     queryFn: fetchBlogPosts,
-    onError: (error: Error) => { // Added error type
+    onError: (error: Error) => {
       showError('Erro ao carregar posts do blog: ' + error.message);
     },
   });
@@ -78,7 +77,7 @@ const BlogPage = () => {
           />
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {blogPosts?.map((post) => (
+            {blogPosts?.map((post: BlogPost) => (
               <BlogCard
                 key={post.id}
                 image={post.cover_image_url || '/placeholder.svg'}

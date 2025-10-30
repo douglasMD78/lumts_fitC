@@ -1,11 +1,10 @@
 "use client";
 
-import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
-import { useDynamicContent } from '@/hooks/useDynamicContent';
+import { useDynamicContent, DynamicContent } from '@/hooks/useDynamicContent';
 import { ArrowRight, ExternalLink } from 'lucide-react';
 
 interface DynamicHeroBannerProps {
@@ -33,7 +32,7 @@ const DynamicHeroBanner = ({
         <div className="p-6">
           <div className="h-8 w-3/4 bg-gray-300 mb-4"></div>
           <div className="h-4 w-full bg-gray-300 mb-4"></div>
-          <div className="h-12 w-full bg-gray-300 rounded-full"></div>
+          <div className="h-12 bg-gray-300 w-full rounded-full"></div>
         </div>
       </Card>
     );
@@ -51,7 +50,7 @@ const DynamicHeroBanner = ({
   const isExternalLink = link.startsWith('http');
 
   return (
-    <Link to={isExternalLink ? '#' : link} onClick={(e) => { if (isExternalLink) window.open(link, '_blank'); }} className="block">
+    <Link to={isExternalLink ? '#' : link} onClick={() => { if (isExternalLink) window.open(link, '_blank'); }} className="block">
       <Card className="relative rounded-2xl shadow-lg border border-pink-100 overflow-hidden group transition-all duration-300 hover:shadow-xl hover:shadow-pink-200/50 hover:-translate-y-1">
         <div
           className="absolute inset-0 bg-cover bg-center"

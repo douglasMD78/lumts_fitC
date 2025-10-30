@@ -3,7 +3,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { showError, showSuccess } from '@/utils/toast';
-import { format, parseISO } from 'date-fns';
+import { format } from 'date-fns';
 
 interface UserGoalPayload {
   id?: string;
@@ -94,7 +94,7 @@ export const useSaveUserGoal = () => {
         }
       }
     },
-    onSuccess: (data, variables) => {
+    onSuccess: (variables) => {
       showSuccess(variables.goalData.id ? 'Meta atualizada com sucesso! ✨' : 'Meta definida com sucesso! 🎉');
       queryClient.invalidateQueries({ queryKey: ['userGoals', variables.userId] }); // Invalidate all user goals
       queryClient.invalidateQueries({ queryKey: ['userGoals', variables.userId, 'active'] }); // Invalidate active goals

@@ -1,9 +1,9 @@
 "use client";
 
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, UseQueryOptions } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
-import { showError } from '@/utils/toast'; // Importar showError
+import { showError } from '@/utils/toast';
 
 interface MacroPlan {
   id: string;
@@ -32,7 +32,7 @@ const fetchLatestMacroPlan = async (userId: string): Promise<MacroPlan | null> =
 export const useLatestMacroPlan = () => {
   const { user } = useAuth();
 
-  return useQuery({ // Updated syntax
+  return useQuery<MacroPlan | null, Error, MacroPlan | null, (string | undefined)[]>({
     queryKey: ['latestMacroPlan', user?.id],
     queryFn: () => {
       if (!user) return Promise.resolve(null);
@@ -40,7 +40,7 @@ export const useLatestMacroPlan = () => {
     },
     enabled: !!user,
     staleTime: 1000 * 60 * 5,
-    onError: (error: Error) => { // Updated error type
+    onError: (error: Error) => {
       showError('Erro ao carregar o último plano de macros: ' + error.message);
     },
   });

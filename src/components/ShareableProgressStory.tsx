@@ -1,8 +1,7 @@
 "use client";
 
-import React from 'react';
 import { Button } from '@/components/ui/button';
-import { TrendingUp, Dumbbell, Target, Share2, Sparkles, CheckCircle } from 'lucide-react';
+import { Dumbbell, Target, Share2, Sparkles, CheckCircle } from 'lucide-react';
 import { showError, showSuccess } from '@/utils/toast';
 import { Progress } from '@/components/ui/progress';
 

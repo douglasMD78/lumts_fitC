@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Calculator, ArrowRight } from "lucide-react";
+import { Calculator } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import StoriesSection from "@/components/StoriesSection";
@@ -9,8 +9,8 @@ import { useEffect } from "react";
 import { showError } from "@/utils/toast";
 import BlogCard from '@/components/BlogCard';
 import BlogCardSkeleton from '@/components/BlogCardSkeleton';
-import DynamicHeroBanner from "@/components/DynamicHeroBanner"; // Import the new DynamicHeroBanner
-import { useQuery } from '@tanstack/react-query';
+import DynamicHeroBanner from "@/components/DynamicHeroBanner";
+import { useQuery, UseQueryOptions } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 
 interface BlogPost {
@@ -41,7 +41,7 @@ const HomePage = () => {
   const { data: profileData } = useUserProfile();
   const userName = profileData?.first_name || user?.email?.split('@')[0] || 'Usuária';
 
-  const { data: blogPosts, isLoading: loadingBlogPosts, isError: blogPostsError, error: blogPostsFetchError } = useQuery<BlogPost[], Error>({
+  const { data: blogPosts, isLoading: loadingBlogPosts, isError: blogPostsError, error: blogPostsFetchError } = useQuery<BlogPost[], Error, BlogPost[], (string)[]>({
     queryKey: ['homeBlogPosts'],
     queryFn: fetchBlogPosts,
     staleTime: 1000 * 60 * 10,
@@ -120,7 +120,7 @@ const HomePage = () => {
           </div>
         ) : blogPosts && blogPosts.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {blogPosts.map((post) => (
+            {blogPosts.map((post: BlogPost) => (
               <BlogCard
                 key={post.id}
                 image={post.cover_image_url || '/placeholder.svg'}

@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { showSuccess } from "@/utils/toast";
-import { Flame, Beef, Carrot, Nut, Share2, RefreshCcw, Sparkles, ExternalLink } from 'lucide-react'; // Added ExternalLink
+import { Beef, Carrot, Nut, Share2, RefreshCcw, Sparkles } from 'lucide-react';
 import LoginGate from "./LoginGate";
 import DynamicBanner from "./DynamicBanner"; // Import DynamicBanner
 
@@ -133,8 +133,8 @@ export function ResultsDisplay({ results, onRestart, onSavePlan }: ResultsDispla
           slug="cta_guia_macros"
           defaultTitle="Leve seu Plano de Macros para o Próximo Nível!"
           defaultDescription="Com o nosso Guia de Emagrecimento, você terá receitas e estratégias para aplicar seus macros e ver resultados reais."
-          defaultLink="/ebook"
           buttonText="CONHECER O GUIA"
+          defaultLink="/ebook"
           variant="default"
           colorClass="bg-gradient-to-r from-pink-500 to-fuchsia-600 text-white shadow-pink-500/20"
         />

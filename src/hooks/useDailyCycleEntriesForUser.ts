@@ -1,9 +1,9 @@
 "use client";
 
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, UseQueryOptions } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
-import { showError } from '@/utils/toast'; // Importar showError
+import { showError } from '@/utils/toast';
 
 export interface DailyEntry {
   id: string;
@@ -25,7 +25,7 @@ const fetchDailyCycleEntriesForUser = async (userId: string): Promise<DailyEntry
 export const useDailyCycleEntriesForUser = () => {
   const { user } = useAuth();
 
-  return useQuery({ // Updated syntax
+  return useQuery<DailyEntry[], Error, DailyEntry[], (string | undefined)[]>({
     queryKey: ['dailyCycleEntries', user?.id],
     queryFn: () => {
       if (!user) return Promise.resolve([]);
@@ -33,7 +33,7 @@ export const useDailyCycleEntriesForUser = () => {
     },
     enabled: !!user,
     staleTime: 1000 * 60,
-    onError: (error: Error) => { // Updated error type
+    onError: (error: Error) => {
       showError('Erro ao carregar registros diários do ciclo: ' + error.message);
     },
   });

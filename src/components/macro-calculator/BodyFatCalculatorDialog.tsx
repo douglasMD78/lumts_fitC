@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useEffect } from 'react';
-import { useForm, Controller, UseFormReturn } from "react-hook-form";
+import { useEffect } from 'react';
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Button } from "@/components/ui/button";
@@ -9,10 +9,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { DialogFooter } from "@/components/ui/dialog";
-import { Scale } from 'lucide-react';
 import { showError } from '@/utils/toast';
 import { calculateBodyFatPercentage, BodyFatCalculationInputs } from '@/utils/bodyFatCalculations';
-import { Link } from 'react-router-dom';
 import { genderOptions } from '@/utils/macroCalculatorOptions'; // Importar de macroCalculatorOptions
 
 // Schema Zod para o formulário de cálculo de BF% dentro do diálogo

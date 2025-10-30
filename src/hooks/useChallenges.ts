@@ -1,9 +1,9 @@
 "use client";
 
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, UseQueryOptions } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
-import { showError } from '@/utils/toast'; // Importar showError
+import { showError } from '@/utils/toast';
 
 interface Challenge {
   id: string;
@@ -42,7 +42,7 @@ const fetchChallenges = async (userId: string | undefined): Promise<Challenge[]>
     }
   }
 
-  const challengesWithJoinStatus = challengesData.map(challenge => ({
+  const challengesWithJoinStatus = challengesData.map((challenge: Challenge) => ({
     ...challenge,
     isJoined: userChallenges.some(uc => uc.challenge_id === challenge.id)
   }));
@@ -53,12 +53,12 @@ const fetchChallenges = async (userId: string | undefined): Promise<Challenge[]>
 export const useChallenges = () => {
   const { user } = useAuth();
 
-  return useQuery({ // Updated syntax
+  return useQuery<Challenge[], Error, Challenge[], (string | undefined)[]>({
     queryKey: ['challenges', user?.id],
     queryFn: () => fetchChallenges(user?.id),
     enabled: true,
     staleTime: 1000 * 60 * 5,
-    onError: (error: Error) => { // Updated error type
+    onError: (error: Error) => {
       showError('Erro ao carregar desafios: ' + error.message);
     },
   });

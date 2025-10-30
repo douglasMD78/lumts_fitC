@@ -1,18 +1,13 @@
 "use client";
 
-import { useState, useEffect, useCallback } from 'react'; // Removed useCallback as it's not used
-import { supabase } from '@/integrations/supabase/client'; // Removed supabase as it's not used
 import { useAuth } from '@/contexts/AuthContext';
-import { showError } from '@/utils/toast'; // Removed showError as it's not used
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Link } from 'react-router-dom';
-import { BookOpen, ShoppingCart, RefreshCcw } from 'lucide-react'; // Removed Download, Lock
-// Removed LoginGate, EmptyState as they are not used
+import { BookOpen, ShoppingCart, RefreshCcw } from 'lucide-react';
 import { useDynamicContent } from '@/hooks/useDynamicContent';
 
 const EbookPage = () => {
-  const { user, loading: authLoading } = useAuth();
+  const { loading: authLoading } = useAuth();
 
   // Fetch dynamic content for Kiwify links
   const { data: checkoutEbookContent } = useDynamicContent('link_checkout_ebook');

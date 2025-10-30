@@ -1,10 +1,10 @@
 "use client";
 
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, UseQueryOptions } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { format, subDays, differenceInDays } from 'date-fns';
-import { showError } from '@/utils/toast'; // Importar showError
+import { showError } from '@/utils/toast';
 
 interface DailyRoutine {
   routine_date: string;
@@ -50,7 +50,7 @@ const fetchHomeSummaryData = async (userId: string): Promise<HomeSummaryData> =>
 export const useHomeSummaryData = () => {
   const { user } = useAuth();
 
-  return useQuery<HomeSummaryData, Error>({
+  return useQuery<HomeSummaryData, Error, HomeSummaryData, (string | undefined)[]>({
     queryKey: ['homeSummaryData', user?.id],
     queryFn: () => {
       if (!user) return Promise.resolve({ avgWorkoutDuration: 0 });
@@ -58,7 +58,7 @@ export const useHomeSummaryData = () => {
     },
     enabled: !!user,
     staleTime: 1000 * 60 * 5,
-    onError: (error) => {
+    onError: (error: Error) => {
       showError('Erro ao carregar dados de resumo da página inicial: ' + error.message);
     },
   });

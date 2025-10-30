@@ -4,7 +4,6 @@ import { ResultsDisplay } from "@/components/ResultsDisplay";
 import { useAuth } from "@/contexts/AuthContext";
 import { showError, showSuccess } from "@/utils/toast";
 import { MacroCalculationInputs } from "@/utils/macroCalculations";
-import { useNavigate } from "react-router-dom";
 
 // Importar os novos hooks
 import { useUserProfile } from "@/hooks/useUserProfile";
@@ -13,7 +12,6 @@ import { useSaveMacroPlan } from '@/hooks/useSaveMacroPlan';
 
 const MacroCalculatorPage = () => {
   const { user } = useAuth();
-  const navigate = useNavigate();
   const [results, setResults] = useState<any | null>(null);
   const [initialData, setInitialData] = useState<{
     age?: string;
@@ -63,9 +61,9 @@ const MacroCalculatorPage = () => {
         {
           first_name: profileData?.first_name || '', // Manter valores existentes se não forem alterados
           last_name: profileData?.last_name || '',
-          age: formData.age,
-          weight: formData.weight,
-          height: formData.height,
+          age: formData.age ?? null, // Convert undefined to null
+          weight: formData.weight ?? null, // Convert undefined to null
+          height: formData.height ?? null, // Convert undefined to null
         },
         {
           onSuccess: () => {

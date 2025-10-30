@@ -1,5 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
-import { supabase } from '@/integrations/supabase/client';
+import { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -10,10 +9,10 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import AvatarUpload from '@/components/AvatarUpload';
 import { useUserProfile } from '@/hooks/useUserProfile';
 import { useLogout } from "@/hooks/useLogout";
-import { useUpdateProfile } from '@/hooks/useUpdateProfile'; // Importar o novo hook
-import { useForm } from 'react-hook-form'; // Importar useForm
-import { zodResolver } from '@hookform/resolvers/zod'; // Importar zodResolver
-import * as z from 'zod'; // Importar Zod
+import { useUpdateProfile } from '@/hooks/useUpdateProfile';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import *as z from 'zod';
 
 // Definir o schema Zod para validação do perfil
 const profileSchema = z.object({
@@ -68,9 +67,9 @@ const ProfilePage = () => {
     updateProfileMutation.mutate({
       first_name: data.first_name || '',
       last_name: data.last_name || '',
-      age: data.age,
-      weight: data.weight,
-      height: data.height,
+      age: data.age ?? null,
+      weight: data.weight ?? null,
+      height: data.height ?? null,
     });
   };
 

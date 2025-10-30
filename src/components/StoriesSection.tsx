@@ -1,11 +1,9 @@
 "use client";
 
-import React from 'react';
 import { Link } from 'react-router-dom';
-import { Calculator, BookOpen, Newspaper, Users, Droplet, User, LogIn, GlassWater, Scale, Lightbulb, Trophy } from 'lucide-react';
+import { Calculator, BookOpen, Newspaper, Droplet, User, LogIn, GlassWater, Scale, Lightbulb, Trophy } from 'lucide-react';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { useAuth } from '@/contexts/AuthContext';
-import { cn } from '@/lib/utils';
 import { trackEvent } from '@/utils/analytics';
 
 interface StoryItem {

@@ -1,13 +1,11 @@
 "use client";
 
-import { useState, useEffect, useCallback } from 'react'; // Removed useState, useEffect, useCallback as they are not used
-import { supabase } from '@/integrations/supabase/client'; // Removed supabase as it's not used
-import { useAuth } from '@/contexts/AuthContext';
-import { showError, showSuccess } from '@/utils/toast'; // Removed showSuccess as it's not used
+import { Link, useNavigate } from 'react-router-dom';
+import { Utensils, Flame, Beef, Carrot, Nut, Trash2 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Link, useNavigate } from 'react-router-dom'; // Added useNavigate
-import { Utensils, Flame, Beef, Carrot, Nut, Trash2 } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
+import { showError } from '@/utils/toast';
 import EmptyState from '@/components/EmptyState';
 
 // Importar os novos hooks
@@ -26,18 +24,11 @@ interface MacroPlan {
 
 const MyMacroPlansPage = () => {
   const { user, loading: authLoading } = useAuth();
-  const navigate = useNavigate(); // Initialized useNavigate
+  const navigate = useNavigate();
 
   // Usar os novos hooks de query e mutação
   const { data: plans, isLoading: loadingPlans } = useUserMacroPlans();
   const deleteMacroPlanMutation = useDeleteMacroPlan();
-
-  // Removido useEffect para tratamento de erro, agora gerenciado pelo hook useUserMacroPlans
-  // useEffect(() => {
-  //   if (fetchError) {
-  //     showError('Erro ao carregar seus planos de macros: ' + fetchError.message);
-  //   }
-  // }, [fetchError]);
 
   const handleDeletePlan = async (planId: string) => {
     if (!user) {
@@ -85,12 +76,12 @@ const MyMacroPlansPage = () => {
             title="Nenhum plano de macros salvo"
             description="Crie seu primeiro plano nutricional personalizado agora!"
             buttonText="Criar Meu Primeiro Plano"
-            onClick={() => navigate("/calculadora-macros")} // Adicionado onClick para o EmptyState
+            onClick={() => navigate("/calculadora-macros")}
             iconColorClass="text-pink-500"
           />
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {plans && plans.map((plan) => (
+            {plans && plans.map((plan: MacroPlan) => (
               <Card key={plan.id} className="relative bg-white rounded-2xl shadow-lg border border-pink-100">
                 <CardHeader className="flex flex-row items-center justify-between pb-2">
                   <CardTitle className="text-xl font-bold text-slate-800">

@@ -1,10 +1,9 @@
 "use client";
 
-import React from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, BarChart, Bar } from 'recharts';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { TrendingUp, Dumbbell, Target, CheckCircle } from 'lucide-react';
+import { Dumbbell, Target, CheckCircle } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
 import { Button } from '@/components/ui/button';
 
@@ -40,7 +39,6 @@ const calculateProgress = (current: number, target: number) => {
 const PrintableProgressReport = ({
   activityData,
   userGoals,
-  macroPlan, // Mantido para compatibilidade, mas não usado para dados de macro
   startDate,
   endDate,
 }: PrintableProgressReportProps) => {
@@ -110,7 +108,7 @@ const PrintableProgressReport = ({
                             <CheckCircle className="h-4 w-4 mr-1" /> Meta Concluída!
                           </p>
                         ) : (
-                          <p className="text-slate-500 text-sm print:text-slate-700">Faltam {(goal.target_value - goal.current_value).toFixed(1)} {goal.target_unit} para a meta.</p>
+                          <p className="text-slate-500 text-sm print:text-slate-700">Faltam {((goal.target_value ?? 0) - goal.current_value).toFixed(1)} {goal.target_unit} para a meta.</p>
                         )}
                       </>
                     ) : (

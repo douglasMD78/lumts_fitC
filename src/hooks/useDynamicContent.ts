@@ -1,8 +1,7 @@
 "use client";
 
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, UseQueryOptions } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
-import { showError } from '@/utils/toast';
 
 export interface DynamicContent {
   slug: string;
@@ -30,14 +29,10 @@ const fetchDynamicContent = async (slug: string): Promise<DynamicContent | null>
 };
 
 export const useDynamicContent = (slug: string) => {
-  return useQuery({ // Updated syntax
+  return useQuery<DynamicContent | null, Error, DynamicContent | null, (string)[]>({
     queryKey: ['dynamicContent', slug],
     queryFn: () => fetchDynamicContent(slug),
     enabled: !!slug,
     staleTime: 1000 * 60 * 5, // Cache for 5 minutes
-    onError: (error: Error) => { // Updated error type
-      console.error(`Erro ao carregar conteúdo dinâmico para slug '${slug}':`, error.message);
-      // showError(`Erro ao carregar conteúdo dinâmico: ${error.message}`); // Optional: show toast for user
-    },
   });
 };

@@ -1,9 +1,8 @@
 "use client";
 
-import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Droplet, CalendarDays, Plus } from 'lucide-react';
+import { Droplet } from 'lucide-react';
 
 const CycleTrackerDisplaySkeleton = () => {
   return (

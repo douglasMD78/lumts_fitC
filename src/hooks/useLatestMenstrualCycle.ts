@@ -1,10 +1,10 @@
 "use client";
 
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, UseQueryOptions } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { parseISO } from 'date-fns';
-import { showError } from '@/utils/toast'; // Importar showError
+import { showError } from '@/utils/toast';
 
 interface MenstrualCycle {
   id: string;
@@ -40,7 +40,7 @@ const fetchLatestMenstrualCycle = async (userId: string): Promise<MenstrualCycle
 export const useLatestMenstrualCycle = () => {
   const { user } = useAuth();
 
-  return useQuery({ // Updated syntax
+  return useQuery<MenstrualCycle | null, Error, MenstrualCycle | null, (string | undefined)[]>({
     queryKey: ['latestMenstrualCycle', user?.id],
     queryFn: () => {
       if (!user) return Promise.resolve(null);
@@ -48,7 +48,7 @@ export const useLatestMenstrualCycle = () => {
     },
     enabled: !!user,
     staleTime: 1000 * 60 * 10,
-    onError: (error: Error) => { // Updated error type
+    onError: (error: Error) => {
       showError('Erro ao carregar o último ciclo menstrual: ' + error.message);
     },
   });

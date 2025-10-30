@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useUserProfile } from "@/hooks/useUserProfile";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { User, Calculator, BookOpen, Droplet, Lightbulb, GlassWater, Scale, Newspaper, Trophy } from "lucide-react"; // Added Newspaper, Trophy
+import { User, Calculator, BookOpen, Droplet, Lightbulb, GlassWater, Scale, Newspaper, Trophy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const MySpacePage = () => {

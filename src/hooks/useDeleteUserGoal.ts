@@ -25,7 +25,7 @@ export const useDeleteUserGoal = () => {
         throw new Error(error.message);
       }
     },
-    onSuccess: (data, variables) => {
+    onSuccess: (variables) => {
       showSuccess(`Meta "${variables.goalName}" deletada com sucesso!`);
       queryClient.invalidateQueries({ queryKey: ['userGoals', variables.userId] }); // Invalidate all user goals
       queryClient.invalidateQueries({ queryKey: ['userGoals', variables.userId, 'active'] }); // Invalidate active goals

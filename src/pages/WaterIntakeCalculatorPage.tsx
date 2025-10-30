@@ -8,8 +8,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
-import { Droplet, Activity, RefreshCcw, Share2, Sparkles, Apple } from 'lucide-react'; // Adicionado Apple para hábitos alimentares
+import *as z from "zod";
+import { Droplet, RefreshCcw, Share2, Sparkles } from 'lucide-react';
 import { calculateWaterIntake, WaterCalculationInputs } from '@/utils/waterCalculations';
 import { showError, showSuccess } from '@/utils/toast';
 

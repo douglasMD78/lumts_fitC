@@ -1,12 +1,12 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { showError } from "@/utils/toast";
-import { useForm, FieldErrors } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
+import *as z from "zod";
 import { ArrowLeft, Heart } from 'lucide-react';
 import { calculateMacros, MacroCalculationInputs } from '@/utils/macroCalculations';
 
@@ -139,7 +139,7 @@ export function MacroCalculatorStepper({ onCalculate, initialData }: MacroCalcul
 
       <Progress value={progress} className="w-full mb-6 h-2 bg-pink-100" indicatorClassName="bg-gradient-to-r from-pink-500 to-fuchsia-500" />
 
-      <form onSubmit={handleSubmit(handleFinalSubmit)} className="space-y-6"> {/* onErrors removido aqui */}
+      <form onSubmit={handleSubmit(handleFinalSubmit)} className="space-y-6">
         {renderStepComponent()}
 
         <div className="flex justify-between mt-8">

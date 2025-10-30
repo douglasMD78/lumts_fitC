@@ -1,6 +1,5 @@
 "use client";
 
-import React from 'react';
 import { UserRound, User, Diamond, Dumbbell, Leaf, Scale, Weight, Goal, Bed, Hand, Bike, Flame, ShieldCheck, Zap, TrendingUp } from 'lucide-react';
 
 export const genderOptions = [

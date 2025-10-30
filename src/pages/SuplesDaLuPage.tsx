@@ -1,9 +1,8 @@
 "use client";
 
-import { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Sparkles, ExternalLink, HeartHandshake } from 'lucide-react'; // Added HeartHandshake
+import { Sparkles, ExternalLink, HeartHandshake } from 'lucide-react';
 
 interface ProductRecommendation {
   name: string;

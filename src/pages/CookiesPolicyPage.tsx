@@ -1,7 +1,5 @@
 "use client";
 
-import React from 'react';
-
 const CookiesPolicyPage = () => {
   return (
     <div className="container mx-auto px-4 py-12 max-w-4xl">
@@ -24,7 +22,7 @@ const CookiesPolicyPage = () => {
         
         <section className="mb-8">
           <h2 className="text-xl font-bold text-slate-800 mb-4">3. Tipos de Cookies Utilizados</h2>
-          <ul className="list-disc list-inside text-slate-600 mb-4 space-y-1">
+          <ul className="list-disc list-inside text-left text-slate-600 mb-4 space-y-1">
             <li><strong>Cookies Essenciais:</strong> Necessários para o funcionamento básico do site.</li>
             <li><strong>Cookies de Desempenho:</strong> Coletam informações sobre como você usa o site para melhorar sua funcionalidade.</li>
             <li><strong>Cookies de Funcionalidade:</strong> Lembram suas escolhas e preferências para oferecer uma experiência mais personalizada.</li>

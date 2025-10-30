@@ -1,12 +1,11 @@
 import { useState, useEffect } from "react";
 import { Link, NavLink } from "react-router-dom";
-import { Menu, User as UserIcon, LogOut, LayoutDashboard, Calculator, GlassWater, BookOpen, Newspaper, Droplet, Scale, Heart, Lightbulb } from "lucide-react"; // Removed Dumbbell, Target, TrendingUp, Users, Home, Separator
+import { Menu, User as UserIcon, LogOut, LayoutDashboard, Calculator, GlassWater, BookOpen, Droplet, Scale, Heart, Lightbulb } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/contexts/AuthContext";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-// Removed import { Separator } from "@/components/ui/separator";
 import { useUserProfile } from "@/hooks/useUserProfile";
 import { useLogout } from "@/hooks/useLogout";
 import { useIsMobile } from '@/hooks/use-mobile';

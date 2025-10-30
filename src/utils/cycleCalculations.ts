@@ -82,7 +82,7 @@ export function getPredictedDates(
 
   return {
     nextPeriodStartDate,
-    ovulationDate, // This is now the start of the ovulatory window
+    ovulationDate,
     fertileWindowStart,
     fertileWindowEnd,
   };

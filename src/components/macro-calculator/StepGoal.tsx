@@ -1,6 +1,5 @@
 "use client";
 
-import React from 'react';
 import { UseFormReturn, Controller } from 'react-hook-form';
 import VisualSelection from '@/components/VisualSelection';
 import { goalOptions } from '@/utils/macroCalculatorOptions';
