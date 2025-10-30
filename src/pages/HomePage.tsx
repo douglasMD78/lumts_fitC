@@ -54,10 +54,10 @@ const HomePage = () => {
   }, [blogPostsError, blogPostsFetchError]);
 
   return (
-    <div className="container mx-auto px-4 py-8 flex flex-col items-center space-y-10"> {/* Adicionado space-y-10 */}
+    <div className="container mx-auto px-4 py-8 flex flex-col items-center space-y-16"> {/* Adicionado space-y-10 */}
       {/* Seção 1: Acolhimento (com a "Voz" da Luiza) */}
       <section className="w-full max-w-4xl text-center px-6 py-4 animate-fade-in-up">
-        <h1 className="text-3xl font-bold text-slate-800 leading-tight mb-6">
+        <h1 className="text-4xl font-heading font-medium text-slate-800 leading-tight mb-6">
           {user?.first_name ? `Olá, ${userName}!` : 'Bem-vinda ao nosso espaço'}
         </h1>
       </section>
@@ -81,11 +81,11 @@ const HomePage = () => {
 
       {/* Seção 4: A "Isca" (CTA de Macros - com Destaque) */}
       <section className="w-full max-w-4xl animate-fade-in-up animation-delay-400">
-        <Card className="bg-gradient-to-r from-pink-500 to-fuchsia-500 text-white rounded-2xl shadow-lg border border-pink-100">
+        <Card className="bg-white rounded-2xl shadow-lg border border-pink-100">
           <CardContent className="p-6 flex flex-col items-center text-center space-y-4">
-            <h2 className="text-2xl font-bold">Precisando de um norte na dieta?</h2>
-            <p className="text-base text-white/90">A nossa calculadora de macros gratuita é o primeiro passo para você entender exatamente o que precisa comer.</p>
-            <Button asChild variant="secondary" size="lg" className="bg-white text-pink-500 hover:bg-gray-100 font-bold rounded-full px-8 py-4 h-auto text-lg shadow-lg">
+            <h2 className="text-2xl font-bold font-heading">Precisando de um norte na dieta?</h2>
+            <p className="text-base text-slate-600">A nossa calculadora de macros gratuita é o primeiro passo para você entender exatamente o que precisa comer.</p>
+            <Button asChild size="lg" className="bg-gradient-to-r from-pink-500 to-fuchsia-500 text-white shadow-lg shadow-pink-500/30 font-bold rounded-full px-8 py-4 h-auto text-lg">
               <Link to="/calculadora-macros" className="flex items-center justify-center">
                 <Calculator className="h-5 w-5 mr-2" /> Começar a Calcular
               </Link>
@@ -108,7 +108,7 @@ const HomePage = () => {
 
       {/* Seção 6: SEO (Blog) */}
       <section className="w-full max-w-4xl animate-fade-in-up animation-delay-600">
-        <h2 className="text-3xl font-bold text-slate-800 text-center mb-8">Últimas do Blog</h2>
+        <h2 className="text-3xl font-bold font-heading text-slate-800 text-center mb-8">Últimas do Blog</h2>
         {loadingBlogPosts ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {Array.from({ length: 3 }).map((_, index) => (
