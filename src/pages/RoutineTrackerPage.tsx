@@ -8,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 import { Calendar as CalendarIcon, Dumbbell, Heart, Utensils, ChevronLeft, ChevronRight, Plus, Edit, Target, Trash2, CheckCircle, Clock, Bed, Smile, NotebookPen, Bike, Ruler } from 'lucide-react';
-import { format, subDays, addDays, isSameDay, parseISO, isFuture } from 'date-fns'; // Importar isFuture
+import { format, subDays, addDays, isSameDay, parseISO, isAfter, isToday } from 'date-fns'; // Importar isAfter e isToday
 import { ptBR } from 'date-fns/locale';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -80,7 +80,7 @@ const RoutineTrackerPage = () => {
       showError('Você precisa estar logada para salvar sua rotina.');
       return;
     }
-    if (isFuture(selectedDate)) { // Fixed: Removed { unit: 'day' }
+    if (isAfter(selectedDate, new Date()) && !isToday(selectedDate)) {
       showError("Não é possível registrar rotinas para datas futuras.");
       return;
     }

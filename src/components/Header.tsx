@@ -137,6 +137,34 @@ const Header = () => {
                     >
                       <TrendingUp className="h-5 w-5 mr-3" /> Meu Progresso
                     </NavLink>
+                    <Separator className="my-4" />
+                    <NavLink
+                      to="/termos"
+                      onClick={() => setIsSheetOpen(false)}
+                      className={({ isActive }) =>
+                        `text-lg font-medium ${isActive ? "text-pink-500" : "text-slate-700"}`
+                      }
+                    >
+                      Termos de Uso
+                    </NavLink>
+                    <NavLink
+                      to="/privacidade"
+                      onClick={() => setIsSheetOpen(false)}
+                      className={({ isActive }) =>
+                        `text-lg font-medium ${isActive ? "text-pink-500" : "text-slate-700"}`
+                      }
+                    >
+                      Política de Privacidade
+                    </NavLink>
+                    <NavLink
+                      to="/cookies"
+                      onClick={() => setIsSheetOpen(false)}
+                      className={({ isActive }) =>
+                        `text-lg font-medium ${isActive ? "text-pink-500" : "text-slate-700"}`
+                      }
+                    >
+                      Política de Cookies
+                    </NavLink>
                     <Button
                       variant="ghost"
                       onClick={() => {
@@ -149,15 +177,45 @@ const Header = () => {
                     </Button>
                   </>
                 ) : (
-                  <NavLink
-                    to="/login"
-                    onClick={() => setIsSheetOpen(false)}
-                    className={({ isActive }) =>
-                      `flex items-center text-xl font-medium ${isActive ? "text-pink-500" : "text-slate-700"}`
-                    }
-                  >
-                    <UserIcon className="h-5 w-5 mr-3" /> Login / Cadastro
-                  </NavLink>
+                  <>
+                    <NavLink
+                      to="/login"
+                      onClick={() => setIsSheetOpen(false)}
+                      className={({ isActive }) =>
+                        `flex items-center text-xl font-medium ${isActive ? "text-pink-500" : "text-slate-700"}`
+                      }
+                    >
+                      <UserIcon className="h-5 w-5 mr-3" /> Login / Cadastro
+                    </NavLink>
+                    <Separator className="my-4" />
+                    <NavLink
+                      to="/termos"
+                      onClick={() => setIsSheetOpen(false)}
+                      className={({ isActive }) =>
+                        `text-lg font-medium ${isActive ? "text-pink-500" : "text-slate-700"}`
+                      }
+                    >
+                      Termos de Uso
+                    </NavLink>
+                    <NavLink
+                      to="/privacidade"
+                      onClick={() => setIsSheetOpen(false)}
+                      className={({ isActive }) =>
+                        `text-lg font-medium ${isActive ? "text-pink-500" : "text-slate-700"}`
+                      }
+                    >
+                      Política de Privacidade
+                    </NavLink>
+                    <NavLink
+                      to="/cookies"
+                      onClick={() => setIsSheetOpen(false)}
+                      className={({ isActive }) =>
+                        `text-lg font-medium ${isActive ? "text-pink-500" : "text-slate-700"}`
+                      }
+                    >
+                      Política de Cookies
+                    </NavLink>
+                  </>
                 )}
               </div>
             </SheetContent>

@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { format, isFuture } from 'date-fns';
+import { format, isAfter, isToday } from 'date-fns'; // Importar isAfter e isToday
 import { ptBR } from 'date-fns/locale';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -76,7 +76,7 @@ const RecordProgressDialog = ({ isOpen, onOpenChange, goal, onProgressRecorded }
       showError("Usuário não autenticado ou meta não selecionada.");
       return;
     }
-    if (isFuture(data.recorded_date)) { // Corrigido: Removido { unit: 'day' }
+    if (isAfter(data.recorded_date, new Date()) && !isToday(data.recorded_date)) {
       showError("A data do registro não pode ser no futuro.");
       return;
     }
@@ -146,7 +146,7 @@ const RecordProgressDialog = ({ isOpen, onOpenChange, goal, onProgressRecorded }
                       onSelect={field.onChange}
                       initialFocus
                       locale={ptBR}
-                      disabled={(date) => isFuture(date)} // Corrigido: Removido { unit: 'day' }
+                      disabled={(date) => isAfter(date, new Date()) && !isToday(date)}
                     />
                   </PopoverContent>
                 </Popover>

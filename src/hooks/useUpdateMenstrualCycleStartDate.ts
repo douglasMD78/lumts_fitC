@@ -3,7 +3,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { showError, showSuccess } from '@/utils/toast';
-import { format, isFuture } from 'date-fns';
+import { format, isAfter, isToday } from 'date-fns'; // Importar isAfter e isToday
 
 interface UpdateMenstrualCycleStartDateVariables {
   cycleId: string;
@@ -15,7 +15,7 @@ export const useUpdateMenstrualCycleStartDate = () => {
 
   return useMutation<void, Error, UpdateMenstrualCycleStartDateVariables>({
     mutationFn: async ({ cycleId, newStartDate }) => {
-      if (isFuture(newStartDate)) { // Fixed: Removed { unit: 'day' }
+      if (isAfter(newStartDate, new Date()) && !isToday(newStartDate)) {
         throw new Error("A data de início do ciclo não pode ser no futuro.");
       }
       const { error } = await supabase

@@ -10,7 +10,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { showError, showSuccess } from "@/utils/toast";
 import { getCycleDayInfo, getPredictedDates, CyclePhaseInfo, PHASE_CONTENT } from "@/utils/cycleCalculations"; // Import PHASE_CONTENT
 import { Calendar } from "@/components/ui/calendar";
-import { format, subDays, addDays, isSameDay, parseISO, isFuture } from "date-fns"; // Importar isFuture
+import { format, subDays, addDays, isSameDay, parseISO, isAfter, isToday } from "date-fns"; // Importar isAfter e isToday
 import { ptBR } from 'date-fns/locale';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
 import CircularProgress from "@/components/ui/CircularProgress";
@@ -160,7 +160,7 @@ const CycleTrackerDisplayPage = () => {
               progress={progress} 
               size={220} 
               strokeWidth={18} 
-              indicatorColorClass={colorClass} // Usar a nova prop
+              className={colorClass} // Passar a classe de cor aqui
             >
               <text x="50%" y="50%" textAnchor="middle" dy=".3em" className="fill-slate-800">
                 <tspan x="50%" dy="-0.2em" className="text-6xl font-bold">{dayInCycle}</tspan>
@@ -214,7 +214,7 @@ const CycleTrackerDisplayPage = () => {
                   selected={newPeriodDate}
                   onSelect={setNewPeriodDate}
                   locale={ptBR}
-                  disabled={(date) => isFuture(date)} // Fixed: Removed { unit: 'day' }
+                  disabled={(date) => isAfter(date, new Date()) && !isToday(date)}
                 />
                 <DialogFooter>
                   <Button variant="ghost" onClick={() => setIsUpdatePeriodOpen(false)}>Cancelar</Button>
