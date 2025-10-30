@@ -40,8 +40,8 @@ const StoriesSection = () => {
             className="flex flex-col items-center flex-shrink-0 w-20 group"
             onClick={() => trackEvent('navigation.story_select', { story_name: item.label })}
           >
-            <Avatar className="h-16 w-16 p-1 bg-gradient-to-r from-pink-500 to-fuchsia-500 shadow-md group-hover:scale-105 transition-all duration-300 ease-out">
-              <AvatarFallback className="bg-white text-pink-500">
+            <Avatar className="h-16 w-16 p-1 bg-gray-100 shadow-md group-hover:scale-105 group-hover:bg-pink-50 transition-all duration-300 ease-out">
+              <AvatarFallback className="bg-transparent text-pink-500">
                 <item.icon className="h-8 w-8" />
               </AvatarFallback>
             </Avatar>
