@@ -1,6 +1,6 @@
 "use client";
 
-import { Trophy, Users, ExternalLink } from "lucide-react";
+import { Calendar, Trophy, Users, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from 'react-router-dom';
 import { Card } from '@/components/ui/card';

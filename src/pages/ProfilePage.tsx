@@ -1,10 +1,9 @@
 import { useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useAuth } from '@/contexts/AuthContext';
-import { showSuccess, showError } from '@/utils/toast';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import AvatarUpload from '@/components/AvatarUpload';
 import { useUserProfile } from '@/hooks/useUserProfile';
@@ -27,7 +26,6 @@ type ProfileFormInputs = z.infer<typeof profileSchema>;
 
 const ProfilePage = () => {
   const { user, loading: authLoading } = useAuth();
-  const navigate = useNavigate();
   const logout = useLogout();
 
   const { data: profileData, isLoading: loadingProfile } = useUserProfile();

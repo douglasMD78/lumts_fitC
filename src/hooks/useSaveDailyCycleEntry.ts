@@ -46,7 +46,7 @@ export const useSaveDailyCycleEntry = () => {
         if (error) throw error;
       }
     },
-    onSuccess: (variables) => {
+    onSuccess: (data, variables) => { // 'data' is the result of mutation, 'variables' is the input
       showSuccess(variables.existingEntryId ? 'Registro atualizado!' : 'Registro salvo!');
       queryClient.invalidateQueries({ queryKey: ['dailyCycleEntries', variables.userId] });
     },

@@ -24,7 +24,7 @@ export const useDeleteMacroPlan = () => {
         throw new Error(error.message);
       }
     },
-    onSuccess: (data, variables) => {
+    onSuccess: (data, variables) => { // 'data' is the result of mutation, 'variables' is the input
       showSuccess('Plano de macros deletado com sucesso!');
       queryClient.invalidateQueries({ queryKey: ['userMacroPlans', variables.userId] });
       queryClient.invalidateQueries({ queryKey: ['latestMacroPlan', variables.userId] }); // Invalidate latest macro plan as well

@@ -66,7 +66,6 @@ export function getCycleDayInfo(
 export function getPredictedDates(
   lastPeriodStartDate: Date,
   cycleLength: number,
-  menstrualLength: number,
 ) {
   const startOfLastPeriod = startOfDay(lastPeriodStartDate);
 

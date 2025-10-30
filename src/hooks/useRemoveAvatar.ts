@@ -38,7 +38,7 @@ export const useRemoveAvatar = () => {
         throw new Error(updateError.message);
       }
     },
-    onSuccess: (variables) => {
+    onSuccess: (data, variables) => { // 'data' is the result of mutation, 'variables' is the input
       queryClient.invalidateQueries({ queryKey: ['userProfile', variables.uid] });
       showSuccess('Avatar removido com sucesso!');
     },

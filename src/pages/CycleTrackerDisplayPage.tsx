@@ -15,7 +15,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, Dialog
 import CircularProgress from "@/components/ui/CircularProgress";
 import InfoAccordion from "@/components/InfoAccordion";
 import CycleTrackerDisplaySkeleton from "@/components/CycleTrackerDisplaySkeleton";
-import { Matcher } from "react-day-picker";
+import { DayModifiers } from "react-day-picker"; // Import DayModifiers
 
 // Importar os novos hooks
 import { useLatestMenstrualCycle } from '@/hooks/useLatestMenstrualCycle';
@@ -32,7 +32,7 @@ interface CycleData {
 }
 
 const CycleTrackerDisplayPage = () => {
-  const { user, loading: authLoading } = useAuth();
+  const { loading: authLoading } = useAuth();
   const navigate = useNavigate();
   const [cycleData, setCycleData] = useState<CycleData | null>(null);
   const [cycleDayInfo, setCycleDayInfo] = useState<CyclePhaseInfo | null>(null);
@@ -69,7 +69,7 @@ const CycleTrackerDisplayPage = () => {
     if (cycleData) {
       const info = getCycleDayInfo(cycleData.lastPeriodStartDate, cycleData.cycleLength, cycleData.menstrualLength, selectedDate || new Date());
       setCycleDayInfo(info);
-      const predicted = getPredictedDates(cycleData.lastPeriodStartDate, cycleData.cycleLength, cycleData.menstrualLength);
+      const predicted = getPredictedDates(cycleData.lastPeriodStartDate, cycleData.cycleLength);
       setPredictedDates(predicted);
     }
   }, [cycleData, selectedDate]);

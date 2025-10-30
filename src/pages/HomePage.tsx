@@ -10,7 +10,7 @@ import { showError } from "@/utils/toast";
 import BlogCard from '@/components/BlogCard';
 import BlogCardSkeleton from '@/components/BlogCardSkeleton';
 import DynamicHeroBanner from "@/components/DynamicHeroBanner";
-import { useQuery, UseQueryOptions } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 
 interface BlogPost {

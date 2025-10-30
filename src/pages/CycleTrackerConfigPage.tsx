@@ -29,7 +29,6 @@ type SetupFormInputs = z.infer<typeof setupSchema>;
 
 const CycleTrackerConfigPage = () => {
   const { user } = useAuth();
-  const navigate = useNavigate();
 
   const {
     control,
