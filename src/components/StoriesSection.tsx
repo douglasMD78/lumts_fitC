@@ -2,11 +2,11 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Calculator, BookOpen, Newspaper, Users, Droplet, User, LogIn, GlassWater, Scale, Lightbulb } from 'lucide-react'; // Removed Dumbbell, cn, trackEvent
+import { Calculator, BookOpen, Newspaper, Users, Droplet, User, LogIn, GlassWater, Scale, Lightbulb } from 'lucide-react';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { useAuth } from '@/contexts/AuthContext';
-// Removed import { cn } from '@/lib/utils';
-// Removed import { trackEvent } from '@/utils/analytics';
+import { cn } from '@/lib/utils';
+import { trackEvent } from '@/utils/analytics';
 
 interface StoryItem {
   to: string;
@@ -22,10 +22,10 @@ const StoriesSection = () => {
     { to: "/rastreador-ciclo", label: "Ciclo", icon: Droplet },
     { to: "/calculadora-agua", label: "Água", icon: GlassWater },
     { to: "/calculadora-bf", label: "BF%", icon: Scale },
-    { to: "/suples-da-lu", label: "Suples", icon: Lightbulb }, // Updated label and icon
+    { to: "/suples-da-lu", label: "Suples", icon: Lightbulb },
     { to: "/ebook", label: "Ebook", icon: BookOpen },
     { to: "/blog", label: "Blog", icon: Newspaper },
-    { to: "/desafios", label: "Desafios", icon: Users }, // Changed from Community to Challenges
+    { to: "/desafios", label: "Desafios", icon: Users },
     // Story condicional para Perfil/Login
     user
       ? { to: "/perfil", label: "Perfil", icon: User }
@@ -34,12 +34,13 @@ const StoriesSection = () => {
 
   return (
     <section className="w-full max-w-4xl mb-12 opacity-0 animate-fade-in-up animation-delay-100">
-      <div className="flex overflow-x-auto space-x-4 px-4 py-3 no-scrollbar">
+      <div className="flex w-full space-x-4 overflow-x-auto p-4 no-scrollbar"> {/* Refactored for horizontal scroll */}
         {storyItems.map((item, index) => (
           <Link
             key={index}
             to={item.to}
             className="flex flex-col items-center flex-shrink-0 w-20 group"
+            onClick={() => trackEvent('navigation.story_select', { story_name: item.label })}
           >
             <Avatar className="h-16 w-16 border-2 border-pink-300 p-1 bg-white shadow-md group-hover:scale-105 group-hover:border-pink-500 transition-all duration-300 ease-out">
               <AvatarFallback className="bg-pink-100 text-pink-500">
